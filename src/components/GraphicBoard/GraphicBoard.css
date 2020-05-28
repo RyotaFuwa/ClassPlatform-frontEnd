@@ -1,0 +1,58 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+.SpaceBoard {
+    background-color: #0f1028;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.Object {
+    margin: 0px;
+    padding: 0px;
+    position: absolute;
+}
+
+.Earth {
+    height: 40vmin;
+    pointer-events: none;
+    left: 40%;
+    top: 30%;
+}
+
+.Moon {
+    height: 10vmin;
+    pointer-events: none;
+    left: 30%;
+    top: 10%;
+}
+
+.RubbishBin {
+    height: 35vmin;
+    right: 0px;
+    bottom: 0px;
+}
+
+.PaperBall {
+    height: 10vmin;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .Earth {
+        animation: Spin infinite 30s linear;
+    }
+    .Moon {
+        animation: Spin infinite 50s linear;
+    }
+}
+
+@keyframes Spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

@@ -1,26 +1,30 @@
 import React from 'react';
-import logo from './logo.svg';
+import { Switch, Route } from "react-router-dom";
 import './App.css';
+import HomePage from "./pages/HomePage/HomePage";
+import LecturePage from "./pages/LecturePage/LecturePage";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import SpaceBoard from "./components/GraphicBoard/GraphicBoard";
+import NavBar from "./components/NavBar/NavBar";
+import Footer from "./components/Footer/Footer";
+
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+      return (
+          <div className="App">
+              <Switch>
+                  <Route path="/codingcamp2020" component={ LecturePage } />
+                  <Route path="/" component={ HomePage } />
+              </Switch>
+          </div>
+      );
+  }
 }
 
 export default App;

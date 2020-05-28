@@ -1,0 +1,36 @@
+.Footer {
+    background-color: #0f1028;
+    color: white;
+    position: relative;
+    width: 100%;
+    height: 50px;
+}
+
+#separate-line {
+    border: 1px solid white;
+    width: 100%;
+}
+
+#Footer-contents {
+    position: relative;
+    top: 25%;
+}
+
+#Copy-right {
+    position: absolute;
+    left: 0;
+}
+
+#Footer-links {
+    position: absolute;
+    right: 0;
+}
+
+.Footer-button {
+    display: inline-block;
+    color: white;
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+
