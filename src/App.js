@@ -3,10 +3,12 @@ import { Switch, Route } from "react-router-dom";
 import './App.css';
 import HomePage from "./pages/HomePage/HomePage";
 import LecturePage from "./pages/LecturePage/LecturePage";
+import CodingPage from "./pages/CodingPage/CodingPage";
 
 import SpaceBoard from "./components/GraphicBoard/GraphicBoard";
 import NavBar from "./components/NavBar/NavBar";
 import Footer from "./components/Footer/Footer";
+import MyProfilePage from "./pages/MyProfilePage/MyProfilePage";
 
 
 class App extends React.Component {
@@ -19,7 +21,9 @@ class App extends React.Component {
       return (
           <div className="App">
               <Switch>
-                  <Route path="/codingcamp2020" component={ LecturePage } />
+                  <Route path="/lectures/:lecture" component={ LecturePage } />
+                  <Route path="/codingroom" component={ CodingPage } />
+                  <Route path="/myprofile" component={ MyProfilePage } />
                   <Route path="/" component={ HomePage } />
               </Switch>
           </div>

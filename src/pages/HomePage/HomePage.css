@@ -1,9 +1,22 @@
-.page {
+.Page {
     position: relative;
     width: 100%;
     height: 100%;
 }
 
+.Signiture {
+    position: absolute;
+    height: 10vh;
+    top: 6vh;
+    right: 1vw;
+}
+.Page > h1 {
+    position: absolute;
+    top: 5vh;
+    right: 2.5vw;
+    font-family: "Caveat";
+    color: lightgray;
+}
 
 Footer {
     position: fixed;

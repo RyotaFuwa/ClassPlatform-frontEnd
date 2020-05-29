@@ -1,7 +1,3 @@
-* {
-    padding: 0;
-    margin: 0;
-}
 .SpaceBoard {
     background-color: #0f1028;
     position: relative;
@@ -10,8 +6,8 @@
 }
 
 .Object {
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
     position: absolute;
 }
 

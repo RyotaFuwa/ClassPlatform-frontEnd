@@ -1,0 +1,57 @@
+#CodingPage {
+    text-align: left;
+}
+
+.MainFrame {
+    position: relative;
+    text-align: left;
+    margin: 3vh 1vw;
+    width: 98%;
+    height: 85%;
+}
+
+.AceEditor {
+    position: absolute;
+    left: 40%;
+    top: 3.5%;
+    width: 60%;
+    height: 70%;
+    border: 3px solid darkgray;
+}
+
+.Terminal {
+    position: absolute;
+    margin: 0;
+    left: 40%;
+    bottom: 0;
+    width: 60%;
+    height: 30%;
+    border: 3px solid darkgray;
+
+}
+
+.DiscussionNote {
+    position: absolute;
+    left: 0;
+    width: 40%;
+    height: 96.6%;
+    top: 3.5%;
+    border: 3px solid darkgray;
+}
+
+#solutions {
+    position: relative;
+    left: 0;
+    height: 3.6%;
+}
+
+.Each-solution {
+    display: inline-block;
+    width: 7%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    border: 3px solid darkgray;
+    border-top-left-radius: 1vh;
+    border-top-right-radius: 1vh;
+}
