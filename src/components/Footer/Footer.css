@@ -1,10 +1,11 @@
 .Footer {
     background-color: #0f1028;
     color: white;
-    position: relative;
+    position: fixed;
     bottom: 0;
     width: 100%;
-    height: 50px;
+    height: 4.5vh;
+
 }
 
 #separate-line {

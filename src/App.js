@@ -1,14 +1,14 @@
 import React from 'react';
 import { Switch, Route } from "react-router-dom";
 import './App.css';
-import HomePage from "./pages/HomePage/HomePage";
-import LecturePage from "./pages/LecturePage/LecturePage";
-import CodingPage from "./pages/CodingPage/CodingPage";
 
-import SpaceBoard from "./components/GraphicBoard/GraphicBoard";
-import NavBar from "./components/NavBar/NavBar";
-import Footer from "./components/Footer/Footer";
+import HomePage from "./pages/HomePage/HomePage";
+import CodingRoomSession from "./pages/CodingRoom/CodingRoomSession";
+import ClassRoomSession from "./pages/ClassRoom/ClassRoomSession";
+import MyDeskPage from "./pages/MyDeskPage/MyDeskPage";
 import MyProfilePage from "./pages/MyProfilePage/MyProfilePage";
+import AboutThisWebsitePage from "./pages/AboutThisWebsitePage/AboutThisWebsitePage";
+
 
 
 class App extends React.Component {
@@ -21,9 +21,11 @@ class App extends React.Component {
       return (
           <div className="App">
               <Switch>
-                  <Route path="/lectures/:lecture" component={ LecturePage } />
-                  <Route path="/codingroom" component={ CodingPage } />
+                  <Route path="/mydesk/" component={ MyDeskPage } />
+                  <Route path="/classroom/" component={ ClassRoomSession } />
+                  <Route path="/codingroom" component={ CodingRoomSession } />
                   <Route path="/myprofile" component={ MyProfilePage } />
+                  <Route path="/aboutthiswebsite" component={ AboutThisWebsitePage } />
                   <Route path="/" component={ HomePage } />
               </Switch>
           </div>

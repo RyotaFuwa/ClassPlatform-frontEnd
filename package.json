@@ -12,9 +12,12 @@
     "react": "^16.13.1",
     "react-ace": "^9.0.0",
     "react-bootstrap": "^1.0.1",
+    "react-compound-timer": "^1.2.0",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5"
   },
   "scripts": {
     "start": "react-scripts start",

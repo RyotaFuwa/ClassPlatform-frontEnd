@@ -11,7 +11,7 @@ function Footer() {
                     |&nbsp;
                     <a className="Footer-button" href="/myprofile">My Profile</a> &nbsp;
                     &nbsp;|&nbsp;
-                    <a className="Footer-button" href="/aboutthisebsite">About This Website</a> &nbsp;
+                    <a className="Footer-button" href="/aboutthiswebsite">About This Website</a> &nbsp;
                     |
                     <a className="Footer-button" href="/">Back To Home</a> &nbsp;
                     | &nbsp;

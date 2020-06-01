@@ -1,0 +1,10 @@
+.Card {
+    border: 1px solid #282c34;
+    background-color: #61cafb;
+    border-radius: 1rem;
+}
+
+.Card:hover {
+    background-color: aquamarine;
+    transform: scale(1.025);
+}
