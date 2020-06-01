@@ -1,15 +1,19 @@
-#onePhrase {
-    position: absolute;
-    top: 46px;
-    right: 0;
+.OnePhrase {
+    position: relative;
     margin: 2vh 2vw;
+    z-index: 9999;
+    text-align: right;
+}
+
+#phrase {
+    position: relative;
+    right: 0;
     font-family: "Caveat";
     color: lightgray;
 }
 
-#signiture {
-    position: absolute;
+#signature {
+    position: relative;
     right: 0;
-    top: 72px;
-    height: 126px;
+    top: 0;
 }

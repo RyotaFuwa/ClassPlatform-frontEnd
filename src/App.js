@@ -3,7 +3,7 @@ import { Switch, Route } from "react-router-dom";
 import './App.css';
 
 import HomePage from "./pages/HomePage/HomePage";
-import CodingRoomSession from "./pages/CodingRoom/CodingRoomSession";
+import CodingRoomPage from "./pages/CodingRoom/CodingRoomPage";
 import ClassRoomSession from "./pages/ClassRoom/ClassRoomSession";
 import MyDeskPage from "./pages/MyDeskPage/MyDeskPage";
 import MyProfilePage from "./pages/MyProfilePage/MyProfilePage";
@@ -23,7 +23,7 @@ class App extends React.Component {
               <Switch>
                   <Route path="/mydesk/" component={ MyDeskPage } />
                   <Route path="/classroom/" component={ ClassRoomSession } />
-                  <Route path="/codingroom" component={ CodingRoomSession } />
+                  <Route path="/codingroom" component={ CodingRoomPage } />
                   <Route path="/myprofile" component={ MyProfilePage } />
                   <Route path="/aboutthiswebsite" component={ AboutThisWebsitePage } />
                   <Route path="/" component={ HomePage } />

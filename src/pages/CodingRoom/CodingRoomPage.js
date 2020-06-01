@@ -20,14 +20,17 @@ class CodingRoomPage extends React.Component {
         this.state = {
             apiTokenForGlot: "2c2634e4-ecc3-446e-bace-2c030900dc64",
             codeText: "",
-            minutes: 2,
+            minutes: 45,
         };
     }
+
     runOnClick(e) {
     }
+
     render() {
         return (
             <div className="Page">
+                <div className="min-vh-100 ExceptFooter">
                 <NavBar />
                 <h1 className="Header">Coding Room  <TimerBox minutes={this.state.minutes}/></h1>
                 <div className="MainFrame">
@@ -54,6 +57,7 @@ class CodingRoomPage extends React.Component {
                             </Tab>
                         </Tabs>
                     </div>
+                </div>
                 </div>
                 <Footer />
             </div>

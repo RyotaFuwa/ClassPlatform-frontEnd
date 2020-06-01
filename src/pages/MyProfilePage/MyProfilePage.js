@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {ProgressBar} from "react-bootstrap";
+import {ProgressBar, Breadcrumb} from "react-bootstrap";
 import NavBar from "../../components/NavBar/NavBar";
 import Footer from "../../components/Footer/Footer";
 import "./MyProfilePage.css";
@@ -36,7 +36,7 @@ class MyProfilePage extends Component {
                         <a href="#myprofile-hobbies">hobbies</a>
                     </p>
                     <h1>My Profile</h1>
-                    <h4><a href="#">Contact</a> / <a href="#">Linkdn</a> / <a href="#">GitHub</a></h4>
+                    <h5><a href="#">Contact</a> / <a href="#">Linkdn</a> / <a href="#">GitHub</a></h5>
                     <div id="myprofile-education"></div>
                     <div id="myprofile-projects"></div>
                     <div id="myprofile-hobbies"></div>

@@ -7,7 +7,7 @@ const MyDeskPage = props => {
     return (
         <div>
             <NavBar />
-            <h1>Class Room Session</h1>
+            <h1>MyDeskPage</h1>
             <Footer />
         </div>
     )

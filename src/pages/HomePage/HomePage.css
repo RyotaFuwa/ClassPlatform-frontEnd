@@ -1,13 +1,4 @@
-.Page {
-    position: relative;
-    width: 100%;
-    height: 100%;
+.ExceptFooter {
+    display: flex;
+    flex-direction: column;
 }
-
-
-
-Footer {
-    position: fixed;
-    bottom: 0;
-}
-

@@ -7,6 +7,7 @@ import randomChoice from "../../js/random.js";
 import satelite from "./data/satelite.svg"
 */
 import './GraphicBoard.css'
+import OnePhrase from "../OnePhrase/OnePhrase";
 
 
 class GraphicBoard extends React.Component {
@@ -22,6 +23,7 @@ class SpaceBoard extends GraphicBoard {
         return (
             <div className="SpaceBoard">
                 {this.renderCircles(100, 5)}
+                <OnePhrase className="OnePhrase" random="true"/>
                 <img src={earth} className="Object 2D Dynamic Earth" alt="logo" />
                 <img src={moon} className="Object 2D Dynamic Moon" alt="logo" />
                 <img src={rubbishBin} className="Object 2D Dynamic RubbishBin" alt="logo" />

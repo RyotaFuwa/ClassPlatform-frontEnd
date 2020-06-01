@@ -11,7 +11,7 @@ import './NavBar.css';
 
 function NavBar() {
     return (
-        <Navbar className="Space-nav" bg="light" expand="sm">
+        <Navbar className="navbar-expand-sm" bg="light">
             <Navbar.Brand href="/">Hi, Welcome :)</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
