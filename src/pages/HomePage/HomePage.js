@@ -6,14 +6,14 @@ import "./HomePage.css";
 
 const HomePage = () => {
     return (
-        <div className="Page">
-            <div className="min-vh-100 ExceptFooter">
+        <div>
+            <div className="page-app">
                 <NavBar />
-                <SpaceBoard />
+                <SpaceBoard className="page-app-main"/>
             </div>
-            <Footer/>
+                <Footer className="bg-light"/>
         </div>
-    );
+);
 }
 
 export default HomePage;

@@ -3,6 +3,7 @@ import NavBar from "../../components/NavBar/NavBar";
 import Footer from "../../components/Footer/Footer";
 import ClassList from "../../components/ClassList/ClassList";
 import SearchBox from "../../components/SearchBox/SearchBox";
+import "./ClassRoom.css";
 
 class ClassRoomSession extends Component {
     constructor(props) {
@@ -28,10 +29,17 @@ class ClassRoomSession extends Component {
     render() {
         let matchedClasses = this.getMatchedClasses();
         return (
-            <div>
+            <div className="page-normal">
                 <NavBar/>
-                <SearchBox placeholder="Search Classes" onChange={e => this.setState({searchSubstring: e.target.value})} />
-                <ClassList classes={matchedClasses}/>
+                <div className="page-normal-main">
+                    <div className="classroom-header">
+                        <h2 className="classroom-title">Class Room</h2>
+                        <div className="classroom-searchbox">
+                            <SearchBox onChange={e => this.setState({searchSubstring: e.target.value})} />
+                        </div>
+                    </div>
+                    <ClassList classes={matchedClasses}/>
+                </div>
                 <Footer/>
             </div>
         )

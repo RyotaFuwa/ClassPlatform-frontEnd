@@ -6,25 +6,30 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import FormControl from 'react-bootstrap/FormControl';
 import './NavBar.css';
 
-function NavBar() {
+const NavBar = props => {
     return (
-        <Navbar className="navbar-expand-sm" bg="light">
+        <Navbar className="page-navbar navbar-expand-sm light">
             <Navbar.Brand href="/">Hi, Welcome :)</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
                     <Nav.Link href="mydesk">My Desk</Nav.Link>
                     <Nav.Link href="/classroom">Class Room</Nav.Link>
-                    <Nav.Link href="/codingroom">Coding Room</Nav.Link>
+
+                    <NavDropdown title="Coding Room" id="basic-nav-dropdown">
+                        <NavDropdown.Item href="/codingroom">Coding Room</NavDropdown.Item>
+                        <NavDropdown.Item href="/questionboard">Question Board</NavDropdown.Item>
+                        <NavDropdown.Item href="/codingchallenge">Coding Challenge</NavDropdown.Item>
+                    </NavDropdown>
+
                     <NavDropdown title="Warehouse" id="basic-nav-dropdown">
-                        <NavDropdown.Item href="#action/3.2">Neural Network Architect</NavDropdown.Item>
-                        <NavDropdown.Item href="#action/3.3">Scheduler</NavDropdown.Item>
+                        <NavDropdown.Item href="#action/3.3">Neural Network Architect</NavDropdown.Item>
                         <NavDropdown.Divider/>
-                        <NavDropdown.Item href="#action/3.1">Programming Language: Kitty</NavDropdown.Item>
-                        <NavDropdown.Item href="#action/3.1">Programming Language: COOL</NavDropdown.Item>
+                        <NavDropdown.Item href="#action/3.1">UI Password</NavDropdown.Item>
+                        <NavDropdown.Divider/>
+                        <NavDropdown.Item href="#action/3.2">Programming Language: Kitty</NavDropdown.Item>
                     </NavDropdown>
                 </Nav>
                 <Nav>

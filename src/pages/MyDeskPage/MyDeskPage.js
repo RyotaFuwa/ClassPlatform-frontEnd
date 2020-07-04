@@ -1,14 +1,17 @@
-import React, {Component} from 'react';
+import React from 'react';
 import './MyDeskPage.css';
 import NavBar from "../../components/NavBar/NavBar";
 import Footer from "../../components/Footer/Footer";
 
-const MyDeskPage = props => {
+const MyDeskPage = () => {
     return (
-        <div>
+        <div className="page-app">
             <NavBar />
-            <h1>MyDeskPage</h1>
-            <Footer />
+            <div className="page-app-main">
+                <div className="w-100 h-100">My Desk</div>
+                <button className="">Button</button>
+            </div>
+            <Footer className="bg-light"/>
         </div>
     )
 }

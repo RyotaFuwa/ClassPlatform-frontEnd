@@ -3,18 +3,17 @@ import './Footer.css';
 
 function Footer() {
     return (
-        <div className="Footer">
-            <div id="separate-line"></div>
-            <div id="Footer-contents">
-                <span id="Copy-right">&copy; All contents reserved. 2020 Ryota Fuwa</span>
-                <span id="Footer-links">
+        <div className="page-footer">
+            <div className="border-top h-100 footer-grid">
+                <span className="text-dark footer-item-left">&copy; All contents reserved. 2020 Ryota Fuwa</span>
+                <span className="text-dark footer-item-right">
                     |&nbsp;
-                    <a className="Footer-button" href="/myprofile">My Profile</a> &nbsp;
+                    <a className="text-dark text-decoration-none" href="/myprofile">My Profile</a>
                     &nbsp;|&nbsp;
-                    <a className="Footer-button" href="/aboutthiswebsite">About This Website</a> &nbsp;
-                    |
-                    <a className="Footer-button" href="/">Back To Home</a> &nbsp;
-                    | &nbsp;
+                    <a className="text-dark text-decoration-none" href="/aboutthiswebsite">About This Website</a>
+                    &nbsp;|&nbsp;
+                    <a className="text-dark text-decoration-none" href="/">Back To Home</a>
+                    &nbsp;|&nbsp;
                 </span>
             </div>
         </div>

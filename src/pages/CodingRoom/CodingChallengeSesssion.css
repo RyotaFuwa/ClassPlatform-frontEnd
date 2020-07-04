@@ -1,22 +1,8 @@
-#codingSession {
-    position: relative;
-    margin-right: 35vw;
-    margin-left: 35vw;
-    margin-top: 15vh;
+.form-box-center {
+    justify-self: center;
+    align-self: center;
+    border: 1px solid #282c34;
+    border-radius: 5px;
     width: 30vw;
     height: 60vh;
-    border: 1px solid black;
-}
-
-#codingSession > h1 {
-    margin: 10% 0;
-}
-
-#codingSession > div {
-    position: relative;
-    text-align: left;
-    margin-top: 25%;
-    margin-left: 5%;
-    width: 80%;
-    height: 100%;
 }

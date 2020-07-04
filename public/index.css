@@ -1,9 +1,133 @@
-html, body, #root {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+* {
+    position: relative;
 }
 
+.button-basic {
+    border: 2px solid lightgray;
+    color: black;
+    text-decoration: none;
+}
+
+.link {
+    color: black;
+    text-decoration: none;
+}
+
+.link:hover.button-basic:hover {
+    color: dimgray;
+    text-decoration: none;
+}
+
+.page-app {
+    display: grid;
+    width: 100vw;
+    height: 100vh;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+        "navbar"
+        "page-app-main";
+}
+
+.page-app-main {
+    grid-area: page-app-main;
+}
+
+.page-normal {
+    display: grid;
+    width: 100vw;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+            "navbar"
+            "page-normal-main"
+            "footer";
+}
+
+.page-normal-main {
+    grid-area: page-normal-main;
+    min-height: 100vh;
+}
+
+.page-navbar {
+    grid-area: navbar;
+    width: 100vw;
+    height: 50px;
+}
+
+.page-footer {
+    grid-area: footer;
+    width: 100vw;
+    height: 50px;
+}
+
+.border-black {
+    border: 1px solid black;
+}
+
+.border-basic {
+    border: 2px solid lightgray;
+}
+
+.w-10 {
+    width: 10%!important;
+}
+
+.h-10 {
+    height: 10%!important;
+}
+
+.abs-right {
+    position: absolute;
+    right: 0;
+}
+
+.rel-right {
+    position: relative;
+    right: 0;
+}
+
+.abs-center {
+    position: absolute;
+    right: 0;
+}
+
+.z-top {
+    z-index: 999999;
+}
+
+.font-size-0100 {
+    font-size: 1rem;
+}
+
+.font-size-0125 {
+    font-size: 1.25rem;
+}
+
+.font-size-0150 {
+    font-size: 1.5rem;
+}
+
+.font-family-signature {
+    font-family: "Dawning of a New Day", cursive;
+}
+
+.font-family-quote {
+    font-family: "Homemade Apple";
+}
+
+.fnt-size-tiny {
+    font-size: 14px;
+}
+
+.hover-strong:hover {
+    font-weight: bold;
+}
+
+.empty-box {
+    width: 500px;
+    height: 300px;
+}
+
+.sub-1 {
+    padding: 10px 50px;
+    width: 100%;
+}

@@ -3,24 +3,31 @@
     flex: 1;
 }
 
-.Object {
+.object-2d {
     margin: 0;
     padding: 0;
     position: absolute;
 }
 
-.Earth {
-    height: 40vmin;
-    pointer-events: none;
+
+#earth {
+    height: 40vh;
     left: 40%;
     top: 30%;
 }
 
-.Moon {
-    height: 10vmin;
-    pointer-events: none;
+#earth:hover {
+    transform: scale(1.025);
+}
+
+#moon {
+    height: 10vh;
     left: 30%;
     top: 10%;
+}
+
+#moon:hover {
+    transform: scale(1.025);
 }
 
 .RubbishBin {
@@ -34,10 +41,11 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-    .Earth {
+    .spin-itself-fast {
         animation: Spin infinite 30s linear;
     }
-    .Moon {
+
+    .spin-itself-slow {
         animation: Spin infinite 50s linear;
     }
 }

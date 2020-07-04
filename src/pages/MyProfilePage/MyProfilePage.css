@@ -1,17 +1,50 @@
-.MyProfile {
-    position: relative;
+.myprofile-title {
+    background-color: midnightblue;
+    color: white;
+    margin: 0;
+    height: 40vh;
+    display: grid;
+    margin-bottom: 7vh;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 2fr 2fr 1fr 1fr;
 }
 
-.MyProfile > div {
-    width: 100vw;
-    height: 100vh;
-    border: 1px solid black;
+.myprofile-name {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    font-size: 3rem;
+    font-weight: bold;
 }
 
-.MyProfile > p {
-    text-align: right;
-    margin: 15px;
-    position: sticky;
-    top: 30px;
-    right: 0;
+.myprofile-address {
+    grid-column: 2 / 3;
+    grid-row: 3 / 4;
+    font-size: 1rem;
+}
+
+.myprofile-content {
+    display: grid;
+    grid-template-columns: 20vw 80vw;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+    "panel blocks"
+    "empty blocks";
+}
+
+.myprofile-linkpanel {
+    grid-area: panel;
+    left: 5vw;
+}
+
+.myprofile-blocks {
+    grid-area: blocks;
+    display: grid;
+    width: 100%;
+    padding: 0 1vw;
+    grid-template-columns: 100%;
+    grid-row-gap: 100px;
+}
+
+.myprofile-block {
+    display: grid;
 }

@@ -5,9 +5,9 @@ import "./OnePhrase.css";
 //TODO
 const OnePhrase = (props) => {
     return (
-        <div className="OnePhrase">
-            <h1 id="phrase">Let's Take Care Of The Environment  :)</h1>
-            <img id="signature" src={signature} alt="logo" />
+        <div className="z-top m-4 p-2">
+            <div className="font-size-0125 font-weight-bold text-light font-family-quote"> {props.phrase} </div>
+            <div className="font-size-0150 text-light text-right font-family-signature"> {props.author} </div>
         </div>
     )
 }
