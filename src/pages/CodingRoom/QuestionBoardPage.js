@@ -8,6 +8,8 @@ import ToggleButton from 'react-bootstrap/ToggleButton';
 
 import './CodingRoom.css';
 
+const fetch = require('node-fetch');
+const API_URL = 'localhost:3001/api';
 
 class QuestionBoardPage extends Component {
     SORT_TYPE = [{name: 'CATEGORY', id: 0},
@@ -38,6 +40,22 @@ class QuestionBoardPage extends Component {
         // make an API call to get list of questions available
         // Assumption: API call -> json file and contains title, url, level, category, tags
         // Design: insert category at top of tags when passing to question card
+        const list = fetch(`${API_URL}/coding/questions`, {
+            headers: {'Content-Type': 'application/json'}
+            }
+        )
+            .then(res => {
+            return res.questions.map((each, idx) =>
+                <QuestionCard key={idx} title={each.title}
+                              url={`${API_URL}/coding/questions/${each.title}`}
+                              level={each.level}
+                              tags={[each.category, ...each.tags]}
+                />
+            )
+        })
+            .catcth(rej => {console.log(rej)});
+        return list;
+        /*
         return [
             <QuestionCard key={0} title="Longest Substring Sequence"
                           url="dummy.com"
@@ -56,6 +74,8 @@ class QuestionBoardPage extends Component {
             <QuestionCard key={12} title="Topological Sorting" level={50} url="dummy.com" tags={["Graph"]}/>,
             <QuestionCard key={5} title="Quick Sort" level={60} url="dummy.com" tags={["Sort"]}/>,
         ];
+
+         */
     }
 
     sortQuestions(questions) {

@@ -1,5 +1,4 @@
 import React from 'react';
-import rp from 'request-promise';
 
 import './GraphicBoard.css'
 import moon from "../../data/moon.svg"
@@ -107,12 +106,6 @@ class SpaceBoard extends React.Component {
 
     resetUI = () => {
         this.setState(state => ({selected: [], lines: []}));
-    }
-
-    getQuoteOfDay = () => {
-        rp("https://quotes.rest/qod")
-            .then(res => this.setState({qod: JSON.parse(res)}))
-            .catch(err => console.log("qod read error"));
     }
 }
 

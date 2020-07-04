@@ -1,5 +1,6 @@
 import React from "react";
 import AceEditor from "react-ace";
+
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/mode-javascript";
@@ -10,13 +11,13 @@ import "ace-builds/src-noconflict/theme-dawn";
 import "ace-builds/src-noconflict/keybinding-vim";
 import "ace-builds/src-noconflict/keybinding-emacs";
 import "ace-builds/src-noconflict/keybinding-sublime";
+
 import "./CodeEditor.css";
-import {Dropdown, Tab, Tabs, Row} from "react-bootstrap";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import Nav from "react-bootstrap/Nav";
 import Button from "react-bootstrap/Button";
 
-const got = require('got');
+const fetch = require('node-fetch');
+
 const API_URL = 'localhost:3001/api';
 class CodeEditor extends React.Component {
     constructor(props) {
@@ -31,26 +32,37 @@ class CodeEditor extends React.Component {
             options: {
                 enableBasicAutocompletion: true,
                 enableLiveAutocompletion: true,
-                enableSnippets: false,
+                enableSnippets: true,
                 showLineNumbers: true,
                 tabSize: 4,
             },
+            tests: props.tests,
 
             text: props.initialCode ? props.initialCode : "",
+            stdOut: '',
+
+            running: false,
         }
     }
 
-    onChange = (e) => this.setState({text: e});
-    onLoad = () => {}
-    runOnClick = async () => {
-        let {body}  = await got(`${API_URL}/coding/run/${this.state.lang}`, {
-            timeout: 10000,
-            headers: {'Content-type': 'application/json'},
-            data: {files: [{name: 'main', content: this.state.text}]}
-        });
-        console.log(body);
-    };
+    onChange = (e) => {
+        this.setState({text: e});
+    }
 
+    runOnClick = (e) => {
+        fetch(`${API_URL}/coding/run/${this.state.lang}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({files: [{name: 'main', content: this.state.text}]}),
+        }).then(res => {
+            console.log(res.body);
+        }).catch(rej => {
+            console.log(rej);
+        });
+        e.target.diabled = false;
+    };
 
     render() {
         return (
@@ -77,13 +89,17 @@ class CodeEditor extends React.Component {
                 </div>
 
                 <div className="editor-run">
-                    <Button  className="w-100 btn-sm"  variant="primary" onClick={this.runOnClick}>
+                    <Button  className="w-100 btn-sm"  variant="primary" onClick={this.runOnClick} disabled={this.state.running}>
                         Run
                     </Button>
                 </div>
 
                 <div className="editor-editor border-basic">
                     <AceEditor
+                        lang={this.state.lang}
+                        theme={this.state.theme}
+                        keyboardHandler={this.state.keybinding}
+                        value={this.state.text}
                         showPrintMargin={true}
                         showGutter={true}
                         highlightActiveLine={true}
@@ -92,20 +108,15 @@ class CodeEditor extends React.Component {
                         height="100%" placeholder=""
                         fontSize={this.state.fontSize}
                         setOptions={this.state.options}
-
-                        lang={this.state.lang}
-                        theme={this.state.theme}
-                        keyboardHandler={this.state.keybinding}
-                        value={this.state.text}
                         defaultValue={this.state.text}
-
-                        onLoad={this.onLoad}
                         onChange={this.onChange}
                     />
                 </div>
 
                 <div className="editor-terminal">
-                    <div className='w-100 h-100 border-basic' />
+                    <div className='w-100 h-100 border-basic'>
+                        {this.state.stdOut}
+                    </div>
                 </div>
             </div>
         )

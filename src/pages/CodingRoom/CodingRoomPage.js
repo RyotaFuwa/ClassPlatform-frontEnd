@@ -6,6 +6,10 @@ import {Tab, TabBlock} from "../../components/Tab/Tab";
 
 import "./CodingRoom.css";
 
+//TODO: link from question card to coding room.
+//TODO: solve cross origin request. this frontEnd to backEnd.
+//TODO: code editor functionality not working.
+
 class CodingRoomPage extends React.Component {
     constructor(props) {
         super(props);
@@ -23,7 +27,6 @@ class CodingRoomPage extends React.Component {
         // get question by api call on url
     }
 
-
     render() {
         return (
             <div className="page-app">
@@ -37,6 +40,7 @@ class CodingRoomPage extends React.Component {
                     </div>
                     <div className="codingroom-editor">
                         <CodeEditor tests={[]}
+                                    initialCode='def hello_world():'
                         />
                     </div>
                     <div className="codingroom-docs">
@@ -53,6 +57,8 @@ class CodingRoomPage extends React.Component {
                                         width="100%"
                                         height="100%"
                                 />
+                            </TabBlock>
+                            <TabBlock tabName='Solution'>
                             </TabBlock>
                         </Tab>
                     </div>
