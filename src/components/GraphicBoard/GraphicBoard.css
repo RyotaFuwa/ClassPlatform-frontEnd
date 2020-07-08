@@ -10,23 +10,19 @@
 }
 
 
-#earth {
+.earth {
     height: 40vh;
     left: 40%;
     top: 30%;
 }
 
-#earth:hover {
-    transform: scale(1.025);
-}
-
-#moon {
+.moon {
     height: 10vh;
-    left: 30%;
-    top: 10%;
+    left: 85%;
+    top: 85%;
 }
 
-#moon:hover {
+.earth:hover, .moon:hover {
     transform: scale(1.025);
 }
 

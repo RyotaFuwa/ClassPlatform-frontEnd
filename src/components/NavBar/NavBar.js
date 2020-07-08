@@ -27,7 +27,7 @@ const NavBar = props => {
                     <NavDropdown title="Warehouse" id="basic-nav-dropdown">
                         <NavDropdown.Item href="#action/3.3">Neural Network Architect</NavDropdown.Item>
                         <NavDropdown.Divider/>
-                        <NavDropdown.Item href="#action/3.1">UI Password</NavDropdown.Item>
+                        <NavDropdown.Item href="/uipasswd">UI Password</NavDropdown.Item>
                         <NavDropdown.Divider/>
                         <NavDropdown.Item href="#action/3.2">Programming Language: Kitty</NavDropdown.Item>
                     </NavDropdown>

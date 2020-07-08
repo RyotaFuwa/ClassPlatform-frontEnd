@@ -4,6 +4,7 @@ import Footer from "../../components/Footer/Footer";
 import ClassList from "../../components/ClassList/ClassList";
 import SearchBox from "../../components/SearchBox/SearchBox";
 import "./ClassRoom.css";
+import Button from "react-bootstrap/Button";
 
 class ClassRoomSession extends Component {
     constructor(props) {
@@ -26,6 +27,10 @@ class ClassRoomSession extends Component {
         }
     }
 
+    createClass() {
+        console.log('nothing yet');
+    }
+
     render() {
         let matchedClasses = this.getMatchedClasses();
         return (
@@ -33,7 +38,10 @@ class ClassRoomSession extends Component {
                 <NavBar/>
                 <div className="page-normal-main">
                     <div className="classroom-header">
-                        <h2 className="classroom-title">Class Room</h2>
+                        <h2 className="classroom-title">
+                            Class Room &nbsp;
+                            {true && <Button onClick={() => this.createClass()}> + </Button>}
+                        </h2>
                         <div className="classroom-searchbox">
                             <SearchBox onChange={e => this.setState({searchSubstring: e.target.value})} />
                         </div>

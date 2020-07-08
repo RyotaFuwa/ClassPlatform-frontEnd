@@ -9,7 +9,6 @@ const HomePage = () => {
         <div>
             <div className="page-app">
                 <NavBar />
-                <SpaceBoard className="page-app-main"/>
             </div>
                 <Footer className="bg-light"/>
         </div>

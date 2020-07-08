@@ -11,6 +11,7 @@ import "ace-builds/src-noconflict/theme-dawn";
 import "ace-builds/src-noconflict/keybinding-vim";
 import "ace-builds/src-noconflict/keybinding-emacs";
 import "ace-builds/src-noconflict/keybinding-sublime";
+import "ace-builds/src-noconflict/ext-language_tools";
 
 import "./CodeEditor.css";
 import NavDropdown from "react-bootstrap/NavDropdown";
@@ -18,51 +19,42 @@ import Button from "react-bootstrap/Button";
 
 const fetch = require('node-fetch');
 
-const API_URL = 'localhost:3001/api';
+const API_URL = 'http://localhost:3001/api';
 class CodeEditor extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            width: props.width ? props.width : "100%",
-            height: props.height ? props.height : "100%",
+            width: "100%",
+            height: "100%",
             lang: "python",
             theme: "monokai",
             keybinding: "sublime",
             fontSize: 14,
-            options: {
-                enableBasicAutocompletion: true,
-                enableLiveAutocompletion: true,
-                enableSnippets: true,
-                showLineNumbers: true,
-                tabSize: 4,
-            },
+
             tests: props.tests,
-
             text: props.initialCode ? props.initialCode : "",
-            stdOut: '',
-
+            output: {stdout: '', stderr: '', error: ''},
             running: false,
         }
     }
 
-    onChange = (e) => {
-        this.setState({text: e});
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(this.state.running) {
+            fetch(`${API_URL}/coding/run/${this.state.lang}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({content: this.state.text}),
+            })
+                .then(res => res.json())
+                .then(json => {
+                this.setState({output: json, running: false})
+            }).catch(rej => {
+                this.setState({output: {stdout: '', stderr: 'API Call Failed.\n\n', error: rej}, running: false})
+            });
+        }
     }
-
-    runOnClick = (e) => {
-        fetch(`${API_URL}/coding/run/${this.state.lang}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({files: [{name: 'main', content: this.state.text}]}),
-        }).then(res => {
-            console.log(res.body);
-        }).catch(rej => {
-            console.log(rej);
-        });
-        e.target.diabled = false;
-    };
 
     render() {
         return (
@@ -82,41 +74,50 @@ class CodeEditor extends React.Component {
 
                     <NavDropdown title="Language" id="nav-dropdown">
                         <NavDropdown.Item active={this.state.lang === "python"} onClick={e => {this.setState({lang: "python"})}}>python</NavDropdown.Item>
-                        <NavDropdown.Item active={this.state.lang === "c++"} onClick={e => {this.setState({lang: "c++"})}}>c++</NavDropdown.Item>
+                        <NavDropdown.Item active={this.state.lang === "c++"} onClick={e => {this.setState({lang: "c_cpp"})}}>c++</NavDropdown.Item>
                         <NavDropdown.Item active={this.state.lang === "java"} onClick={e => {this.setState({lang: "java"})}}>java</NavDropdown.Item>
-                        <NavDropdown.Item active={this.state.lang === "javascript"} onClick={e => {this.setState({lang: "javacript"})}}>javascript</NavDropdown.Item>
+                        <NavDropdown.Item active={this.state.lang === "javascript"} onClick={e => {this.setState({lang: "javascript"})}}>javascript</NavDropdown.Item>
                     </NavDropdown>
                 </div>
 
                 <div className="editor-run">
-                    <Button  className="w-100 btn-sm"  variant="primary" onClick={this.runOnClick} disabled={this.state.running}>
+                    <Button  className="w-100 btn-sm"  variant="primary" onClick={() => {this.setState({running: true})}} disabled={this.state.running}>
                         Run
                     </Button>
                 </div>
-
                 <div className="editor-editor border-basic">
                     <AceEditor
-                        lang={this.state.lang}
-                        theme={this.state.theme}
-                        keyboardHandler={this.state.keybinding}
-                        value={this.state.text}
                         showPrintMargin={true}
                         showGutter={true}
                         highlightActiveLine={true}
+                        setOptions={{
+                            enableBasicAutocompletion: true,
+                            enableLiveAutocompletion: true,
+                            enableSnippets: true,
+                            showLineNumbers: true,
+                            tabSize: 4,
+                        }}
+                        fontSize={14}
                         name="code-editor"
                         width="100%"
-                        height="100%" placeholder=""
-                        fontSize={this.state.fontSize}
-                        setOptions={this.state.options}
+                        height="100%"
+                        placeholder=""
+
+                        mode={this.state.lang}
+                        theme={this.state.theme}
+                        keyboardHandler={this.state.keybinding}
+                        onChange={(e) => {
+                            this.setState({text: e})
+                        }}
+                        value={this.state.text}
                         defaultValue={this.state.text}
-                        onChange={this.onChange}
                     />
                 </div>
 
                 <div className="editor-terminal">
-                    <div className='w-100 h-100 border-basic'>
-                        {this.state.stdOut}
-                    </div>
+                    <pre className='editor-stdout border-basic' style={{color: this.state.output.stdout ? 'floralwhite' : 'crimson'}}>
+                        {this.state.output.stdout || (this.state.output.stderr + this.state.output.error)}
+                    </pre>
                 </div>
             </div>
         )

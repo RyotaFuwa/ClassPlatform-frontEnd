@@ -1,0 +1,20 @@
+.mydesk {
+    width: 100%;
+    height: 100%;
+    padding: 1vh 1vw;
+    display: grid;
+    grid-template-areas:
+    "none1 title none2"
+    "empty1 empty6 empty2"
+    "empty4 empty5 empty3";
+    grid-template-columns: 1fr 200px 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+}
+
+.mydesk-title {
+    grid-area: title;
+}
+
+.mydesk-empty {
+    grid-area: none;
+}

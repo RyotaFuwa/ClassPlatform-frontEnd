@@ -36,7 +36,7 @@ class MyProfilePage extends Component {
                                    iconColor='royalblue'
                                    links={['Work Experience', 'Education', 'Projects', 'Hobbies']} />
                         <div className='myprofile-blocks'>
-                            <LinkBlock title='Work Experience'>
+                            <LinkBlock title='Work Experience' line>
                                 <div className='sub-1'>
                                 <CollapibleBlock title='Empty'>
                                     <p>Hello World</p>
@@ -56,7 +56,7 @@ class MyProfilePage extends Component {
                                 </CollapibleBlock>
                                 </div>
                             </LinkBlock>
-                            <LinkBlock title='Education'>
+                            <LinkBlock title='Education' line>
                                 <CollapibleBlock title='Empty'>
                                     <p>Hello World</p>
                                 </CollapibleBlock>

@@ -20,7 +20,6 @@ class Random {
     random() {
         if(this.w != null) {
             const r = Math.abs(this.next());
-            console.log(r);
             return (r % (10000)) / 10000.0;
         } else {
             return Math.random();

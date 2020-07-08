@@ -4,11 +4,11 @@
     height: 100%;
     padding: 1vh 1vw;
     grid-gap: 1vmin;
-    grid-template-columns: 32.5% 67.5%;
+    grid-template-columns: 42.5% 57.5%;
     grid-template-rows: 50px auto;
     grid-template-areas:
     "header timerbox"
-    "docs editor"
+    "docs editor";
 }
 
 .codingroom-header {
@@ -22,15 +22,19 @@
 }
 
 .codingroom-editor {
-    grid-area: editor
+    grid-area: editor;
 }
 
 .codingroom-docs {
     grid-area: docs;
 }
 
-.codingroom-docs-content {
-    height: 100%;
+.codingroom-docs-tips {
+    display: grid;
+    margin-top: 30px;
+    padding: 0 30px;
+    grid-gap: 30px;
+    grid-template-rows: repeat(auto-fit, auto);
 }
 
 .questionboard-header {
@@ -72,3 +76,5 @@
     grid-row-gap: 200px;
     padding: 100px 25px;
 }
+
+

@@ -4,3 +4,12 @@
   text-align: center;
 }
 
+.dark {
+  background-color: #151518;
+  color: lightgray;
+}
+
+.light {
+  background-color: white;
+  color: black;
+}

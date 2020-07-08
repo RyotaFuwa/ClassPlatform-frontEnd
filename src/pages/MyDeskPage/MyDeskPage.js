@@ -7,11 +7,8 @@ const MyDeskPage = () => {
     return (
         <div className="page-app">
             <NavBar />
-            <div className="page-app-main">
-                <div className="w-100 h-100">My Desk</div>
-                <button className="">Button</button>
+            <div className="page-app-main mydesk">
             </div>
-            <Footer className="bg-light"/>
         </div>
     )
 }
