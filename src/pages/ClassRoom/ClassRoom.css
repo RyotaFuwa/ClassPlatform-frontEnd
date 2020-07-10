@@ -1,16 +1,16 @@
 .classroom-header {
-    display: grid;
-    padding: 1vh 1vw;
-    padding-bottom: 10vh;
-    align-items: center;
-    grid-template-columns: 1fr 1fr 1fr;
+  display: grid;
+  padding: 1vh 1vw;
+  padding-bottom: 10vh;
+  align-items: center;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
 .classroom-title {
-    grid-column: 1 / 2;
-    justify-self: left;
+  grid-column: 1 / 2;
+  justify-self: left;
 }
 
 .classroom-searchbox {
-    grid-column: 2 / 3;
+  grid-column: 2 / 3;
 }

@@ -1,7 +1,7 @@
 .ClassList {
-    width: 85vw;
-    margin: 2vh auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-gap: 20px;
+  width: 85vw;
+  margin: 2vh auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 20px;
 }

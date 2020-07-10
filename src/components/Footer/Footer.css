@@ -1,14 +1,14 @@
 .footer-grid {
-    display: grid;
-    align-items: center;
+  display: grid;
+  align-items: center;
 }
 
 .footer-item-left {
-    grid-column: 1/2;
-    text-align: left;
+  grid-column: 1/2;
+  text-align: left;
 }
 
 .footer-item-right {
-    grid-column: 3/4;
-    text-align: right;
+  grid-column: 3/4;
+  text-align: right;
 }

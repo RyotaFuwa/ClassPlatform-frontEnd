@@ -1,19 +1,19 @@
 .timerbox {
-    display: grid;
-    width: 275px;
-    max-height: 40px;
-    grid-gap: 0.5rem;
-    padding: 0.1rem 0.5rem;
-    align-items: center;
-    grid-template-columns: 4fr 2fr;
-    border-radius: 0.25rem;
+  display: grid;
+  width: 275px;
+  max-height: 40px;
+  grid-gap: 0.5rem;
+  padding: 0.1rem 0.5rem;
+  align-items: center;
+  grid-template-columns: 4fr 2fr;
+  border-radius: 0.25rem;
 }
 
 .timerbox-timer {
-    grid-column: 1 / 2;
-    font-size: 1.5rem;
+  grid-column: 1 / 2;
+  font-size: 1.5rem;
 }
 
 .timerbox-buttons {
-    grid-column: 2 / 3;
+  grid-column: 2 / 3;
 }

@@ -1,56 +1,56 @@
 .SpaceBoard {
-    background-color: #0f1028;
-    flex: 1;
+  background-color: #0f1028;
+  flex: 1;
 }
 
 .object-2d {
-    margin: 0;
-    padding: 0;
-    position: absolute;
+  margin: 0;
+  padding: 0;
+  position: absolute;
 }
 
 
 .earth {
-    height: 40vh;
-    left: 40%;
-    top: 30%;
+  height: 40vh;
+  left: 40%;
+  top: 30%;
 }
 
 .moon {
-    height: 10vh;
-    left: 85%;
-    top: 85%;
+  height: 10vh;
+  left: 85%;
+  top: 85%;
 }
 
 .earth:hover, .moon:hover {
-    transform: scale(1.025);
+  transform: scale(1.025);
 }
 
 .RubbishBin {
-    height: 35vmin;
-    right: 0px;
-    bottom: 0px;
+  height: 35vmin;
+  right: 0px;
+  bottom: 0px;
 }
 
 .PaperBall {
-    height: 10vmin;
+  height: 10vmin;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-    .spin-itself-fast {
-        animation: Spin infinite 30s linear;
-    }
+  .spin-itself-fast {
+    animation: Spin infinite 30s linear;
+  }
 
-    .spin-itself-slow {
-        animation: Spin infinite 50s linear;
-    }
+  .spin-itself-slow {
+    animation: Spin infinite 50s linear;
+  }
 }
 
 @keyframes Spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

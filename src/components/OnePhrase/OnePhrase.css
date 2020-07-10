@@ -1,18 +1,18 @@
 #phrase {
-    position: relative;
-    right: 0;
-    font-weight: bold;
-    color: lightgray;
+  position: relative;
+  right: 0;
+  font-weight: bold;
+  color: lightgray;
 }
 
 #authorOfPhrase {
-    text-align: right;
-    color: white;
+  text-align: right;
+  color: white;
 }
 
 #signature {
-    display: none;
-    position: relative;
-    right: 0;
-    top: 0;
+  display: none;
+  position: relative;
+  right: 0;
+  top: 0;
 }

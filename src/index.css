@@ -12,6 +12,15 @@ textarea, pre {
   tab-size: 4;
 }
 
+.bg-light {
+  background-color: white;
+
+}
+
+.bg-dark {
+  background-color: #151518;
+}
+
 .button-basic {
   border: 2px solid lightgray;
   color: black;
@@ -20,14 +29,17 @@ textarea, pre {
 
 .form {
   justify-items: left;
+  min-width: 200px;
+  width: auto;
   display: grid;
+  padding-left: 7.5%;
   grid-template-rows: repeat(auto-fit, auto);
   grid-gap: 25px;
 }
 
 .form-button {
-    height: 40px;
-    justify-self: center;
+  height: 40px;
+  justify-self: center;
 }
 
 .link {
@@ -40,14 +52,18 @@ textarea, pre {
   text-decoration: none;
 }
 
+.grid-row {
+  display: grid;
+  grid-template-rows: repeat(auto-fit, 1fr);
+}
+
+
 .page-app {
   display: grid;
   width: 100vw;
   height: 100vh;
   grid-template-rows: auto 1fr;
-  grid-template-areas:
-          "navbar"
-          "page-app-main";
+  grid-template-areas: "navbar" "page-app-main";
 }
 
 .page-app-main {
@@ -58,10 +74,7 @@ textarea, pre {
   display: grid;
   width: 100vw;
   grid-template-columns: auto 1fr auto;
-  grid-template-areas:
-          "navbar"
-          "page-normal-main"
-          "footer";
+  grid-template-areas: "navbar" "page-normal-main" "footer";
 }
 
 .page-normal-main {
@@ -91,11 +104,11 @@ textarea, pre {
 }
 
 .w-10 {
-  width: 10%!important;
+  width: 10% !important;
 }
 
 .h-10 {
-  height: 10%!important;
+  height: 10% !important;
 }
 
 .abs-right {

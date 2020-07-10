@@ -14,67 +14,67 @@ import CollapibleBlock from "../../components/CollapibleBlock/CollapibleBlock";
 //TODO: design: one page with checkpoint links like cv, projects, etc..
 //TODO: spinn
 class MyProfilePage extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            now: 0
-        }
+  constructor(props) {
+    super(props);
+    this.state = {
+      now: 0
     }
+  }
 
-    render() {
-        const txt = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-        return (
-            <div className='page-normal'>
-                <NavBar />
-                <div className='page-normal-main'>
-                    <div className='myprofile-title'>
-                        <div className='myprofile-name'>Ryota Fuwa</div>
-                        <div className='myprofile-address'>RYOTA.FUWA.1428@GMAIL.COM</div>
-                    </div>
-                    <div className='myprofile-content'>
-                        <LinkPanel className='myprofile-linkpanel'
-                                   iconColor='royalblue'
-                                   links={['Work Experience', 'Education', 'Projects', 'Hobbies']} />
-                        <div className='myprofile-blocks'>
-                            <LinkBlock title='Work Experience' line>
-                                <div className='sub-1'>
-                                <CollapibleBlock title='Empty'>
-                                    <p>Hello World</p>
-                                    <p>Hello World</p>
-                                    <p>Hello World</p>
-                                    <p>Hello World</p>
-                                    <p>Hello World</p>
-                                    <p>Hello World</p>
-                                    <p>Hello World</p>
-                                    <p>Hello World</p>
-                                    <p>Hello World</p>
-                                    <p>Hello World</p>
-                                    <p>Hello World</p>
-                                    <p>Hello World</p>
-                                    <p>Hello World</p>
-                                    <p>Hello World</p>
-                                </CollapibleBlock>
-                                </div>
-                            </LinkBlock>
-                            <LinkBlock title='Education' line>
-                                <CollapibleBlock title='Empty'>
-                                    <p>Hello World</p>
-                                </CollapibleBlock>
-                                <div className='empty-box' />
-                            </LinkBlock>
-                            <LinkBlock title='Projects'>
-                                <div className='empty-box' />
-                            </LinkBlock>
-                            <LinkBlock title='Hobbies'>
-                                <div className='empty-box' />
-                            </LinkBlock>
-                        </div>
-                    </div>
+  render() {
+    const txt = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    return (
+      <div className='page-normal'>
+        <NavBar/>
+        <div className='page-normal-main'>
+          <div className='myprofile-title'>
+            <div className='myprofile-name'>Ryota Fuwa</div>
+            <div className='myprofile-address'>RYOTA.FUWA.1428@GMAIL.COM</div>
+          </div>
+          <div className='myprofile-content'>
+            <LinkPanel className='myprofile-linkpanel'
+                       iconColor='royalblue'
+                       links={['Work Experience', 'Education', 'Projects', 'Hobbies']}/>
+            <div className='myprofile-blocks'>
+              <LinkBlock title='Work Experience' line>
+                <div className='sub-1'>
+                  <CollapibleBlock title='Empty'>
+                    <p>Hello World</p>
+                    <p>Hello World</p>
+                    <p>Hello World</p>
+                    <p>Hello World</p>
+                    <p>Hello World</p>
+                    <p>Hello World</p>
+                    <p>Hello World</p>
+                    <p>Hello World</p>
+                    <p>Hello World</p>
+                    <p>Hello World</p>
+                    <p>Hello World</p>
+                    <p>Hello World</p>
+                    <p>Hello World</p>
+                    <p>Hello World</p>
+                  </CollapibleBlock>
                 </div>
-                <Footer/>
+              </LinkBlock>
+              <LinkBlock title='Education' line>
+                <CollapibleBlock title='Empty'>
+                  <p>Hello World</p>
+                </CollapibleBlock>
+                <div className='empty-box'/>
+              </LinkBlock>
+              <LinkBlock title='Projects'>
+                <div className='empty-box'/>
+              </LinkBlock>
+              <LinkBlock title='Hobbies'>
+                <div className='empty-box'/>
+              </LinkBlock>
             </div>
-        )
-    }
+          </div>
+        </div>
+        <Footer/>
+      </div>
+    )
+  }
 }
 
 export default MyProfilePage;
