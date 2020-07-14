@@ -105,7 +105,14 @@ class CodeEditor extends React.Component {
           <Button className="w-100 btn-sm" variant="primary" onClick={() => {
             this.setState({running: true})
           }} disabled={this.state.running}>
-            Run
+            <div className='run-button'>
+              <div />
+              <div>Run</div>
+              <div>
+              {this.state.running && <span className="spinner-border spinner-border-sm text-light" role="status">
+                <span className="sr-only"/></span>}
+              </div>
+            </div>
           </Button>
         </div>
         <div className="editor-editor border-basic">

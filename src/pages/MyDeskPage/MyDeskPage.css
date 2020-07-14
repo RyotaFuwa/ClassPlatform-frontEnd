@@ -3,13 +3,22 @@
   height: 100%;
   padding: 1vh 1vw;
   display: grid;
-  grid-template-areas: "none1 title none2" "empty1 empty6 empty2" "empty4 empty5 empty3";
   grid-template-columns: 1fr 200px 1fr;
   grid-template-rows: 1fr 1fr 1fr;
+  grid-template-areas:
+    "none1 title to-do-list"
+    "empty1 empty6 empty2"
+    "empty4 empty5 empty3";
 }
 
 .mydesk-title {
   grid-area: title;
+}
+
+.mydesk-to-do-list {
+  grid-area: to-do-list;
+  justify-self: center;
+  width: 50%;
 }
 
 .mydesk-empty {

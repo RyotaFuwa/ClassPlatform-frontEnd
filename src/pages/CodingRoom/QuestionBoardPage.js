@@ -11,7 +11,7 @@ import './CodingRoom.css';
 import Button from "react-bootstrap/Button";
 import Popover from "react-bootstrap/Popover";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Form from "react-bootstrap/Form";
+
 
 const fetch = require('node-fetch');
 const API_URL = 'http://localhost:3001/api';
@@ -44,8 +44,9 @@ class QuestionBoardPage extends Component {
       questionList: [],
       searchString: '',
 
-      newQuestion: {title: '', category: '', level: '', tags: []},
       editingIdx: null,
+
+      sure: false,
     }
   }
 
@@ -55,13 +56,11 @@ class QuestionBoardPage extends Component {
     })
       .then(res => res.json())
       .then(json => {
-        let questionList = json.questions.map((each, idx) =>
-          <QuestionCard key={idx} title={titlize(each.title)} level={each.level}
-                        category={each.category} tags={each.tags}/>);
-        this.setState({questionList: questionList, sort: SORT_TYPE[0]});
+        this.setState({questionList: json.questions, sort: SORT_TYPE[0]});
       })
       .catch(rej => console.log(rej));
   }
+
 
   sortQuestions(questions) {
     switch (this.state.sort.id) {
@@ -81,21 +80,23 @@ class QuestionBoardPage extends Component {
     const misc = []; // leave misc category to push it at the end after sorting categories.
     for (let idx = 0; idx < questions.length; idx++) {
       let question = questions[idx];
-      let category = question.props.category ? question.props.category : 'Misc';
+      let category = question.category ? question.category : 'Misc';
       if (categories.has(category))
         categories.get(category).push(question);
       else
         misc.push(question);
     }
     let sortedQuestionList = [];
-    let compareInteger = (a, b) => (a.props.level >= b.props.level);
-    categories.forEach((value, key) => {
+    let compareInteger = (a, b) => (a.level >= b.level);
+    categories.forEach((questionList, key) => {
       sortedQuestionList.push(
-        <QuestionList type='vertical' key={key} title={key} questions={value.sort(compareInteger)}/>)
+        <QuestionList type='vertical' key={key} title={key} questions={
+          questionList.sort(compareInteger).map(each => <QuestionCard key={each.title} {...each} />)}/>)
     });
     if (misc.length > 0) {
       sortedQuestionList.push(
-        <QuestionList type='vertical' key='Misc' title='Misc' questions={misc.sort(compareInteger)}/>
+        <QuestionList type='vertical' key='Misc' title='Misc' questions={
+          misc.map(each => <QuestionCard key={each.title} {...each} />).sort(compareInteger)}/>
       );
     }
     return <div className='questionboard-vertical'> {sortedQuestionList} </div>;
@@ -108,7 +109,7 @@ class QuestionBoardPage extends Component {
       let question = questions[idx];
       for (let jdx = 0; jdx < questionsByLevel.length; jdx++) {
         let eachLevel = questionsByLevel[jdx];
-        if (question.props.level < eachLevel.value) {
+        if (question.level < eachLevel.value) {
           eachLevel.list.push(question);
           break
         }
@@ -116,12 +117,11 @@ class QuestionBoardPage extends Component {
     }
     return (
       <div className='questionboard-horizontal'>
-        {questionsByLevel.map((each, idx) => {
+        {questionsByLevel.map(each => {
           return <QuestionList type='horizontal' key={each.level} title={each.level}
-                               questions={
-                                 each.list.sort((a, b) => (a.props.level >= b.props.level)
-                                 )}/>
-        })}
+                               questions={each.list.sort((a, b) => (a.level >= b.level))
+                               .map(each => <QuestionCard key={each.title} {...each} />)}
+          />})}
       </div>
     )
   }
@@ -129,15 +129,17 @@ class QuestionBoardPage extends Component {
   randomSort(questions) {
     return (
       <div className='questionboard-horizontal'>
-        <QuestionList type='horizontal' key={'All'} title='All' questions={questions}/>
+        <QuestionList type='horizontal' key={'All'} title='All' questions={questions.map(
+          each => <QuestionCard key={each.title} {...each} />)}/>
       </div>
     )
   }
 
+
   createQuestion() {
     let title = titlize(document.forms['createQuestion']['title'].value);
     let category = document.forms['createQuestion']['category'].value;
-    let level = document.forms['createQuestion']['level'].value;
+    let level = Number(document.forms['createQuestion']['level'].value);
     let tags = document.forms['createQuestion']['tags'].value.split(',').map(each => each.replace(/^\s+|\s+$/g, ''));
     fetch(`${API_URL}/coding/questions/info`, {
       method: 'POST',
@@ -148,12 +150,8 @@ class QuestionBoardPage extends Component {
         //TODO: make sure status code.
         console.log(res.status);
         if (res.status === 201) {
-          this.setState(state => ({
-            questionList: [...state.questionList,
-              <QuestionCard key={state.questionList.length}
-                            title={title} level={level} category={category} tags={tags} new/>
-            ]
-          }))
+          let newQuestion =  {title: title, category: category, level: level, tags: tags, new: true};
+          this.setState(state => ({ questionList: [...state.questionList, newQuestion]}));
         }
       })
       .catch(rej => console.log(rej));
@@ -162,43 +160,35 @@ class QuestionBoardPage extends Component {
   editQuestion() {
     let title = titlize(document.forms['editQuestion']['title'].value);
     let category = document.forms['editQuestion']['category'].value;
-    let level = document.forms['editQuestion']['level'].value;
+    let level = Number(document.forms['editQuestion']['level'].value);
     let tags = document.forms['editQuestion']['tags'].value.split(',').map(each => each.replace(/^\s+|\s+$/g, ''));
-    fetch(`${API_URL}/coding/questions/info`, {
-      method: 'POST',
+    fetch(`${API_URL}/coding/questions/info/${this.state.questionList[this.state.editingIdx].title}`, {
+      method: 'PUT',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({question: {title: title, category: category, level: level, tags: tags}}),
     })
-      .then((res) => {
-        //TODO: make sure status code.
-        console.log(res.status);
+      .then(res => {
         if (res.status === 201) {
-          this.setState(state => ({
-            questionList: [...state.questionList,
-              <QuestionCard key={state.questionList.length}
-                            title={title} level={level} category={category} tags={tags} new/>
-            ]
-          }))
+          this.setState(state => {
+            state.questionList[state.editingIdx] = {title: title, category: category, level: level, tags: tags};
+            return {questionList: [...state.questionList]}});
         }
       })
       .catch(rej => console.log(rej));
   }
 
   deleteQuestion() {
-    let idx = document.forms['deleteQuestion']['title'].value;
-    let title = this.state.questionList[idx].props.title;
-    fetch(`${API_URL}/coding/questions/info/${title}`, {
+    let idx = Number(document.forms['deleteQuestion']['title'].value);
+    let title = this.state.questionList[idx].title;
+    fetch(`${API_URL}/coding/questions/${title}`, {
       method: 'DELETE',
       headers: {'Content-Type': 'application/json'},
     })
       .then((res) => {
-        //TODO: make sure status code
-        console.log(res.status);
-        if (res.status === 202) {
+        if (res.status === 200) {
           this.setState(state => {
-            let newQuestionList = [...state.questionList];
-            newQuestionList.splice(idx, 1);
-            return {questionList: newQuestionList};
+            state.questionList.splice(idx, 1);
+            return {questionList: [...state.questionList], sure: false};
           })
         }
       })
@@ -255,38 +245,38 @@ class QuestionBoardPage extends Component {
   }
 
   popOverEdit() {
-    let editingQuestion = this.state.editingIdx !== null ?
-      this.state.questionList[this.state.editingIdx] : null;
-    let title = editingQuestion ? editingQuestion.props.title : '';
-    let level = editingQuestion ? editingQuestion.props.level : -1;
-    let category = editingQuestion ? editingQuestion.props.category : '';
-    let tags = editingQuestion ? editingQuestion.props.tags : [];
+    let editingQuestion = this.state.questionList[this.state.editingIdx];
+    let title = editingQuestion ? editingQuestion.title : '';
+    let level = editingQuestion ? editingQuestion.level : -1;
+    let category = editingQuestion ? editingQuestion.category : '';
+    let tags = editingQuestion ? editingQuestion.tags : [];
 
     let categories = [...CATEGORY];
     let levels = [];
     categories.push('Misc');
     for (let idx = 0; idx < 100; idx++) {
-      levels.push(<option key={idx} selected={idx === level}>{idx + 1}</option>);
+      levels.push(idx + 1);
     }
     return (
       <Popover id="popover-basic">
-        <Popover.Title as="h3">Create a New Question</Popover.Title>
+        <Popover.Title as="h3">Edit a Question</Popover.Title>
         <Popover.Content>
           <form className='form' name='editQuestion'>
             <div>
               <div>Question To Edit</div>
               <select name='titleList' onChange={() => {
-                let idx = document.forms['editQuestion']['titleList'].value;
+                let idx = Number(document.forms['editQuestion']['titleList'].value);
                 this.setState({editingIdx: idx});
               }}>
+                <option selected />
                 {this.state.questionList.map((each, idx) => (
-                  <option key={idx} value={idx} title={each.props.title}>{each.props.title}</option>)
+                  <option key={idx} value={idx} title={each.title}>{each.title}</option>)
                 ).sort((a, b) => (a.props.title >= b.props.title))}
               </select>
             </div>
             <div>
               <div>Question Title</div>
-              <input name='title' defaultValue={title} placeholder='Not Selected'/>
+              <input name='title' defaultValue={title} placeholder='Not Selected Yet'/>
             </div>
             <div>
               <div>Category</div>
@@ -298,7 +288,9 @@ class QuestionBoardPage extends Component {
             </div>
             <div>
               <div>Difficulty</div>
-              <select name='level'> {levels} </select>
+              <select name='level'> {levels.map(each =>
+                <option key={each} selected={each === level}>{each}</option>
+              )} </select>
             </div>
             <div>
               <div>Tags</div>
@@ -317,27 +309,36 @@ class QuestionBoardPage extends Component {
   popOverDelete() {
     return (
       <Popover id="popover-basic">
-        <Popover.Title as="h3">Create a New Question</Popover.Title>
+        <Popover.Title as="h3">Delete a Question</Popover.Title>
         <Popover.Content>
           <form className='form' name='deleteQuestion'>
             <div>
               <div>Question To Delete</div>
               <select name='title'>
                 {this.state.questionList.map((each, idx) => (
-                  <option key={idx} value={idx} title={each.props.title}>{each.props.title}</option>)
+                  <option key={idx} value={idx} title={each.title}>{each.title}</option>)
                 ).sort((a, b) => (a.props.title >= b.props.title))}
               </select>
             </div>
-            <Button className='form-button' variant="danger" onClick={() => this.deleteQuestion()}>
-              Delete
+            <Button className='form-button' variant="danger" onClick={() => {
+              if(this.state.sure)
+                this.deleteQuestion();
+              else
+                this.setState({sure: true});
+            }}>
+              {this.state.sure ? 'Sure' : 'Delete'}
             </Button>
+            {this.state.sure && <Button className='form-button' variant='secondary' onClick={() =>
+              this.setState({sure: false})}> Nah </Button>}
           </form>
         </Popover.Content>
       </Popover>
     );
   }
 
+
   render() {
+    console.log(this.state.questionList);
     return (
       <div className='page-normal'>
         <NavBar/>
@@ -347,16 +348,16 @@ class QuestionBoardPage extends Component {
               Question Board &nbsp;
               {true && (
                 <span>
-                                    <OverlayTrigger trigger="click" placement="bottom" overlay={this.popOverCreate()}>
-                                        <Button variant="primary"> + </Button>
-                                    </OverlayTrigger> &nbsp;
+                  <OverlayTrigger trigger="click" placement="bottom" overlay={this.popOverCreate()}>
+                    <Button variant="primary"> + </Button>
+                  </OverlayTrigger> &nbsp;
                   <OverlayTrigger trigger="click" placement="bottom" overlay={this.popOverEdit()}>
-                                        <Button variant="success"> > </Button>
-                                    </OverlayTrigger> &nbsp;
+                    <Button variant="success"> > </Button>
+                  </OverlayTrigger> &nbsp;
                   <OverlayTrigger trigger="click" placement="bottom" overlay={this.popOverDelete()}>
-                                        <Button variant="danger"> - </Button>
-                                    </OverlayTrigger>
-                                </span>
+                    <Button variant="danger"> - </Button>
+                  </OverlayTrigger>
+                </span>
               )}
             </h2>
             <SearchBox className='questionboard-searchbox' placeholder='Search Question'
@@ -370,8 +371,7 @@ class QuestionBoardPage extends Component {
                     type='radio'
                     variant='secondary'
                     checked={each === this.state.sort}
-                    onChange={() => this.setState({sort: SORT_TYPE[each.id]})}
-                  >
+                    onChange={() => this.setState({sort: SORT_TYPE[each.id]})}>
                     {each.name}
                   </ToggleButton>
                 ))
@@ -379,7 +379,7 @@ class QuestionBoardPage extends Component {
             </div>
           </div>
           {this.sortQuestions(this.state.questionList.filter(each =>
-            (each.props.title.toLowerCase().includes(this.state.searchString.toLowerCase()))))}
+            (each.title.toLowerCase().includes(this.state.searchString.toLowerCase()))))}
         </div>
         <Footer/>
 

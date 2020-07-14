@@ -4,13 +4,12 @@ import './ClassList.css';
 
 const ClassList = props => {
   return (
-    <div className="ClassList">
-      {props.classes.map((each, idx) => (
+    <div className="classList">
+      {props.classList.map((each, idx) => (
           <Class key={idx}
                  title={each.title}
-                 imageSrc={each.imageSrc}
+                 theme={each.theme}
                  description={each.description}
-                 link={each.link}
           />
         )
       )}

@@ -22,7 +22,7 @@ class MyProfilePage extends Component {
   }
 
   render() {
-    const txt = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+
     return (
       <div className='page-normal'>
         <NavBar/>
@@ -34,38 +34,44 @@ class MyProfilePage extends Component {
           <div className='myprofile-content'>
             <LinkPanel className='myprofile-linkpanel'
                        iconColor='royalblue'
-                       links={['Work Experience', 'Education', 'Projects', 'Hobbies']}/>
+                       links={['Work Experience', 'Education', 'Project', 'Hobby']}/>
             <div className='myprofile-blocks'>
               <LinkBlock title='Work Experience' line>
                 <div className='sub-1'>
                   <CollapibleBlock title='Empty'>
-                    <p>Hello World</p>
-                    <p>Hello World</p>
-                    <p>Hello World</p>
-                    <p>Hello World</p>
-                    <p>Hello World</p>
-                    <p>Hello World</p>
-                    <p>Hello World</p>
-                    <p>Hello World</p>
-                    <p>Hello World</p>
-                    <p>Hello World</p>
-                    <p>Hello World</p>
-                    <p>Hello World</p>
-                    <p>Hello World</p>
-                    <p>Hello World</p>
                   </CollapibleBlock>
                 </div>
               </LinkBlock>
               <LinkBlock title='Education' line>
-                <CollapibleBlock title='Empty'>
-                  <p>Hello World</p>
-                </CollapibleBlock>
-                <div className='empty-box'/>
+                <div className='sub-1'>
+                  <CollapibleBlock title='Empty'>
+                    <p>Hello World</p>
+                  </CollapibleBlock>
+                </div>
               </LinkBlock>
-              <LinkBlock title='Projects'>
-                <div className='empty-box'/>
+              <LinkBlock title='Project' line>
+                <div className='sub-1 myprofile-project'>
+                  <ProjectFrame title='C++ Programming'
+                                description={['Coursework from CSC3223 at Newcastle University. ' +
+                                'These projects are meant to be practices that emcompass the basic and also advance elements of C++.',
+                                ' 1. Math Objects: Classes acting as mathematical operations. For example, instances of ' +
+                                'Polynominal class acts as polynominal expression.',
+                                ' 2. Simple 2D Board Game: Physical Simulation with chess pieces. ' +
+                                'Colliison Detection is implemented with simple shapes like circle and rectangle.']}
+                                github='https://github.com/RyotaFuwa/Cpp-Programming'
+                                tags={['C++', 'OOP', 'Gaming']}
+                  />
+                  <ProjectFrame title='Gaming Graphics' />
+                  <ProjectFrame title='Gaming Simulation' />
+                  <ProjectFrame title='Biologically Inspired Computing' />
+                  <ProjectFrame title='Simple Deep Learning Framework' />
+                  <ProjectFrame title='Programming Language Kitty' />
+                  <ProjectFrame title='UI Password' />
+                  <ProjectFrame title='RDF Website' />
+                  <ProjectFrame title='Website For Learning' />
+                </div>
               </LinkBlock>
-              <LinkBlock title='Hobbies'>
+              <LinkBlock title='Hobby' line>
                 <div className='empty-box'/>
               </LinkBlock>
             </div>

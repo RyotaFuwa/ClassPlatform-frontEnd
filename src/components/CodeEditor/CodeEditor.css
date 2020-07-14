@@ -25,6 +25,11 @@
   align-self: center;
 }
 
+.run-button {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
 .editor-terminal {
   grid-row: 3 / 4;
   grid-column: 1 / 3;

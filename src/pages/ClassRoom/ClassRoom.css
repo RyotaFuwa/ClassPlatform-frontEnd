@@ -1,4 +1,48 @@
+.classroom {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+  "header header"
+  "sidebar content";
+}
+
 .classroom-header {
+  min-height: 50vh;
+  grid-area: header;
+  color: white;
+  margin: 0;
+  display: grid;
+  grid-gap: 5px;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 30px 1fr;
+  grid-template-areas:
+  "none none1 none2"
+  "none3 title none4"
+  "none5 info none6"
+  "none7 none8 none9"
+}
+
+.classroom-title {
+  grid-area: title;
+  font-size: 2.5rem;
+}
+
+.classroom-info {
+  grid-area: info;
+}
+
+.classroom-sidebar {
+  grid-area: sidebar;
+  height: 300vh;
+}
+
+.classroom-content {
+  grid-area: content;
+}
+
+.classboard-header {
   display: grid;
   padding: 1vh 1vw;
   padding-bottom: 10vh;
@@ -6,11 +50,11 @@
   grid-template-columns: 1fr 1fr 1fr;
 }
 
-.classroom-title {
+.classboard-title {
   grid-column: 1 / 2;
   justify-self: left;
 }
 
-.classroom-searchbox {
+.classboard-searchbox {
   grid-column: 2 / 3;
 }

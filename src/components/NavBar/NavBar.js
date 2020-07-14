@@ -16,7 +16,7 @@ const NavBar = props => {
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
           <Nav.Link href="mydesk">My Desk</Nav.Link>
-          <Nav.Link href="/classroom">Class Room</Nav.Link>
+          <Nav.Link href="/classboard">Class Room</Nav.Link>
 
           <NavDropdown title="Coding Room" id="basic-nav-dropdown">
             <NavDropdown.Item href="/codingroom">Coding Room</NavDropdown.Item>

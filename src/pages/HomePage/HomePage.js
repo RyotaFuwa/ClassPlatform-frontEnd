@@ -23,7 +23,7 @@ const HomePage = () => {
           </button>
         </div>
       </div>
-      <Footer className="bg-light"/>
+      <Footer className="theme-light"/>
     </div>
   );
 }

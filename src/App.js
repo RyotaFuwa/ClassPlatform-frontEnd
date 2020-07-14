@@ -6,7 +6,8 @@ import './App.css';
 import HomePage from "./pages/HomePage/HomePage";
 import CodingRoomPage from "./pages/CodingRoom/CodingRoomPage";
 import CodingChallengeSession from "./pages/CodingRoom/CodingChallengeSession";
-import ClassRoomSession from "./pages/ClassRoom/ClassRoomSession";
+import ClassBoard from "./pages/ClassRoom/ClassBoard";
+import ClassRoomPage from "./pages/ClassRoom/ClassRoomPage";
 import MyDeskPage from "./pages/MyDeskPage/MyDeskPage";
 import MyProfilePage from "./pages/MyProfilePage/MyProfilePage";
 import AboutThisWebsitePage from "./pages/AboutThisWebsitePage/AboutThisWebsitePage";
@@ -32,7 +33,8 @@ class App extends React.Component {
               <Route exact path="/" component={HomePage}/>
               <Route path="/mydesk/" component={MyDeskPage}/>
               <Route path="/uipasswd/" component={UIPassword}/>
-              <Route path="/classroom/" component={ClassRoomSession}/>
+              <Route path="/classboard/" component={ClassBoard}/>
+              <Route path="/classroom/:class" component={ClassRoomPage}/>
               <Route path="/codingroom/:question" component={CodingRoomPage}/>
               <Route path="/codingroom/" component={CodingRoomPage}/>
               <Route path="/codingchallenge" component={CodingChallengeSession}/>

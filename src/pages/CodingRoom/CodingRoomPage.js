@@ -64,12 +64,8 @@ class CodingRoomPage extends React.Component {
   }
 
   saveQuestion() {
-    console.log(this.state.instruction);
-    console.log(this.state.helps);
-    console.log(this.state.tests);
-    console.log(this.state.pseudo);
     fetch(`${API_URL}/coding/questions/${titlize(this.state.title)}`, {
-      method: 'POST',
+      method: 'PUT',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
           question: {
@@ -88,7 +84,7 @@ class CodingRoomPage extends React.Component {
   renderInstruction() {
     if (true) {
       return (
-        <textarea className="h-100 w-100 pl-4 border-0 justify-content-start"
+        <textarea className="h-100 w-100 pl-4 border-0 justify-content-start scrollable size-fixed"
                   value={this.state.instruction}
                   onChange={txt => {
                     this.setState({instruction: txt.target.value})
@@ -97,7 +93,7 @@ class CodingRoomPage extends React.Component {
       )
     } else {
       return (
-        <pre className="h-100 w-100 pl-4">
+        <pre className="h-100 w-100 pl-4 scrollable">
                     {this.state.instruction}
                 </pre>
       )
@@ -124,7 +120,7 @@ class CodingRoomPage extends React.Component {
             {this.state.helps.map((helpTxt, idx) => (
               <div key={idx} className='w-100'>
                 <p className='w-100 text-left'>Tips {idx + 1}</p>
-                <textarea className='w-100' style={{height: '100px'}}
+                <textarea className='w-100 size-fixed' style={{height: '100px'}}
                           value={helpTxt}
                           onChange={(e) => {
                             let txt = e.target.value;
@@ -133,7 +129,7 @@ class CodingRoomPage extends React.Component {
                               return {helps: state.helps};
                             })
                           }}>
-                                </textarea>
+                </textarea>
               </div>
             ))}
           </div>
@@ -201,6 +197,7 @@ class CodingRoomPage extends React.Component {
               </TabBlock>
               <TabBlock tabName='Memo'>
                 <iframe
+                  className='border-0 scrollable'
                   src="https://docs.google.com/document/d/1nzDH0jBdTicIS5gJZ2AFN82-vD7ojb4eDQjcFEcwl1A/edit?usp=sharing&rm=demo&hl=en"
                   title={'memo'}
                   frameBorder='none'

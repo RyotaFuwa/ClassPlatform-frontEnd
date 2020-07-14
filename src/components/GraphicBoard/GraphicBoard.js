@@ -53,7 +53,7 @@ class SpaceBoard extends React.Component {
   render() {
     //const quote = this.state.qod.contents.quotes[0];
     return (
-      <div className="bg-dark h-100 w-100">
+      <div className="theme-dark h-100 w-100">
         <svg height="95vh" width="100%" xmlns="http://www.w3.org/2000/svg">
           {this.state.lines}
           {this.state.circles}
