@@ -11,7 +11,7 @@ import ClassRoomPage from "./pages/ClassRoom/ClassRoomPage";
 import MyDeskPage from "./pages/MyDeskPage/MyDeskPage";
 import MyProfilePage from "./pages/MyProfilePage/MyProfilePage";
 import AboutThisWebsitePage from "./pages/AboutThisWebsitePage/AboutThisWebsitePage";
-import QuestionBoardPage from "./pages/CodingRoom/QuestionBoardPage";
+import QuestionBoard from "./pages/CodingRoom/QuestionBoard";
 import WebsiteSetting from "./pages/WebsiteSetting/WebsiteSetting";
 
 import store from "./redux/store";
@@ -38,8 +38,8 @@ class App extends React.Component {
               <Route path="/codingroom/:question" component={CodingRoomPage}/>
               <Route path="/codingroom/" component={CodingRoomPage}/>
               <Route path="/codingchallenge" component={CodingChallengeSession}/>
-              <Route path="/questionboard" component={QuestionBoardPage}/>
-              <Route path="/questionboard/:question" component={QuestionBoardPage}/>
+              <Route path="/questionboard" component={QuestionBoard}/>
+              <Route path="/questionboard/:question" component={QuestionBoard}/>
               <Route path="/myprofile" component={MyProfilePage}/>
               <Route path="/aboutthiswebsite" component={AboutThisWebsitePage}/>
               <Route path="/admin" component={WebsiteSetting}/>

@@ -3,18 +3,37 @@ import NotFound from "../NotFound/NotFound";
 import titlize from 'titlize';
 import NavBar from "../../components/NavBar/NavBar";
 import Footer from "../../components/Footer/Footer";
-import CollapibleBlock from "../../components/CollapibleBlock/CollapibleBlock";
+import SearchBox from "../../components/SearchBox/SearchBox";
 
 class ClassRoomPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       title: props.match.params.class ? titlize(props.match.params.class) : '',
+      htmlBlocks: [], // {title, relative link to the HTMLBlock}
+      currentPage: 'https://sourceshare2218.github.io/codingcamp2020/day1.html',
+      sidebar: [], // elem: {title: <string>, numOfChildren: <int>} numOfChildren represents # of elements that belong to it from that idx.
+      candidateIdxes: [],
     }
   }
 
   componentDidMount() {
-    // load class
+    // load class info
+    // load htmlBlocks
+    // get sidebar
+  }
+
+  renderSidebar() {
+    // sidebar is nested lists of Link
+    // nest elements if numOfChildren !== 0 when nesting, attaching the outermost page link to the front of each children's title
+    // also highlight title if the candidateIdxes is true.
+    // logic depends on the order of the list so don't mess up with it.
+  }
+
+  renderPage() {
+    return (
+      <div />
+  )
   }
 
   renderClass() {
@@ -29,9 +48,18 @@ class ClassRoomPage extends Component {
             </div>
           </div>
           <div className='classroom-sidebar'>
-            <div className='w-100, h-100 border-basic' />
+            <SearchBox placeholder='Keyword...' onChange={(e) => {
+              let candidates = [];
+              this.state.sidebar.forEach((each, idx) => {
+                if(each.title.toLowerCase().contains(e.target.value.toLowerCase()))
+                  candidates.push(idx);
+              })
+            }}/>
+            {this.renderSidebar()}
           </div>
-          <div className='classroom-sidebar' />
+          <div className='classroom-page'>
+            {this.renderPage()}
+          </div>
         </div>
         <Footer />
       </div>
@@ -43,7 +71,10 @@ class ClassRoomPage extends Component {
       return <NotFound />
     }
     else {
-      return this.renderClass();
+      return <div>
+        {this.renderClass()}
+        <button onClick={() => this.getString()}>get String</button>
+      </div>
     }
   }
 }

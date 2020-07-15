@@ -43,6 +43,11 @@ textarea, pre {
   grid-gap: 25px;
 }
 
+label > div {
+  text-align: left;
+  border-bottom: 1em;
+}
+
 .form-button {
   height: 40px;
   justify-self: center;

@@ -4,4 +4,12 @@ function key(string) {
   return titlize(string).split(' ').join('');
 }
 
-export {key};
+function intRange(a, b) {
+  let out = [];
+  for(let i = a; i < b; i++) {
+    out.push(i);
+  }
+  return out;
+}
+
+export {key, intRange};

@@ -9,7 +9,7 @@ const ClassList = props => {
           <Class key={idx}
                  title={each.title}
                  theme={each.theme}
-                 description={each.description}
+                 tags={each.tags}
           />
         )
       )}

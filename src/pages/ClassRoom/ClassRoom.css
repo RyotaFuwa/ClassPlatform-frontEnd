@@ -1,11 +1,11 @@
 .classroom {
   width: 100%;
   display: grid;
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: auto 1fr;
   grid-template-rows: auto 1fr;
   grid-template-areas:
   "header header"
-  "sidebar content";
+  "sidebar page";
 }
 
 .classroom-header {
@@ -35,11 +35,16 @@
 
 .classroom-sidebar {
   grid-area: sidebar;
-  height: 300vh;
+  border-right: 1px solid lightgray;
+  margin: 5vh 0;
+  min-width: 10vw;
+  width: 350px;
 }
 
-.classroom-content {
-  grid-area: content;
+.classroom-page {
+  grid-area: page;
+  min-height: 100vh;
+  padding: 10px 10px;
 }
 
 .classboard-header {

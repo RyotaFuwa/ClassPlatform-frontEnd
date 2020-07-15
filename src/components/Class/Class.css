@@ -5,7 +5,11 @@
   border-radius: 1rem;
   text-align: center;
   display: grid;
-  grid-template-rows: auto auto 35px;
+  grid-template-rows: auto auto 100px;
+}
+
+.class:hover {
+  transform: scale(1.025);
 }
 
 .class .theme {
@@ -26,8 +30,8 @@
   color: dodgerblue;
 }
 
-.class p {
-  margin: 5% 10%;
+.class .tags {
+  font-size: 1.25em;
   overflow: scroll;
 }
 
