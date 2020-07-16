@@ -132,11 +132,6 @@ label > div {
   right: 0;
 }
 
-.abs-center {
-  position: absolute;
-  right: 0;
-}
-
 .z-top {
   z-index: 999999;
 }
