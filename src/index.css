@@ -12,6 +12,10 @@ textarea, pre {
   tab-size: 4;
 }
 
+textarea:focus, input:focus {
+  outline: none;
+}
+
 .size-fixed {
   resize: none;
 }
@@ -180,4 +184,13 @@ label > div {
 
 .scrollable::-webkit-scrollbar {
   display: none;
+}
+
+.edit-icon {
+  transition: all 0.25s;
+  transform-origin: 50% 50%;
+}
+
+.edit-icon:hover {
+  transform: scale(1.5);
 }

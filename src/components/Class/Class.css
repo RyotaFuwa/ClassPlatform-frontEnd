@@ -1,11 +1,12 @@
 .class {
-  min-height: 40vh;
+  height: 400px;
   border: 1px solid #282c34;
   background-color: white;
   border-radius: 1rem;
   text-align: center;
   display: grid;
-  grid-template-rows: auto auto 100px;
+  grid-gap: 40px;
+  grid-template-rows: 2fr 0.5fr 1.5fr;
 }
 
 .class:hover {
@@ -13,7 +14,6 @@
 }
 
 .class .theme {
-  height: 20vh;
   padding: 0;
   position: relative;
   width: 100%;

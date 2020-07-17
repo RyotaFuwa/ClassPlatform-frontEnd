@@ -1,6 +1,7 @@
 .page-blobs {
   display: grid;
   grid-gap: 20px;
+  padding: 20px 20px;
 }
 
 .sidebar {
@@ -27,7 +28,7 @@
 }
 
 .classroom-header {
-  min-height: 50vh;
+  min-height: 550px;
   grid-area: header;
   color: white;
   margin: 0;
@@ -65,8 +66,8 @@
   padding: 100px 10px;
 }
 
-.classroom-page > .title {
-  font-size: 1.5em;
+.classroom-page .class-title {
+  font-size: 2em;
   margin-bottom: 50px;
 }
 
