@@ -9,6 +9,7 @@ import LinkBlock from "../../components/LinkBlock/LinkBlock";
 import LinkPanel from "../../components/LinkPanel/LinkPanel";
 import ScrollBar from "../../components/ScrollBar/ScrollBar";
 import CollapibleBlock from "../../components/CollapibleBlock/CollapibleBlock";
+import {Page} from "../../components/Page/Page";
 
 
 //TODO: design: one page with checkpoint links like cv, projects, etc..
@@ -24,9 +25,7 @@ class MyProfilePage extends Component {
   render() {
 
     return (
-      <div className='page-normal'>
-        <NavBar/>
-        <div className='page-normal-main'>
+      <Page>
           <div className='myprofile-title'>
             <div className='myprofile-name'>Ryota Fuwa</div>
             <div className='myprofile-address'>RYOTA.FUWA.1428@GMAIL.COM</div>
@@ -38,13 +37,13 @@ class MyProfilePage extends Component {
             <div className='myprofile-blocks'>
               <LinkBlock title='Work Experience' line>
                 <div className='sub-1'>
-                  <CollapibleBlock title='Empty'>
+                  <CollapibleBlock title={<div>Empty</div>}>
                   </CollapibleBlock>
                 </div>
               </LinkBlock>
               <LinkBlock title='Education' line>
                 <div className='sub-1'>
-                  <CollapibleBlock title='Empty'>
+                  <CollapibleBlock title={<div>Empty</div>}>
                     <p>Hello World</p>
                   </CollapibleBlock>
                 </div>
@@ -76,9 +75,7 @@ class MyProfilePage extends Component {
               </LinkBlock>
             </div>
           </div>
-        </div>
-        <Footer/>
-      </div>
+      </Page>
     )
   }
 }

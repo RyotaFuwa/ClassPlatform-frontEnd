@@ -1,0 +1,445 @@
+import titlize from 'titlize';
+import React, {Component, useState} from 'react';
+import QuestionCard from '../../components/QuestionCard/QuestionCard';
+import SearchBox from '../../components/SearchBox/SearchBox';
+import QuestionList from '../../components/QuestionList/QuestionList';
+import ToggleButton from 'react-bootstrap/ToggleButton';
+
+import './CodingRoom.css';
+import Button from '@material-ui/core/Button'
+import {Create, Delete, Update} from "../../icons";
+import {Header, Page} from "../../components/Page/Page";
+import NotFound from "../../components/NotFound/NotFound";
+import Slider from "@material-ui/core/Slider";
+import Select from "react-select";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import {Link} from "react-router-dom";
+import TextField from "@material-ui/core/TextField";
+import DialogActions from "@material-ui/core/DialogActions";
+
+//TODO: Edit Forms to Dialog
+
+const nodeFetch = require('node-fetch');
+const API_URL = 'http://localhost:3001/api';
+const admin = true;
+
+const SORT_TYPE = [{name: 'CATEGORY', id: 0}, {name: 'DIFFICULTY', id: 1}, {name: 'ALL', id: 2}];
+const CATEGORY = [ 'Array', 'String', 'Heap', 'Linked List', 'Tree', 'Graph', 'Sorting', 'Dynamic Programming'];
+const DIFFICULTY_LEVEL = [{level: 'Easy', value: 25}, {level: 'Intermediate', value: 50},
+  {level: 'Hard', value: 75}, {level: 'Professional', value: Infinity}];
+
+const CreateQuestionForm = props => {
+    return (
+      <form className='form' onSubmit={e => {e.preventDefault(); props.onSubmit()}}>
+        <label>
+          <div>Title</div>
+          <input value={props.newQuestion.title} onChange={e => props.setTitle(e.target.value)} />
+        </label>
+        <label>
+          <div>Category</div>
+          <Select className="basic-single"
+                  classNamePrefix="select"
+                  isSearchable
+                  name="category"
+                  value={{label: props.newQuestion.category, value: props.newQuestion.category}}
+                  options={[...CATEGORY, 'Misc'].map(each => ({label: each, value: each}))}
+                  onChange={e => props.setCategory(e.label)} />
+        </label>
+        <label>
+          <div>Level</div>
+          <Slider style={{width: 200}}
+                  aria-labelledby="label"
+                  value={props.newQuestion.level}
+                  valueLabelDisplay='auto'
+                  onChange={(e, v) => props.setLevel(v)} />
+        </label>
+        <label>
+          <div>Tags</div>
+          <input placeholder='Comma Separated' value={props.newQuestion.tags} onChange={e => props.setTags(e.target.value)} />
+        </label>
+        <Button className='form-button' type="submit">
+          Create
+        </Button>
+      </form>
+    )
+}
+
+const EditQuestionForm = props => {
+  let questionList = props.questionList
+    .map((each, idx) => ({label: each.title, value: idx}))
+    .sort((a, b) => (a.label >= b.title));
+  return (
+    <form className='form' onSubmit={e => {e.preventDefault(); props.onSubmit()}}>
+      <label>
+      <div>Question to Edit</div>
+        <Select className="basic-single"
+                classNamePrefix="select"
+                isClearable
+                isSearchable
+                name="quesiton"
+                options={questionList}
+                onChange={e => {if(e) {props.onSelect(e.value)}}} />
+      </label>
+      <label>
+        <div>Title</div>
+        <input value={props.editingQuestion.title} onChange={e => props.setTitle(e.target.value)} />
+      </label>
+      <label>
+        <div>Category</div>
+        <Select className="basic-single"
+                classNamePrefix="select"
+                isSearchable
+                name="category"
+                value={{label: props.editingQuestion.category, value: props.editingQuestion.category}}
+                options={[...CATEGORY, 'Misc'].map(each => ({label: each, value: each}))}
+                onChange={e => props.setCategory(e.label)} />
+      </label>
+      <label>
+        <div>Level</div>
+          <Slider style={{width: 200}}
+                  value={props.editingQuestion.level}
+                  valueLabelDisplay='auto'
+                  onChange={(e, v) => props.setLevel(v)} />
+
+      </label>
+      <label>
+        <div>Tags</div>
+        <input value={props.editingQuestion.tags} placeholder='Comma Separated' onChange={e => props.setTags(e.target.value)} />
+      </label>
+
+      <Button className='form-button' type="submit">
+        Edit
+      </Button>
+    </form>
+  )
+}
+
+const DeleteQuestionForm = props => {
+  let [sure, setSure] = useState(false);
+  let questionList = props.questionList
+    .map((each, idx) => ({label: each.title, value: idx}))
+    .sort((a, b) => (a.label >= b.label));
+  return (
+    <form className='form' onSubmit={e => {
+      if(sure) {
+        e.preventDefault();
+        props.onSubmit();
+      }
+      else {
+        setSure(true);
+      }
+    }}>
+      <label>
+        <div>Question to Delete</div>
+        <Select className="basic-single"
+                classNamePrefix="select"
+                isClearable
+                isSearchable
+                name="quesiton"
+                options={questionList}
+                onChange={e => {if(e) {props.onSelect(e.value)}}} />
+      </label>
+      {!sure &&
+        <Button className='form-button' onClick={() => setSure(true)}>
+          Delete
+        </Button>
+      }
+      {sure &&
+        <span>
+          <Button className='form-button m-1'  type="submit">
+            Sure
+          </Button>
+          <Button className='form-button m-1' onClick={() => setSure(false)}>
+            Nah
+          </Button>
+        </span>
+      }
+    </form>
+  )
+}
+
+const CodingChallengeDialog = props => {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button variant='outlined' className='m-1' onClick={() => setOpen(true)}> Coding Challange </Button>
+      <Dialog fullWidth maxWidth='sm'  open={open} fullWidth>
+        <DialogTitle>Coding Challenge</DialogTitle>
+        <DialogContent>
+            <div className='m-5'>
+              <TextField autoFocus margin="dense" label="Question Code" type="name" fullWidth/>
+            </div>
+            <div className='m-5'>
+              <TextField autoFocus margin="none" label='Session Key' type="password" fullWidth/>
+            </div>
+        </DialogContent>
+
+        <DialogActions>
+          <Button className='btn-none' onClick={() => console.log('fetch question and go to coding room')}>
+            Enter
+          </Button>
+          <Button className='btn-none' onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  )
+}
+
+const GoToCodingRoom = () => <Button variant='outlined'><Link className='link' to='/codingroom'>
+    Go to Coding Room
+  </Link></Button>
+
+class CodingBoard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      sort: {name: '', id: -1},
+      questionList: [],
+      searchString: '',
+
+      popup: null,
+      challenge: false,
+      admin: true,
+
+      //new question info
+      idx: 0,
+      title: '', level: 0, category: '', tags: '', //convert it into list on submit
+    }
+  }
+
+  componentDidMount() {
+    nodeFetch(`${API_URL}/coding/questions/info`, {
+      method: 'GET',
+      headers: {'Content-Type': 'application/json'}})
+      .then(res => res.json())
+      .then(json => {
+        this.setState({questionList: json.questions, sort: SORT_TYPE[0]})})
+      .catch(rej => console.log(rej));
+  }
+
+  EditControl() {
+    return (
+      <span>
+        <span className='m-2'>
+          <Create onClick={() => this.setState(state => ({popup: state.popup === null ? 0 : null}))} />
+        </span>
+        <span className='m-2'>
+          <Update onClick={() => this.setState(state => ({popup: state.popup === null ? 1 : null}))} />
+        </span>
+        <span className='m-2'>
+          <Delete onClick={() => this.setState(state => ({popup: state.popup === null ? 2 : null}))} />
+        </span>
+      </span>
+    )
+  }
+
+  renderPopup() {
+    switch(this.state.popup) {
+      case 0:
+        return <CreateQuestionForm onSubmit={() => this.createQuestion()}
+                                   onClose={() => this.setState({popup: null})}
+                                   newQuestion={{ title: this.state.title, level: this.state.level, category: this.state.category, tags: this.state.tags}}
+                                   setTitle={title => this.setState({title: title})}
+                                   setLevel={level => this.setState({level: level})}
+                                   setCategory={category => this.setState({category: category})}
+                                   setTags={tags => this.setState({tags: tags})} />
+      case 1:
+        if(this.state.questionList.length > 0) {
+          return <EditQuestionForm questionList={this.state.questionList}
+                                   onClose={() => this.setState({popup: null})}
+                                   editingQuestion={{title: this.state.title, category: this.state.category, level: this.state.level, tags: this.state.tags}}
+                                   onSubmit={() => this.editQuestion()}
+                                   onSelect={idx => this.setState(state => ({idx: idx, ...state.questionList[idx], tags: state.questionList[idx].tags.join(',')}))}
+                                   setTitle={title => this.setState({title: title})}
+                                   setLevel={level => this.setState({level: level})}
+                                   setCategory={category => this.setState({category: category})}
+                                   setTags={tags => this.setState({tags: tags})} />
+        }
+        else {
+          return <NotFound />
+        }
+        case 2:
+          if(this.state.questionList.length) {
+            return <DeleteQuestionForm questionList={this.state.questionList}
+                                       onSubmit={() => this.deleteQuestion()}
+                                       onSelect={idx => this.setState({idx: idx})} />
+          }
+          else {
+            return <NotFound />
+          }
+      default:
+        break;
+    }
+  }
+
+  sortQuestions(questions) {
+    switch (this.state.sort.id) {
+      case 0:
+        return this.categoricalSort(questions);
+      case 1:
+        return this.levelSort(questions);
+      case 2:
+        return this.randomSort(questions);
+      default:
+        break
+    }
+  }
+
+  categoricalSort(questions) {
+    const categories = new Map(CATEGORY.map(each => [each, []]));
+    const misc = [];
+    for (let idx = 0; idx < questions.length; idx++) {
+      let question = questions[idx];
+      let category = question.category ? question.category : 'Misc';
+      if (categories.has(category)) {
+        categories.get(category).push(question);
+      }
+      else {
+        misc.push(question);
+      }
+    }
+    let sortedQuestionList = [];
+    let compareInteger = (a, b) => (a.level >= b.level);
+    categories.forEach((questionList, key) => {
+      sortedQuestionList.push(
+        <QuestionList type='vertical' key={key} title={key} questions={
+          questionList.sort(compareInteger).map(each => <QuestionCard key={each.title} {...each} />)}/>)
+    });
+    if (misc.length > 0) {
+      sortedQuestionList.push(
+        <QuestionList type='vertical' key='Misc' title='Misc' questions={
+          misc.map(each => <QuestionCard key={each.title} {...each} />).sort(compareInteger)}/>
+      );
+    }
+    return <div className='questionboard-vertical'> {sortedQuestionList} </div>;
+  }
+
+  levelSort(questions) {
+    let questionsByLevel = Array.from(DIFFICULTY_LEVEL,
+      each => ({level: each.level, value: each.value, list: []}));
+    for (let idx = 0; idx < questions.length; idx++) {
+      let question = questions[idx];
+      for (let jdx = 0; jdx < questionsByLevel.length; jdx++) {
+        let eachLevel = questionsByLevel[jdx];
+        if (question.level < eachLevel.value) {
+          eachLevel.list.push(question);
+          break
+        }
+      }
+    }
+    return (
+      <div className='questionboard-horizontal'>
+        {questionsByLevel.map(each => {
+          return <QuestionList type='horizontal' key={each.level} title={each.level}
+                               questions={each.list.sort((a, b) => (a.level >= b.level))
+                               .map(each => <QuestionCard key={each.title} {...each} />)}
+          />})}
+      </div>
+    )
+  }
+
+  randomSort(questions) {
+    return (
+      <div className='questionboard-horizontal'>
+        <QuestionList type='horizontal' key={'All'} title='All' questions={questions.map(
+          each => <QuestionCard key={each.title} {...each} />)}/>
+      </div>
+    )
+  }
+
+  createQuestion() {
+    let alreadyExist = this.state.questionList
+      .filter(each => each.title === titlize(this.state.title)).length !== 0;
+    if(alreadyExist)
+      return; //Might be ask users to override it.
+
+    let newQuestion = {title: titlize(this.state.title),
+      category: this.state.category,
+      level: this.state.level,
+      tags: this.state.tags.split(',').map(each => each.replace(/^\s+|\s+$/g, '')),
+    }
+    nodeFetch(`${API_URL}/coding/questions/info`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({question: newQuestion}),
+    })
+      .then(res => {
+        if (res.status === 201) {
+          newQuestion.new = true;
+          this.setState(state => ({ questionList: [...state.questionList, newQuestion]}));
+        }
+      })
+      .catch(rej => console.log(rej));
+  }
+
+  editQuestion() {
+    let newQuestion = {title: titlize(this.state.title),
+      category: this.state.category,
+      level: this.state.level,
+      tags: this.state.tags.split(',').map(each => each.replace(/^\s+|\s+$/g, '')),
+    }
+    nodeFetch(`${API_URL}/coding/questions/info/${this.state.questionList[this.state.idx].title}`, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({question: newQuestion}),
+    })
+      .then(res => {
+        if (res.status === 201) {
+          this.setState(state => {
+            state.questionList[state.idx] = newQuestion;
+            return {questionList: [...state.questionList]}});
+        }
+      })
+      .catch(rej => console.log(rej));
+  }
+
+  deleteQuestion() {
+    let title = this.state.questionList[this.state.idx].title;
+    nodeFetch(`${API_URL}/coding/questions/${title}`, {
+      method: 'DELETE',
+      headers: {'Content-Type': 'application/json'},
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          this.setState(state => {
+            state.questionList.splice(state.idx, 1);
+            return {questionList: [...state.questionList], sure: false};
+          })
+        }
+      })
+      .catch(rej => console.log(rej));
+  }
+
+  render() {
+    let filteredQuestionList = this.state.questionList
+      .filter(each => (each.title.toLowerCase().includes(this.state.searchString.toLowerCase())))
+
+    return (
+      <Page>
+        <Header left={<div className='title'>Coding Board {admin && this.EditControl()}</div>}
+                center={<SearchBox placeholder='Search Question'
+                                   onChange={e => this.setState({searchString: e.target.value})}/>}
+                right={<div className='codingboard-right'><GoToCodingRoom /><CodingChallengeDialog /></div>} />
+        <div className='questionboard-sortpanel'>
+          {SORT_TYPE.map(each => (
+            <ToggleButton key={each.id} className='m-1 p-2 text-center sm' type='radio'
+                          variant='secondary' checked={each === this.state.sort}
+                          onChange={() => this.setState({sort: SORT_TYPE[each.id]})}>
+              &nbsp; {each.name}
+            </ToggleButton>
+          ))}
+        </div>
+       <Dialog open={this.state.popup !== null} onClose={() => this.setState({popup: null})}>
+         {this.renderPopup()}
+       </Dialog>
+       {this.sortQuestions(filteredQuestionList)}
+      </Page>
+    )
+  }
+}
+
+export default CodingBoard;

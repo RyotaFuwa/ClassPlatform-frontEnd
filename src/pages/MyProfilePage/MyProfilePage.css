@@ -2,7 +2,7 @@
   background-color: midnightblue;
   color: white;
   margin: 0;
-  height: 40vh;
+  height: 500px;
   display: grid;
   margin-bottom: 7vh;
   grid-template-columns: 1fr 1fr 1fr;

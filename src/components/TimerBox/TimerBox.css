@@ -5,7 +5,7 @@
   grid-gap: 0.5rem;
   padding: 0.1rem 0.5rem;
   align-items: center;
-  grid-template-columns: 4fr 2fr;
+  grid-template-columns: 5fr 2fr;
   border-radius: 0.25rem;
 }
 
@@ -14,6 +14,6 @@
   font-size: 1.5rem;
 }
 
-.timerbox-buttons {
+.timerbox-ops {
   grid-column: 2 / 3;
 }

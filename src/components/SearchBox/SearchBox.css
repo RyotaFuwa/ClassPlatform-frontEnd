@@ -1,12 +1,9 @@
-.SearchBox {
-  -webkit-appearance: none;
-  appearance: none;
-  border: 1px solid black;
-  border-radius: 5px;
+.searchbox {
+  border: 1px solid lightgray;
+  border-radius: 0.25em;
   outline: none;
-  padding: 5px;
+  padding: 2px;
   width: 250px;
   line-height: 30px;
-  margin: 20px auto;
-  font-size: 1.25em;
+  font-size: 1em;
 }

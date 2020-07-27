@@ -8,23 +8,21 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import './NavBar.css';
 
+const admin = true;
+
 const NavBar = props => {
   return (
-    <Navbar className="page-navbar navbar-expand-sm light">
+    <Navbar className="navbar light">
       <Navbar.Brand href="/">Hi, Welcome :)</Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="mr-auto">
+      <Navbar.Toggle />
+      <Navbar.Collapse>
+        <Nav className='mr-auto'>
           <Nav.Link href="mydesk">My Desk</Nav.Link>
-          <Nav.Link href="/classboard">Class Room</Nav.Link>
+          <Nav.Link href="/classboard">Class Board</Nav.Link>
 
-          <NavDropdown title="Coding Room" id="basic-nav-dropdown">
-            <NavDropdown.Item href="/codingroom">Coding Room</NavDropdown.Item>
-            <NavDropdown.Item href="/questionboard">Question Board</NavDropdown.Item>
-            <NavDropdown.Item href="/codingchallenge">Coding Challenge</NavDropdown.Item>
-          </NavDropdown>
+          <Nav.Link href="/codingboard">Coding Board</Nav.Link>
 
-          <NavDropdown title="Warehouse" id="basic-nav-dropdown">
+          <NavDropdown title="Warehouse">
             <NavDropdown.Item href="#action/3.3">Neural Network Architect</NavDropdown.Item>
             <NavDropdown.Divider/>
             <NavDropdown.Item href="/uipasswd">UI Password</NavDropdown.Item>
@@ -32,22 +30,24 @@ const NavBar = props => {
             <NavDropdown.Item href="#action/3.2">Programming Language: Kitty</NavDropdown.Item>
           </NavDropdown>
 
-          {true && <Nav.Link href="admin">Setting</Nav.Link>}
+          {admin && <Nav.Link href="admin">Setting</Nav.Link>}
         </Nav>
         <Nav>
-          <Nav.Link href="#" onClick={SignUp()}>Sign Up</Nav.Link>
-          <Nav.Link href="#" onClick={LogIn()}>Log In</Nav.Link>
+          <Nav.Link href="#" onClick={e => SignUp(e)}>Sign Up</Nav.Link>
+          <Nav.Link href="#" onClick={e => LogIn(e)}>Log In</Nav.Link>
         </Nav>
       </Navbar.Collapse>
     </Navbar>
   );
 }
 
-function SignUp() {
+function SignUp(e) {
+  e.preventDefault();
   return (<div></div>)
 }
 
-function LogIn() {
+function LogIn(e) {
+  e.preventDefault();
   return (
     <Card variant="dark" style={{width: '20rem'}}>
       <Card.Body>

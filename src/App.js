@@ -4,52 +4,44 @@ import {Switch, Route, BrowserRouter} from "react-router-dom";
 import './App.css';
 
 import HomePage from "./pages/HomePage/HomePage";
-import CodingRoomPage from "./pages/CodingRoom/CodingRoomPage";
-import CodingChallengeSession from "./pages/CodingRoom/CodingChallengeSession";
+import CodingRoom from "./pages/CodingRoom/CodingRoom";
 import ClassBoard from "./pages/ClassRoom/ClassBoard";
-import ClassRoomPage from "./pages/ClassRoom/ClassRoomPage";
+import ClassRoom from "./pages/ClassRoom/ClassRoom";
 import MyDeskPage from "./pages/MyDeskPage/MyDeskPage";
 import MyProfilePage from "./pages/MyProfilePage/MyProfilePage";
 import AboutThisWebsitePage from "./pages/AboutThisWebsitePage/AboutThisWebsitePage";
-import QuestionBoard from "./pages/CodingRoom/QuestionBoard";
+import CodingBoard from "./pages/CodingRoom/CodingBoard";
 import WebsiteSetting from "./pages/WebsiteSetting/WebsiteSetting";
 
 import store from "./redux/store";
 import UIPassword from "./pages/UIPassword/UIPassword";
+import NotFound from "./components/NotFound/NotFound";
 
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  render() {
-    return (
-      <div className="App light">
-        <Provider store={store}>
-          <BrowserRouter>
-            <Switch>
-              <Route exact path="/" component={HomePage}/>
-              <Route path="/mydesk/" component={MyDeskPage}/>
-              <Route path="/uipasswd/" component={UIPassword}/>
-              <Route path="/classboard/" component={ClassBoard}/>
-              <Route path="/classroom/:class" component={ClassRoomPage}/>
-              <Route path="/codingroom/:question" component={CodingRoomPage}/>
-              <Route path="/codingroom/" component={CodingRoomPage}/>
-              <Route path="/codingchallenge" component={CodingChallengeSession}/>
-              <Route path="/questionboard" component={QuestionBoard}/>
-              <Route path="/questionboard/:question" component={QuestionBoard}/>
-              <Route path="/myprofile" component={MyProfilePage}/>
-              <Route path="/aboutthiswebsite" component={AboutThisWebsitePage}/>
-              <Route path="/admin" component={WebsiteSetting}/>
-              <Route path="/" render={() => <div>Don't have such a page</div>}/>
-            </Switch>
-          </BrowserRouter>
-        </Provider>
-      </div>
-    );
-  }
+const App = props => {
+  return (
+    <div className="App light">
+      <Provider store={store}>
+        <BrowserRouter>
+          <Switch>
+            <Route exact path="/" component={HomePage}/>
+            <Route path="/mydesk/" component={MyDeskPage}/>
+            <Route path="/uipasswd/" component={UIPassword}/>
+            <Route path="/classboard/" component={ClassBoard}/>
+            <Route path="/classroom/:class" component={ClassRoom}/>
+            <Route path="/codingroom/:question" component={CodingRoom}/>
+            <Route path="/codingroom/" component={CodingRoom}/>
+            <Route path="/codingboard" component={CodingBoard}/>
+            <Route path="/questionboard/:question" component={CodingBoard}/>
+            <Route path="/myprofile" component={MyProfilePage}/>
+            <Route path="/aboutthiswebsite" component={AboutThisWebsitePage}/>
+            <Route path="/admin" component={WebsiteSetting}/>
+            <Route path="/" render={() => <NotFound page />}/>
+          </Switch>
+        </BrowserRouter>
+      </Provider>
+    </div>
+  );
 }
 
 export default App;

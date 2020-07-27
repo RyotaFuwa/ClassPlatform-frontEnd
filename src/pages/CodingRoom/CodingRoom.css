@@ -1,30 +1,15 @@
 .codingroom {
-  display: grid;
-  width: 100%;
   height: 100%;
-  padding: 1vh 1vw;
+  display: grid;
   grid-gap: 1vmin;
-  grid-template-columns: 42.5% 57.5%;
-  grid-template-rows: 50px auto;
-  grid-template-areas: "header timerbox" "docs editor";
+  grid-template-rows: auto 1fr;
 }
 
-.codingroom-header {
-  grid-area: header;
-  justify-self: left;
-}
-
-.codingroom-timerbox {
-  grid-area: timerbox;
-  justify-self: right;
-}
-
-.codingroom-editor {
-  grid-area: editor;
-}
-
-.codingroom-docs {
-  grid-area: docs;
+.docs-editor {
+  width: 100%;
+  display: grid;
+  grid-gap: 1vmin 1vmin;
+  grid-template-columns: 40% auto;
 }
 
 .codingroom-docs-tips {
@@ -35,28 +20,8 @@
   grid-template-rows: repeat(auto-fit, auto);
 }
 
-.questionboard-header {
-  display: grid;
-  width: 100%;
-  padding: 1vh 1vw;
-  padding-bottom: 2.5vh;
-  align-items: center;
-  grid-template-columns: 1fr 1fr 1fr;
-}
-
-.questionboard-title {
-  grid-column: 1 / 2;
-  justify-self: left;
-}
-
-.questionboard-searchbox {
-  grid-column: 2 / 3;
-  justify-self: center;
-}
-
 .questionboard-sortpanel {
-  grid-column: 3 / 4;
-  justify-self: right;
+  margin-top: 100px;
   min-width: 370px;
 }
 
@@ -75,4 +40,11 @@
   padding: 100px 25px;
 }
 
+.edit-level > div {
+  padding-left: 25px;
+  font-size: 0.75em;
+}
 
+.codingboard-right {
+  width: 400px;
+}

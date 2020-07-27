@@ -3,18 +3,18 @@ import './MyDeskPage.css';
 import NavBar from "../../components/NavBar/NavBar";
 import Footer from "../../components/Footer/Footer";
 import ToDoList from "../../components/ToDoList/ToDoList";
+import {AppPage, Header} from "../../components/Page/Page";
+import UnderConstruction from "../../components/UnderConstruction/UnderConstruction";
 
 const MyDeskPage = () => {
   return (
-    <div className="page-app">
-      <NavBar/>
-      <div className="page-app-main mydesk">
-        <h2 className='mydesk-title'>My Desk</h2>
-        <div className='mydesk-to-do-list'>
+    <AppPage>
+      <Header center={<div className='title'>My Desk</div>} />
+        <div className='mydesk'>
           <ToDoList />
         </div>
-      </div>
-    </div>
+      <UnderConstruction />
+    </AppPage>
   )
 }
 

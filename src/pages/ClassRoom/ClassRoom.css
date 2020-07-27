@@ -1,6 +1,6 @@
 .page-blobs {
   display: grid;
-  grid-gap: 20px;
+  grid-gap: 10px;
   padding: 20px 20px;
 }
 
@@ -9,12 +9,29 @@
 }
 
 .sidebar-col {
-  width: 100%;
-  height: 2em;
-  font-size: 1.25em;
+  height: 1.5em;
+  font-size: 1em;
   border-radius: 0.1em;
   padding: 0 2em;
   text-align: left;
+  display: grid;
+  grid-template-columns: 3fr auto;
+}
+
+.sidebar-title {
+  width: 100%;
+  height: 100%;
+  overflow-x: scroll;
+  justify-self: left;
+  transition: all 0.25s;
+}
+
+.sidebar-ops {
+  justify-self: right;
+}
+
+.sidebar-title:hover {
+  transform: scale(1.25);
 }
 
 .classroom {
@@ -28,19 +45,20 @@
 }
 
 .classroom-header {
-  min-height: 550px;
+  min-height: 600px;
+  padding: 1vh 5vw;
+  padding-bottom: 7.5vh;
   grid-area: header;
   color: white;
   margin: 0;
   display: grid;
-  grid-gap: 5px;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 30px 1fr;
+  grid-gap: 3em;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: 50px 3rem 1fr;
   grid-template-areas:
   "none none1 none2"
   "none3 title none4"
-  "none5 info none6"
-  "none7 none8 none9"
+  "none5 info none6";
 }
 
 .classroom-title {
@@ -57,7 +75,7 @@
   border-right: 1px solid lightgray;
   margin: 5vh 0;
   min-width: 10vw;
-  width: 350px;
+  width: 300px;
 }
 
 .classroom-page {
@@ -71,19 +89,24 @@
   margin-bottom: 50px;
 }
 
-.classboard-header {
+.classboard {
+  padding-top: 200px;
+}
+
+.infopanel {
+  text-align: center;
+}
+
+.infopanel > div {
+  margin-bottom: 2rem;
+}
+
+.infopanel-duration {
   display: grid;
-  padding: 1vh 1vw;
-  padding-bottom: 10vh;
-  align-items: center;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 1em;
+  grid-template-columns: 1fr 30%;
 }
 
-.classboard-title {
-  grid-column: 1 / 2;
-  justify-self: left;
-}
-
-.classboard-searchbox {
-  grid-column: 2 / 3;
+.btn-group {
+  font-size: 1rem;
 }

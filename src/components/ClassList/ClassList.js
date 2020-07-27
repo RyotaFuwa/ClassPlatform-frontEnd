@@ -1,15 +1,14 @@
 import React, {Component} from 'react';
-import Class from "../Class/Class";
+import ClassCard from "../ClassCard/ClassCard";
 import './ClassList.css';
 
 const ClassList = props => {
   return (
     <div className="classList">
       {props.classList.map((each, idx) => (
-          <Class key={idx}
-                 title={each.title}
-                 theme={each.theme}
-                 tags={each.tags}
+          <ClassCard key={idx}
+                     title={each.title}
+                     imgURL={each.imgURL}
           />
         )
       )}

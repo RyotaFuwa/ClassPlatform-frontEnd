@@ -3,6 +3,20 @@ import Timer from "react-compound-timer";
 import "./TimerBox.css";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
+import {Play, Restart, Stop, Replay} from "../../icons";
+
+const TimerOp = props => {
+  switch(props.op) {
+    case 0:
+      return <Play onClick={props.onClick} />
+    case 1:
+      return <Stop onClick={props.onClick} />
+    case 2:
+      return <Replay onClick={props.onClick} />
+    default:
+      return <div />
+  }
+}
 
 class TimerBox extends Component {
   constructor(props) {
@@ -14,26 +28,23 @@ class TimerBox extends Component {
       onEnd: props.onEnd ? props.onEnd : () => {
       },
 
-      leftButtonTxt: props.controllable ? "start" : "stop",
+      op: props.controllable ? 0 : 1, // 0: start, 1: stop, 2: resume
     }
   }
 
-  onClickLeftButton = (e, start, stop) => {
-    if (this.state.leftButtonTxt === "start") {
-      this.setState(state => ({leftButtonTxt: "stop"}),
-        () => {
-          start(e)
-        });
-    } else if (this.state.leftButtonTxt === "stop") {
-      this.setState(state => ({leftButtonTxt: "resume"}),
-        () => {
-          stop(e)
-        });
-    } else if (this.state.leftButtonTxt === "resume") {
-      this.setState(state => ({leftButtonTxt: "stop"}),
-        () => {
-          start(e)
-        });
+  onClick = (e, start, stop) => {
+    switch(this.state.op) {
+      case 0:
+        this.setState(state => ({op: 1}), () => start(e));
+        break;
+      case 1:
+        this.setState(state => ({op: 2}), () => stop(e));
+        break;
+      case 2:
+        this.setState(state => ({op: 1}), () =>start(e));
+        break;
+      default:
+        break;
     }
   }
 
@@ -45,24 +56,10 @@ class TimerBox extends Component {
           <Timer.Minutes/> :
           <Timer.Seconds/> &nbsp;
         </div>
-        <ButtonGroup className="timerbox-buttons">
-          <Button className="btn-sm mr-1" variant="primary"
-                  onClick={e => {
-                    this.onClickLeftButton(e, start, stop);
-                  }}
-                  disabled={!this.state.controllable}>
-            {this.state.leftButtonTxt}
-          </Button>
-          <Button className="btn-sm" variant="danger"
-                  onClick={e => {
-                    this.setState(state => ({leftButtonTxt: "start"}));
-                    stop(e);
-                    reset(e);
-                  }}
-                  disabled={!this.state.controllable}>
-            Reset
-          </Button>
-        </ButtonGroup>
+        <span className="timerbox-ops">
+          <TimerOp op={this.state.op} onClick={e => this.onClick(e, start, stop)} disabled={!this.state.controllable} />
+          <Restart onClick={e => {this.setState(state => ({op: 0})); stop(e); reset(e);}} disabled={!this.state.controllable}/>
+        </span>
 
       </div>
     )
