@@ -13,7 +13,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import MenuItem from "@material-ui/core/MenuItem";
-import MessageBox from "../../components/MessageBox/MessageBox";
 
 const nodeFetch = require('node-fetch');
 const API_URL = 'http://localhost:3001/api';
@@ -177,7 +176,6 @@ const SideBarCol = props => {
 const SideBar = props => {
   return (
     <div>
-      <SearchBox placeholder='Keyword...' onChange={(e) => this.search(e.target.value.toLowerCase())} />
       <div className='sidebar' style={{fontFamily: props.style.fontFamily}}>
         {admin && <Separator onDrop={() => props.move(0)}/>}
         {props.docs.map((each, idx) => (
@@ -218,8 +216,6 @@ class ClassRoom extends Component {
 
       current: 0,
       focusIdx: null,
-      message: '',
-      messageColor: 'black',
 
       docsCache: new Map(),
     }
@@ -261,8 +257,8 @@ class ClassRoom extends Component {
         return {docs: [...state.docs], focusIdx: null}
       }, () => {
         this.updateClass({docs: this.state.docs})
-          .then(res => this.setState({message: 'Updated Successfully', messageColor: 'dodgerColor'}))
-          .catch(rej => this.setState({message: 'Update Failed', messageColor: 'crimson'}))
+          .then(res => console.log('succeeded'))
+          .catch(rej => console.log('failed'))
       })
     }
   }
@@ -273,13 +269,6 @@ class ClassRoom extends Component {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({'class': {...json}}),
     });
-  }
-
-  printSuccess(message) {
-    this.setState({message: message, messageColor: 'dodgerblue'});
-  }
-  printFail(message) {
-    this.setState({message: message, messageColor: 'crimson'});
   }
 
   updateInfo(info) {
@@ -306,12 +295,10 @@ class ClassRoom extends Component {
           .then(res => {
             if(res.status === 201)
               this.setState({docs: docs})
-            else
-              this.printFail('Creation Failed')
           })
-          .catch(() => this.printFail('Creation Failed'))
+          .catch(() => console.log('failed'))
       })
-      .catch(() => this.printFail('Creation Failed'))
+      .catch(() => console.log('failed'))
   }
 
   deleteDoc(idx) {
@@ -327,13 +314,11 @@ class ClassRoom extends Component {
             .then(res => {
               if(res.status === 201)
                 this.setState({docs: docs})
-              else
-                this.printFail('Deletion Failed')
             })
-            .catch(() => this.printFail('Deletion Failed'))
+            .catch(() => console.log('failed'))
         }
       })
-      .catch(() => this.printFail('Deletion Failed'))
+      .catch(() => console.log('failed'))
   }
 
   renderPage() {
@@ -346,7 +331,6 @@ class ClassRoom extends Component {
     this.state.docsCache.set(docId, (
       <Doc key={docId}
            classTitle={this.state.title}
-           setMessage={(txt) => this.printSuccess(txt)}
            doc={this.state.docs[this.state.current]}
            style={THEME.get(this.state.theme)}/>
     ));
@@ -380,7 +364,6 @@ class ClassRoom extends Component {
           <div className='classroom-page'>
             {this.renderPage()}
           </div>
-          {admin && <MessageBox message={this.state.message} color={this.state.messageColor} />}
         </div>
       </Page>
     )

@@ -17,7 +17,7 @@ const NavBar = props => {
       <Navbar.Toggle />
       <Navbar.Collapse>
         <Nav className='mr-auto'>
-          <Nav.Link href="mydesk">My Desk</Nav.Link>
+          <Nav.Link href="/mydesk">My Desk</Nav.Link>
           <Nav.Link href="/classboard">Class Board</Nav.Link>
 
           <Nav.Link href="/codingboard">Coding Board</Nav.Link>
@@ -30,7 +30,7 @@ const NavBar = props => {
             <NavDropdown.Item href="#action/3.2">Programming Language: Kitty</NavDropdown.Item>
           </NavDropdown>
 
-          {admin && <Nav.Link href="admin">Setting</Nav.Link>}
+          {admin && <Nav.Link href="/admin">Setting</Nav.Link>}
         </Nav>
         <Nav>
           <Nav.Link href="#" onClick={e => SignUp(e)}>Sign Up</Nav.Link>

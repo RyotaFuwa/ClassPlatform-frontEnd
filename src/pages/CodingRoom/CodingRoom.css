@@ -34,10 +34,11 @@
 
 .questionboard-vertical {
   display: grid;
-  grid-template-columns: repeat(auto-fit, 500px);
+  grid-template-columns: repeat(auto-fit, 400px);
+  justify-content: space-around;
   grid-column-gap: 50px;
   grid-row-gap: 200px;
-  padding: 100px 25px;
+  padding: 50px 25px;
 }
 
 .edit-level > div {

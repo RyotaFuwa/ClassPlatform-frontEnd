@@ -6,7 +6,7 @@ const Separator = props => {
       <div className='separator'
            onDragEnter={(e) => {
              let style = e.target.style;
-             style.height = '100px';
+             style.height = '150px';
              style.backgroundColor = '#C8C8CD';
              style.border = '3px dotted dimgray';
            }}

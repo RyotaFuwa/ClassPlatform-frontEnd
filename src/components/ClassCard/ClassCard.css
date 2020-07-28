@@ -1,5 +1,6 @@
 .class-card {
-  width: 250px;
+  width: 20vw;
+  height: auto;
   padding: 1vmin;
   border-radius: 15px;
   transition: all 0.25s;

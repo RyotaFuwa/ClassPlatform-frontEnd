@@ -25,7 +25,7 @@ const nodeFetch = require('node-fetch');
 const API_URL = 'http://localhost:3001/api';
 const admin = true;
 
-const SORT_TYPE = [{name: 'CATEGORY', id: 0}, {name: 'DIFFICULTY', id: 1}, {name: 'ALL', id: 2}];
+const SORT_TYPE = ['CATEGORY', 'DIFFICULTY', 'ALL'];
 const CATEGORY = [ 'Array', 'String', 'Heap', 'Linked List', 'Tree', 'Graph', 'Sorting', 'Dynamic Programming'];
 const DIFFICULTY_LEVEL = [{level: 'Easy', value: 25}, {level: 'Intermediate', value: 50},
   {level: 'Hard', value: 75}, {level: 'Professional', value: Infinity}];
@@ -193,11 +193,92 @@ const GoToCodingRoom = () => <Button variant='outlined'><Link className='link' t
     Go to Coding Room
   </Link></Button>
 
+const SortPanel = props => (
+  <div className='questionboard-sortpanel'>
+    {SORT_TYPE.map((each, idx) => (
+      <ToggleButton key={idx}
+                    className='m-1'
+                    type='radio'
+                    variant='secondary'
+                    checked={idx === props.sortIdx}
+                    onChange={() => props.onChange(idx)}>
+        {each}
+      </ToggleButton>
+    ))}
+  </div>
+)
+
+
+
+function categoricalSort(questions) {
+  const categories = new Map(CATEGORY.map(each => [each, []]));
+  categories.set('Misc', []);
+  for (let idx = 0; idx < questions.length; idx++) {
+    let question = questions[idx];
+    let category = question.category ? question.category : 'Misc';
+    category = categories.has(category) ? category : 'Misc';
+    categories.get(category).push(question);
+  }
+
+  let sortedQuestionList = [];
+  let compareInteger = (a, b) => (a.level >= b.level);
+  categories.forEach((questionList, key) => {
+    sortedQuestionList.push(
+      <QuestionList  key={key} title={key} type='vertical'
+                     questions={questionList.sort(compareInteger)} />)
+  });
+  return <div className='questionboard-vertical'>{sortedQuestionList}</div>;
+}
+
+function levelSort(questions) {
+  let questionsByLevel = Array.from(DIFFICULTY_LEVEL,
+    each => ({level: each.level, value: each.value, list: []}));
+  for (let idx = 0; idx < questions.length; idx++) {
+    let question = questions[idx];
+    for (let jdx = 0; jdx < questionsByLevel.length; jdx++) {
+      let eachLevel = questionsByLevel[jdx];
+      if (question.level < eachLevel.value) {
+        eachLevel.list.push(question);
+        break
+      }
+    }
+  }
+  return (
+    <div className='questionboard-horizontal'>
+      {questionsByLevel.map(each => {
+        return <QuestionList type='horizontal' key={each.level} title={each.level}
+                             questions={each.list.sort((a, b) => (a.level >= b.level))} />
+      })}
+    </div>
+  )
+}
+
+function randomSort(questions) {
+  return (
+    <div className='questionboard-horizontal'>
+      <QuestionList type='horizontal' key={'All'} title='All' questions={questions} />
+    </div>
+  )
+}
+
+const QuestionBoard = ({questionList, sortIdx}) => {
+  switch (sortIdx) {
+    case 0:
+      return categoricalSort(questionList);
+      case 1:
+        return levelSort(questionList);
+      case 2:
+        return randomSort(questionList);
+      default:
+        return <div />
+  }
+}
+
 class CodingBoard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      sort: {name: '', id: -1},
+      sortIdx: -1,
       questionList: [],
       searchString: '',
 
@@ -217,7 +298,7 @@ class CodingBoard extends Component {
       headers: {'Content-Type': 'application/json'}})
       .then(res => res.json())
       .then(json => {
-        this.setState({questionList: json.questions, sort: SORT_TYPE[0]})})
+        this.setState({questionList: json.questions, sortIdx: 0})})
       .catch(rej => console.log(rej));
   }
 
@@ -276,80 +357,6 @@ class CodingBoard extends Component {
     }
   }
 
-  sortQuestions(questions) {
-    switch (this.state.sort.id) {
-      case 0:
-        return this.categoricalSort(questions);
-      case 1:
-        return this.levelSort(questions);
-      case 2:
-        return this.randomSort(questions);
-      default:
-        break
-    }
-  }
-
-  categoricalSort(questions) {
-    const categories = new Map(CATEGORY.map(each => [each, []]));
-    const misc = [];
-    for (let idx = 0; idx < questions.length; idx++) {
-      let question = questions[idx];
-      let category = question.category ? question.category : 'Misc';
-      if (categories.has(category)) {
-        categories.get(category).push(question);
-      }
-      else {
-        misc.push(question);
-      }
-    }
-    let sortedQuestionList = [];
-    let compareInteger = (a, b) => (a.level >= b.level);
-    categories.forEach((questionList, key) => {
-      sortedQuestionList.push(
-        <QuestionList type='vertical' key={key} title={key} questions={
-          questionList.sort(compareInteger).map(each => <QuestionCard key={each.title} {...each} />)}/>)
-    });
-    if (misc.length > 0) {
-      sortedQuestionList.push(
-        <QuestionList type='vertical' key='Misc' title='Misc' questions={
-          misc.map(each => <QuestionCard key={each.title} {...each} />).sort(compareInteger)}/>
-      );
-    }
-    return <div className='questionboard-vertical'> {sortedQuestionList} </div>;
-  }
-
-  levelSort(questions) {
-    let questionsByLevel = Array.from(DIFFICULTY_LEVEL,
-      each => ({level: each.level, value: each.value, list: []}));
-    for (let idx = 0; idx < questions.length; idx++) {
-      let question = questions[idx];
-      for (let jdx = 0; jdx < questionsByLevel.length; jdx++) {
-        let eachLevel = questionsByLevel[jdx];
-        if (question.level < eachLevel.value) {
-          eachLevel.list.push(question);
-          break
-        }
-      }
-    }
-    return (
-      <div className='questionboard-horizontal'>
-        {questionsByLevel.map(each => {
-          return <QuestionList type='horizontal' key={each.level} title={each.level}
-                               questions={each.list.sort((a, b) => (a.level >= b.level))
-                               .map(each => <QuestionCard key={each.title} {...each} />)}
-          />})}
-      </div>
-    )
-  }
-
-  randomSort(questions) {
-    return (
-      <div className='questionboard-horizontal'>
-        <QuestionList type='horizontal' key={'All'} title='All' questions={questions.map(
-          each => <QuestionCard key={each.title} {...each} />)}/>
-      </div>
-    )
-  }
 
   createQuestion() {
     let alreadyExist = this.state.questionList
@@ -416,29 +423,25 @@ class CodingBoard extends Component {
 
   render() {
     let filteredQuestionList = this.state.questionList
-      .filter(each => (each.title.toLowerCase().includes(this.state.searchString.toLowerCase())))
-
+      .filter(each => (each.title.toUpperCase().includes(this.state.searchString.toUpperCase())))
+    console.log(this.state.sortIdx)
     return (
-      <Page>
-        <Header left={<div className='title'>Coding Board {admin && this.EditControl()}</div>}
-                center={<SearchBox placeholder='Search Question'
-                                   onChange={e => this.setState({searchString: e.target.value})}/>}
-                right={<div className='codingboard-right'><GoToCodingRoom /><CodingChallengeDialog /></div>} />
-        <div className='questionboard-sortpanel'>
-          {SORT_TYPE.map(each => (
-            <ToggleButton key={each.id} className='m-1 p-2 text-center sm' type='radio'
-                          variant='secondary' checked={each === this.state.sort}
-                          onChange={() => this.setState({sort: SORT_TYPE[each.id]})}>
-              &nbsp; {each.name}
-            </ToggleButton>
-          ))}
-        </div>
-       <Dialog open={this.state.popup !== null} onClose={() => this.setState({popup: null})}>
-         {this.renderPopup()}
-       </Dialog>
-       {this.sortQuestions(filteredQuestionList)}
-      </Page>
-    )
+      <>
+        <Page>
+          <Header left={<div className='title'>Coding Board {admin && this.EditControl()}</div>}
+                  center={<SearchBox placeholder='Search Question'
+                                     onChange={e => this.setState({searchString: e.target.value})}/>}
+                  right={<div className='codingboard-right'><GoToCodingRoom /><CodingChallengeDialog /></div>} />
+          <SortPanel sortIdx={this.state.sortIdx}
+                     onChange={idx => this.setState({sortIdx: idx})} />
+          <QuestionBoard questionList={filteredQuestionList} sortIdx={this.state.sortIdx} />
+        </Page>
+
+        <Dialog open={this.state.popup !== null} onClose={() => this.setState({popup: null})}>
+          {this.renderPopup()}
+        </Dialog>
+      </>
+  )
   }
 }
 
