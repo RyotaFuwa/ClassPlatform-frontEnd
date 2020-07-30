@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
 import './ToDoList.css';
-import {Button} from "react-bootstrap";
-import URIBlock from "../URIBlock/URIBlock";
 import {Create, Delete, Update} from "../../icons";
 
 class ToDoList extends Component {

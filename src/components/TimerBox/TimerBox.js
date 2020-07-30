@@ -1,8 +1,6 @@
 import React, {Component} from "react";
 import Timer from "react-compound-timer";
 import "./TimerBox.css";
-import Button from "react-bootstrap/Button";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
 import {Play, Restart, Stop, Replay} from "../../icons";
 
 const TimerOp = props => {

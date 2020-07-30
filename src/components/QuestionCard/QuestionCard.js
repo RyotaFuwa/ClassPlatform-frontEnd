@@ -1,7 +1,7 @@
 import React, {Component, useState} from 'react';
 import {Link} from 'react-router-dom';
 import './QuestionCard.css';
-import Badge from "react-bootstrap/Badge";
+import Badge from "@material-ui/core/Badge";
 import Button from "@material-ui/core/Button";
 
 function getColor(level) {

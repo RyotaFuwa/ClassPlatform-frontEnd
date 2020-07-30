@@ -1,0 +1,10 @@
+.user-popover .admin {
+  color: deeppink;
+  text-decoration: none;
+  font-weight: bolder;
+  font-family: "Tsukushi A Round Gothic", serif;
+}
+
+.user-popover .title {
+  border-bottom: 1px solid lightgray;
+}

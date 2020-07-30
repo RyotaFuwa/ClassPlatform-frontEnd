@@ -1,7 +1,5 @@
 import React, {Component, useState} from 'react';
 import './Tab.css';
-import Tabs from "react-bootstrap/Tabs";
-import Button from "@material-ui/core/Button";
 
 const Tab = props => {
   const [idx, setIdx] = useState(0);

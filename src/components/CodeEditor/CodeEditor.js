@@ -15,7 +15,7 @@ import "ace-builds/src-noconflict/ext-language_tools";
 
 import "./CodeEditor.css";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import Button from "react-bootstrap/Button";
+import Button from "@material-ui/core/Button";
 
 const fetch = require('node-fetch');
 
@@ -57,6 +57,7 @@ class CodeEditor extends React.Component {
     }
   }
 
+  //TODO: remove navDropdown and use something else.
   render() {
     return (
       <div className="editor">
@@ -102,7 +103,7 @@ class CodeEditor extends React.Component {
         </div>
 
         <div className="editor-run">
-          <Button className="w-100 btn-sm" variant="primary" onClick={() => {
+          <Button fullWidth size='small' variant='contained' color="primary" onClick={() => {
             this.setState({running: true})
           }} disabled={this.state.running}>
             <div className='run-button'>

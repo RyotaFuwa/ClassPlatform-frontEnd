@@ -24,7 +24,7 @@
   grid-template-columns: 1fr 150px;
   grid-template-rows: auto auto auto;
   grid-template-areas:
-  "title link"
+  "title link-button"
   "desc desc"
   "tags tags";
 }
@@ -35,8 +35,8 @@
   font-weight: bold;
 }
 
-.project-txt .link {
-  grid-area: link;
+.project-txt .link-button {
+  grid-area: link-button;
 }
 
 .project-txt > .desc {

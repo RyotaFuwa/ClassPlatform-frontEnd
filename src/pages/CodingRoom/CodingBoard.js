@@ -1,15 +1,14 @@
 import titlize from 'titlize';
 import React, {Component, useState} from 'react';
-import QuestionCard from '../../components/QuestionCard/QuestionCard';
 import SearchBox from '../../components/SearchBox/SearchBox';
 import QuestionList from '../../components/QuestionList/QuestionList';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 
 import './CodingRoom.css';
 import Button from '@material-ui/core/Button'
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import {Create, Delete, Update} from "../../icons";
 import {Header, Page} from "../../components/Page/Page";
-import NotFound from "../../components/NotFound/NotFound";
 import Slider from "@material-ui/core/Slider";
 import Select from "react-select";
 import Dialog from "@material-ui/core/Dialog";
@@ -222,16 +221,15 @@ const GoToCodingRoom = () => (
 
 const SortPanel = props => (
   <div className='questionboard-sortpanel'>
+    <ButtonGroup size='large' variant='text'>
     {SORT_TYPE.map((each, idx) => (
-      <ToggleButton key={idx}
-                    className='m-1'
-                    type='radio'
-                    variant='secondary'
-                    checked={idx === props.sortIdx}
-                    onChange={() => props.onChange(idx)}>
+      <Button key={idx}
+              disabled={props.sortIdx === idx}
+              onClick={() => props.onChange(idx)}>
         {each}
-      </ToggleButton>
+      </Button>
     ))}
+    </ButtonGroup>
   </div>
 )
 

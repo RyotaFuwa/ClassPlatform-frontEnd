@@ -1,9 +1,5 @@
 import React, {Component} from 'react';
 import './WebsiteSetting.css';
-import NavBar from "../../components/NavBar/NavBar";
-import Form from "react-bootstrap/Form";
-import Footer from "../../components/Footer/Footer";
-import Button from "react-bootstrap/Button";
 import {Header, Page} from "../../components/Page/Page";
 import {Delete, Update} from "../../icons";
 

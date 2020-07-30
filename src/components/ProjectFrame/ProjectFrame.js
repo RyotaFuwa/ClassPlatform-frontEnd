@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import './ProjectFrame.css';
-import CollapibleBlock from "../CollapibleBlock/CollapibleBlock";
-import Button from "react-bootstrap/Button";
-import Badge from "react-bootstrap/Badge";
+import Button from "@material-ui/core/Button";
+import Badge from "@material-ui/core/Badge";
 
 const ProjectFrame = props => {
   return (
@@ -15,9 +14,9 @@ const ProjectFrame = props => {
       </div>
       <div className="project-txt">
         <div className='title'>{props.title}</div>
-        <div className='link'>
-          <Button className='btn-sm btn-secondary' href={props.demo} disabled={!props.demo}> Demo</Button> &nbsp;
-          <Button className='btn-sm btn-secondary' href={props.github} disabled={!props.github}> Github</Button>
+        <div className='link-button'>
+          <Button size='small' variant='contained' href={props.demo} disabled={!props.demo}>Demo</Button> &nbsp;
+          <Button size='small' variant='contained' href={props.github} disabled={!props.github}>Github</Button>
         </div>
         <div className='desc'>
           {props.description ? props.description.map((each, idx) => <p key={idx}> {each}</p>) : []}

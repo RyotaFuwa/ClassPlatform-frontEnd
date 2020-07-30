@@ -22,7 +22,8 @@
 
 .questionboard-sortpanel {
   margin-top: 100px;
-  min-width: 370px;
+  display: flex;
+  justify-content: center;
 }
 
 .questionboard-horizontal {

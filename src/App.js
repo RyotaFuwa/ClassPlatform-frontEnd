@@ -18,6 +18,7 @@ import NotFound from "./components/NotFound/NotFound";
 import {auth, createNewUserIfNoMatch, firestore} from "./firebase/firebase.utils";
 
 import './App.css';
+import NavBar from "./components/NavBar/NavBar";
 
 class App extends React.Component {
   unsubscribeFromAuth = null
@@ -26,11 +27,12 @@ class App extends React.Component {
     const { setCurrentUser } = this.props;
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async user => {
       if (!user) {
+        console.log('h')
         setCurrentUser(user);
       }
       else {
+        console.log('l')
         const userRef = await createNewUserIfNoMatch(user, {admin: false});
-        //on snapchat change (i.e. fired if a new user is created)
         userRef.onSnapshot(async snapshot => {
           setCurrentUser({
             id: userRef.id,
@@ -70,4 +72,8 @@ const mapDispatchToProps = dispatch => ({
   setCurrentUser: user => dispatch(setCurrentUser(user)),
 })
 
-export default connect(null, mapDispatchToProps)(App);
+const mapStateToProps = state => ({
+  currentUser: state.user.currentUser,
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
