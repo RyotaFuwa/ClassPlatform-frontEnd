@@ -21,51 +21,59 @@ const API_URL = 'http://localhost:3001/api';
 //TODO: data structure of page and api call
 const THEME = new Map([['default', {}], ['modern', {}], ['classic', {}], ['mono', {}],]);
 
+const EditControl = props => {
+  return (
+    <span className='btn-group'>
+      <Create onClick={() => props.handleClick(0)} />
+      <Update onClick={() => props.handleClick(1)} />
+      <Delete onClick={() => props.handleClick(2)} />
+    </span>
+  )
+}
+
 const CreateClassDialog = props => {
   return (
-    <>
-      <Dialog fullWidth maxWidth='sm' open={props.open} onClose={props.onClose}>
-        <DialogTitle>Create a New Class</DialogTitle>
-        <DialogContent>
-          <div className='mb-5'>
-            Title: &nbsp;
-            <div className='ml-4'>
-              <TextField margin="dense"  type="name"
-                         value={props.cls.title}
-                         onChange={e => props.onChange({...props.cls, title: e.target.value})}
-                         fullWidth/>
-            </div>
+    <Dialog fullWidth maxWidth='sm' open={props.open} onClose={props.onClose}>
+      <DialogTitle>Create a New Class</DialogTitle>
+      <DialogContent>
+        <div className='mb-5'>
+          Title: &nbsp;
+          <div className='ml-4'>
+            <TextField margin="dense"  type="name"
+                       value={props.cls.title}
+                       onChange={e => props.onChange({...props.cls, title: e.target.value})}
+                       fullWidth/>
           </div>
-          <div className='mb-5'>
-            Tags: &nbsp;
-            <div className='m-4'>
-              <TextField label='Comma Separated'
-                         value={props.cls.tags}
-                         onChange={e => props.onChange({...props.cls, tags: e.target.value})}
-                         fullWidth />
-            </div>
+        </div>
+        <div className='mb-5'>
+          Tags: &nbsp;
+          <div className='m-4'>
+            <TextField label='Comma Separated'
+                       value={props.cls.tags}
+                       onChange={e => props.onChange({...props.cls, tags: e.target.value})}
+                       fullWidth />
           </div>
-          <div className='mb-5'>
-            Theme: &nbsp;
-            <div className='ml-4'>
-              <TextField value={props.cls.theme}
-                         onChange={e => props.onChange({...props.cls, theme: e.target.value})}
-                         select fullWidth>
-                {Array.from(THEME, ([key, value]) =>
-                  <MenuItem key={key} value={key}>
-                    {key}
-                  </MenuItem>
-                )}
-              </TextField>
-            </div>
+        </div>
+        <div className='mb-5'>
+          Theme: &nbsp;
+          <div className='ml-4'>
+            <TextField value={props.cls.theme}
+                       onChange={e => props.onChange({...props.cls, theme: e.target.value})}
+                       select fullWidth>
+              {Array.from(THEME, ([key, value]) =>
+                <MenuItem key={key} value={key}>
+                  {key}
+                </MenuItem>
+              )}
+            </TextField>
           </div>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={props.onSubmit}> Create </Button>
-          <Button onClick={props.onClose}> Cancel </Button>
-        </DialogActions>
-      </Dialog>
-    </>
+        </div>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={props.onSubmit}> Create </Button>
+        <Button onClick={props.onClose}> Cancel </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 
@@ -224,16 +232,6 @@ class ClassBoard extends Component {
       .catch(rej => console.log(rej));
   }
 
-  EditControl() {
-    return (
-      <span className='btn-group'>
-        <Create onClick={() => this.setState(state => ({popup: state.popup === null ? 0 : null}))} />
-        <Update onClick={() => this.setState(state => ({popup: state.popup === null ? 1 : null}))} />
-        <Delete onClick={() => this.setState(state => ({popup: state.popup === null ? 2 : null}))} />
-      </span>
-    )
-  }
-
   onSelect(idx) {
     let cls = this.state.classList[idx];
     let tags = cls.tags.join(', ');
@@ -248,11 +246,8 @@ class ClassBoard extends Component {
 
     let title = titlize(this.state.cls.title);
     let tags = this.state.cls.tags.split(',').map(each => each.replace(/^\s+|\s+$/g, ''));
-    let newClass = {title: title,
-      theme: this.state.cls.theme,
-      tags: tags,
-      docs: [],
-      info: {author: {name: '', email: ''}, level: '', duration: {number: 0, unit: 'None'}, description: ''}};
+    let newClass = {title: title, theme: this.state.cls.theme, tags: tags,
+      docs: [], info: {author: {name: '', email: ''}, level: '', duration: {number: 0, unit: 'None'}, description: ''}};
     nodeFetch(`${API_URL}/classes`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -304,13 +299,9 @@ class ClassBoard extends Component {
       .catch(rej => console.log(rej));
   }
 
-  render() {
-    let matchedClasses = this.state.classList.filter(each =>
-      each.title.toLowerCase().includes(this.state.searchSubstring.toLowerCase()));
+  editDialogs() {
     return (
-      <Page>
-        <Header left={<div className='title'>Class Board {this.state.admin && this.EditControl()} </div>}
-                center={<SearchBox onChange={e => this.setState({searchSubstring: e.target.value})}/>} />
+      <>
         <CreateClassDialog open={this.state.popup === 0}
                            onClose={() => this.setState({popup: null})}
                            cls={this.state.cls}
@@ -331,11 +322,26 @@ class ClassBoard extends Component {
                            cls={this.state.cls}
                            onSelect={idx => this.onSelect(idx)}
                            onSubmit={() => this.deleteClass()} />
+     </>
+    )
+  }
 
-        <div className='classboard'>
-          <ClassList classList={matchedClasses}/>
-        </div>
-      </Page>
+  render() {
+    let matchedClasses = this.state.classList.filter(each =>
+      each.title.toLowerCase().includes(this.state.searchSubstring.toLowerCase()));
+    return (
+      <>
+        <Page>
+          <Header left={(
+            <div className='title'> Class Board
+              {this.state.admin && <EditControl handleClick={idx => this.setState(state => ({popup: state.popup === null ? idx : null}))} />}
+            </div>
+          )}
+                  center={<SearchBox onChange={e => this.setState({searchSubstring: e.target.value})}/>} />
+        <ClassList classList={matchedClasses}/>
+        </Page>
+        {this.editDialogs()}
+      </>
     )
   }
 

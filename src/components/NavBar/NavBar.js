@@ -1,20 +1,21 @@
-import React from 'react';
+import React, {useState} from 'react';
+import {connect} from 'react-redux';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-// eslint-disable-next-line
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import Card from 'react-bootstrap/Card';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
 import './NavBar.css';
+import {signInWithGoogle} from "../../firebase/firebase.utils";
+import Button from "@material-ui/core/Button";
+import { auth } from '../../firebase/firebase.utils';
+import {SignUp} from "../Register/SignUp";
+import {SignIn} from "../Register/SignIn";
 
 const admin = true;
 
 const NavBar = props => {
   return (
-    <Navbar className="navbar light">
-      <Navbar.Brand href="/">Hi, Welcome :)</Navbar.Brand>
-      <Navbar.Toggle />
+    <Navbar bg='light' expand='sm'>
+      <Navbar.Brand href="/"><span className='brand'>ClassPlatform</span></Navbar.Brand>
       <Navbar.Collapse>
         <Nav className='mr-auto'>
           <Nav.Link href="/mydesk">My Desk</Nav.Link>
@@ -31,43 +32,28 @@ const NavBar = props => {
           </NavDropdown>
 
           {admin && <Nav.Link href="/admin">Setting</Nav.Link>}
+
         </Nav>
         <Nav>
-          <Nav.Link href="#" onClick={e => SignUp(e)}>Sign Up</Nav.Link>
-          <Nav.Link href="#" onClick={e => LogIn(e)}>Log In</Nav.Link>
+          {props.currentUser ?
+            <>
+              <Button>{props.currentUser.displayName}</Button>
+              <Button onClick={() => auth.signOut()}>Log Out</Button>
+            </>
+            :
+            <>
+              <SignUp />
+              <SignIn />
+            </>
+          }
         </Nav>
       </Navbar.Collapse>
     </Navbar>
   );
 }
 
-function SignUp(e) {
-  e.preventDefault();
-  return (<div></div>)
-}
+const mapStateToProps = state => ({
+  currentUser: state.user.currentUser
+})
 
-function LogIn(e) {
-  e.preventDefault();
-  return (
-    <Card variant="dark" style={{width: '20rem'}}>
-      <Card.Body>
-        <Form>
-          <Form.Group controlId="formBasicEmail">
-            <Form.Label>Email address</Form.Label>
-            <Form.Control type="email" placeholder="Enter email"/>
-          </Form.Group>
-
-          <Form.Group controlId="formBasicPassword">
-            <Form.Label>Password</Form.Label>
-            <Form.Control type="password" placeholder="Password"/>
-          </Form.Group>
-          <Button variant="secondary" type="submit">
-            Log In
-          </Button>
-        </Form>
-      </Card.Body>
-    </Card>
-  )
-}
-
-export default NavBar;
+export default connect(mapStateToProps)(NavBar);

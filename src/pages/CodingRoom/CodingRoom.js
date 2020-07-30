@@ -161,7 +161,7 @@ class CodingRoom extends React.Component {
                      onChange={(e) => this.setState({pseudo: e})}/>
         </TabBlock>
         <TabBlock tabName='Memo'>
-          <iframe className='border-0 scrollable'
+          <iframe className='border-0'
                   src="https://docs.google.com/document/d/1nzDH0jBdTicIS5gJZ2AFN82-vD7ojb4eDQjcFEcwl1A/edit?usp=sharing&rm=demo&hl=en"
                   title={'memo'}
                   frameBorder='none'

@@ -9,6 +9,8 @@
     "@testing-library/user-event": "^7.2.1",
     "ace-builds": "^1.4.11",
     "audit": "0.0.6",
+    "firebase": "^7.17.1",
+    "firebaseui": "^4.6.1",
     "node-fetch": "^2.6.0",
     "react": "^16.13.1",
     "react-ace": "^9.1.1",

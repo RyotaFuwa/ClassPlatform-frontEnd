@@ -30,12 +30,75 @@ const CATEGORY = [ 'Array', 'String', 'Heap', 'Linked List', 'Tree', 'Graph', 'S
 const DIFFICULTY_LEVEL = [{level: 'Easy', value: 25}, {level: 'Intermediate', value: 50},
   {level: 'Hard', value: 75}, {level: 'Professional', value: Infinity}];
 
-const CreateQuestionForm = props => {
+
+const EditControl = props => {
+  return (
+    <span className='btn-group'>
+      <Create onClick={() => props.handleClick(0)} />
+      <Update onClick={() => props.handleClick(1)} />
+      <Delete onClick={() => props.handleClick(2)} />
+    </span>
+  )
+}
+
+const CreateQuestionDialog = props => {
     return (
+      <Dialog open={props.open}>
+        <form className='form' onSubmit={e => {e.preventDefault(); props.onSubmit()}}>
+          <label>
+            <div>Title</div>
+            <input value={props.newQuestion.title} onChange={e => props.setTitle(e.target.value)} />
+          </label>
+          <label>
+            <div>Category</div>
+            <Select className="basic-single"
+                    classNamePrefix="select"
+                    isSearchable
+                    name="category"
+                    value={{label: props.newQuestion.category, value: props.newQuestion.category}}
+                    options={[...CATEGORY, 'Misc'].map(each => ({label: each, value: each}))}
+                    onChange={e => props.setCategory(e.label)} />
+          </label>
+          <label>
+            <div>Level</div>
+            <Slider style={{width: 200}}
+                    aria-labelledby="label"
+                    value={props.newQuestion.level}
+                    valueLabelDisplay='auto'
+                    onChange={(e, v) => props.setLevel(v)} />
+          </label>
+          <label>
+            <div>Tags</div>
+            <input placeholder='Comma Separated' value={props.newQuestion.tags} onChange={e => props.setTags(e.target.value)} />
+          </label>
+          <Button className='form-button' type="submit">
+            Create
+          </Button>
+        </form>
+      </Dialog>
+    )
+}
+
+const EditQuestionDialog = props => {
+  let questionList = props.questionList
+    .map((each, idx) => ({label: each.title, value: idx}))
+    .sort((a, b) => (a.label >= b.label));
+  return (
+    <Dialog open={props.open}>
       <form className='form' onSubmit={e => {e.preventDefault(); props.onSubmit()}}>
         <label>
+        <div>Question to Edit</div>
+          <Select className="basic-single"
+                  classNamePrefix="select"
+                  isClearable
+                  isSearchable
+                  name="quesiton"
+                  options={questionList}
+                  onChange={e => {if(e) {props.onSelect(e.value)}}} />
+        </label>
+        <label>
           <div>Title</div>
-          <input value={props.newQuestion.title} onChange={e => props.setTitle(e.target.value)} />
+          <input value={props.editingQuestion.title} onChange={e => props.setTitle(e.target.value)} />
         </label>
         <label>
           <div>Category</div>
@@ -43,120 +106,74 @@ const CreateQuestionForm = props => {
                   classNamePrefix="select"
                   isSearchable
                   name="category"
-                  value={{label: props.newQuestion.category, value: props.newQuestion.category}}
+                  value={{label: props.editingQuestion.category, value: props.editingQuestion.category}}
                   options={[...CATEGORY, 'Misc'].map(each => ({label: each, value: each}))}
                   onChange={e => props.setCategory(e.label)} />
         </label>
         <label>
           <div>Level</div>
-          <Slider style={{width: 200}}
-                  aria-labelledby="label"
-                  value={props.newQuestion.level}
-                  valueLabelDisplay='auto'
-                  onChange={(e, v) => props.setLevel(v)} />
+            <Slider style={{width: 200}}
+                    value={props.editingQuestion.level}
+                    valueLabelDisplay='auto'
+                    onChange={(e, v) => props.setLevel(v)} />
+
         </label>
         <label>
           <div>Tags</div>
-          <input placeholder='Comma Separated' value={props.newQuestion.tags} onChange={e => props.setTags(e.target.value)} />
+          <input value={props.editingQuestion.tags} placeholder='Comma Separated' onChange={e => props.setTags(e.target.value)} />
         </label>
+
         <Button className='form-button' type="submit">
-          Create
+          Edit
         </Button>
       </form>
-    )
-}
-
-const EditQuestionForm = props => {
-  let questionList = props.questionList
-    .map((each, idx) => ({label: each.title, value: idx}))
-    .sort((a, b) => (a.label >= b.title));
-  return (
-    <form className='form' onSubmit={e => {e.preventDefault(); props.onSubmit()}}>
-      <label>
-      <div>Question to Edit</div>
-        <Select className="basic-single"
-                classNamePrefix="select"
-                isClearable
-                isSearchable
-                name="quesiton"
-                options={questionList}
-                onChange={e => {if(e) {props.onSelect(e.value)}}} />
-      </label>
-      <label>
-        <div>Title</div>
-        <input value={props.editingQuestion.title} onChange={e => props.setTitle(e.target.value)} />
-      </label>
-      <label>
-        <div>Category</div>
-        <Select className="basic-single"
-                classNamePrefix="select"
-                isSearchable
-                name="category"
-                value={{label: props.editingQuestion.category, value: props.editingQuestion.category}}
-                options={[...CATEGORY, 'Misc'].map(each => ({label: each, value: each}))}
-                onChange={e => props.setCategory(e.label)} />
-      </label>
-      <label>
-        <div>Level</div>
-          <Slider style={{width: 200}}
-                  value={props.editingQuestion.level}
-                  valueLabelDisplay='auto'
-                  onChange={(e, v) => props.setLevel(v)} />
-
-      </label>
-      <label>
-        <div>Tags</div>
-        <input value={props.editingQuestion.tags} placeholder='Comma Separated' onChange={e => props.setTags(e.target.value)} />
-      </label>
-
-      <Button className='form-button' type="submit">
-        Edit
-      </Button>
-    </form>
+    </Dialog>
   )
 }
 
-const DeleteQuestionForm = props => {
+const DeleteQuestionDialog = props => {
   let [sure, setSure] = useState(false);
   let questionList = props.questionList
     .map((each, idx) => ({label: each.title, value: idx}))
     .sort((a, b) => (a.label >= b.label));
   return (
-    <form className='form' onSubmit={e => {
-      if(sure) {
-        e.preventDefault();
-        props.onSubmit();
-      }
-      else {
-        setSure(true);
-      }
-    }}>
-      <label>
-        <div>Question to Delete</div>
-        <Select className="basic-single"
-                classNamePrefix="select"
-                isClearable
-                isSearchable
-                name="quesiton"
-                options={questionList}
-                onChange={e => {if(e) {props.onSelect(e.value)}}} />
-      </label>
-      {!sure &&
-        <Button className='form-button' onClick={() => setSure(true)}>
-          Delete
-        </Button>
-      }
-      {sure &&
-        <span>
-          <Button className='form-button m-1'  type="submit">
-            Sure
+    <Dialog open={props.open} maxWidth='sm'>
+      <form className='form' onSubmit={e => {
+                                              if(sure) {
+                                              e.preventDefault();
+                                              props.onSubmit();
+                                              }
+                                              else {
+                                              setSure(true);
+                                              }
+                                              }}>
+        <label>
+          <div>Question to Delete</div>
+          <Select className="basic-single"
+                  classNamePrefix="select"
+                  isClearable
+                  isSearchable
+                  name="quesiton"
+                  options={questionList}
+                  onChange={e => {if(e) {props.onSelect(e.value)}}} />
+        </label>
+        {!sure &&
+          <Button className='form-button' onClick={() => setSure(true)}>
+            Delete
           </Button>
-          <Button className='form-button m-1' onClick={() => setSure(false)}>
-            Nah
-          </Button>
-        </span>
-      }
-    </form>
+        }
+        {sure &&
+          <span>
+            <Button className='form-button m-1'  type="submit">
+              Sure
+            </Button>
+            <Button className='form-button m-1' onClick={() => setSure(false)}>
+              Nah
+            </Button>
+          </span>
+        }
+      </form>
+    </Dialog>
   )
 }
 
@@ -165,7 +182,7 @@ const CodingChallengeDialog = props => {
   return (
     <>
       <Button variant='outlined' className='m-1' onClick={() => setOpen(true)}> Coding Challange </Button>
-      <Dialog fullWidth maxWidth='sm'  open={open} fullWidth>
+      <Dialog fullWidth maxWidth='sm' open={open} fullWidth>
         <DialogTitle>Coding Challenge</DialogTitle>
         <DialogContent>
             <div className='m-5'>
@@ -278,7 +295,7 @@ class CodingBoard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      sortIdx: -1,
+      sortIdx: 0,
       questionList: [],
       searchString: '',
 
@@ -302,61 +319,34 @@ class CodingBoard extends Component {
       .catch(rej => console.log(rej));
   }
 
-  EditControl() {
-    return (
-      <span>
-        <span className='m-2'>
-          <Create onClick={() => this.setState(state => ({popup: state.popup === null ? 0 : null}))} />
-        </span>
-        <span className='m-2'>
-          <Update onClick={() => this.setState(state => ({popup: state.popup === null ? 1 : null}))} />
-        </span>
-        <span className='m-2'>
-          <Delete onClick={() => this.setState(state => ({popup: state.popup === null ? 2 : null}))} />
-        </span>
-      </span>
-    )
+  editDialogs()  {
+        return (
+          <>
+          <CreateQuestionDialog open={this.state.popup === 0}
+                                onSubmit={() => this.createQuestion()}
+                                onClose={() => this.setState({popup: null})}
+                                newQuestion={{ title: this.state.title, level: this.state.level, category: this.state.category, tags: this.state.tags}}
+                                setTitle={title => this.setState({title: title})}
+                                setLevel={level => this.setState({level: level})}
+                                setCategory={category => this.setState({category: category})}
+                                setTags={tags => this.setState({tags: tags})} />
+          <EditQuestionDialog open={this.state.popup === 1}
+                              questionList={this.state.questionList}
+                              onClose={() => this.setState({popup: null})}
+                              editingQuestion={{title: this.state.title, category: this.state.category, level: this.state.level, tags: this.state.tags}}
+                              onSubmit={() => this.editQuestion()}
+                              onSelect={idx => this.setState(state => ({idx: idx, ...state.questionList[idx], tags: state.questionList[idx].tags.join(',')}))}
+                              setTitle={title => this.setState({title: title})}
+                              setLevel={level => this.setState({level: level})}
+                              etCategory={category => this.setState({category: category})}
+                              setTags={tags => this.setState({tags: tags})} />
+          <DeleteQuestionDialog open={this.state.popup === 1}
+                                questionList={this.state.questionList}
+                                onSubmit={() => this.deleteQuestion()}
+                                onSelect={idx => this.setState({idx: idx})} />
+          </>
+        )
   }
-
-  renderPopup() {
-    switch(this.state.popup) {
-      case 0:
-        return <CreateQuestionForm onSubmit={() => this.createQuestion()}
-                                   onClose={() => this.setState({popup: null})}
-                                   newQuestion={{ title: this.state.title, level: this.state.level, category: this.state.category, tags: this.state.tags}}
-                                   setTitle={title => this.setState({title: title})}
-                                   setLevel={level => this.setState({level: level})}
-                                   setCategory={category => this.setState({category: category})}
-                                   setTags={tags => this.setState({tags: tags})} />
-      case 1:
-        if(this.state.questionList.length > 0) {
-          return <EditQuestionForm questionList={this.state.questionList}
-                                   onClose={() => this.setState({popup: null})}
-                                   editingQuestion={{title: this.state.title, category: this.state.category, level: this.state.level, tags: this.state.tags}}
-                                   onSubmit={() => this.editQuestion()}
-                                   onSelect={idx => this.setState(state => ({idx: idx, ...state.questionList[idx], tags: state.questionList[idx].tags.join(',')}))}
-                                   setTitle={title => this.setState({title: title})}
-                                   setLevel={level => this.setState({level: level})}
-                                   setCategory={category => this.setState({category: category})}
-                                   setTags={tags => this.setState({tags: tags})} />
-        }
-        else {
-          return <NotFound />
-        }
-        case 2:
-          if(this.state.questionList.length) {
-            return <DeleteQuestionForm questionList={this.state.questionList}
-                                       onSubmit={() => this.deleteQuestion()}
-                                       onSelect={idx => this.setState({idx: idx})} />
-          }
-          else {
-            return <NotFound />
-          }
-      default:
-        break;
-    }
-  }
-
 
   createQuestion() {
     let alreadyExist = this.state.questionList
@@ -422,13 +412,20 @@ class CodingBoard extends Component {
   }
 
   render() {
+    // filter out questions.
+    // filtering is done after all data is imported locally, but it can be done assuming the amount
+    // of data is relatively small. Once it gets large, the filtering procedure should be done on backend.
     let filteredQuestionList = this.state.questionList
       .filter(each => (each.title.toUpperCase().includes(this.state.searchString.toUpperCase())))
-    console.log(this.state.sortIdx)
     return (
       <>
         <Page>
-          <Header left={<div className='title'>Coding Board {admin && this.EditControl()}</div>}
+          <Header left={(
+            <div className='title'>
+              Coding Board
+              {admin && <EditControl handleClick={idx => this.setState(state => ({popup: state.popup === null ? idx : null}))}/>}
+            </div>
+          )}
                   center={<SearchBox placeholder='Search Question'
                                      onChange={e => this.setState({searchString: e.target.value})}/>}
                   right={<div className='codingboard-right'><GoToCodingRoom /><CodingChallengeDialog /></div>} />
@@ -436,10 +433,7 @@ class CodingBoard extends Component {
                      onChange={idx => this.setState({sortIdx: idx})} />
           <QuestionBoard questionList={filteredQuestionList} sortIdx={this.state.sortIdx} />
         </Page>
-
-        <Dialog open={this.state.popup !== null} onClose={() => this.setState({popup: null})}>
-          {this.renderPopup()}
-        </Dialog>
+        {this.editDialogs()}
       </>
   )
   }

@@ -218,24 +218,15 @@ class ClassRoom extends Component {
       focusIdx: null,
 
       docsCache: new Map(),
+      loading: true,
     }
   }
 
   componentWillMount() {
     nodeFetch(`${API_URL}/classes/${this.state.title}`)
       .then(res => res.json())
-      .then(json => this.setState({...json}))
+      .then(json => this.setState({...json, loading: false}))
       .catch(rej => console.log(rej))
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    //render page
-    /*
-    if(current page in cache)
-      return current page
-    else
-      render by api call
-     */
   }
 
   setTitle(idx, title) {
@@ -275,11 +266,11 @@ class ClassRoom extends Component {
     this.updateClass({info: info})
         .then(res => {
           if(res.status === 201)
-            this.printSuccess('Info Updated');
+            console.log('succeeded')
           else
-            this.printFail('Update Failed')
+            console.log('failed')
         })
-      .catch(() => this.printFail('Update Failed'))
+        .catch(console.log('failed'))
   }
 
   createDoc() {
@@ -322,6 +313,8 @@ class ClassRoom extends Component {
   }
 
   renderPage() {
+    if(this.state.loading)
+      return <div>Page Loading...</div>
     if(this.state.docs.length === 0)
       return <NotFound inline />;
     let docId = this.state.docs[this.state.current]._id;
@@ -356,7 +349,7 @@ class ClassRoom extends Component {
                      move={idx => this.move(idx)}
                      createDoc={() => this.createDoc()}
                      deleteDoc={idx => this.deleteDoc(idx)}
-                     onUpdate={() => this.updateClass({docs: this.state.docs}).then(() => this.printSuccess('Updated')).catch(() => this.printFail('Update Failed'))}
+                     onUpdate={() => this.updateClass({docs: this.state.docs}).then(() => console.log('success')).catch(() => console.log('failed'))}
                      setTitle={(idx, title) => this.setTitle(idx, title)}
                      setCurrent={idx => this.setState({current: idx})}
                      setFocusIdx={idx => this.setState({focusIdx: idx})} />
