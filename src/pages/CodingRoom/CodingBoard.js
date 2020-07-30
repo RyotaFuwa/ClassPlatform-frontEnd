@@ -18,12 +18,12 @@ import DialogContent from "@material-ui/core/DialogContent";
 import {Link} from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
+import {connect} from "react-redux";
 
 //TODO: Edit Forms to Dialog
 
 const nodeFetch = require('node-fetch');
 const API_URL = 'http://localhost:3001/api';
-const admin = true;
 
 const SORT_TYPE = ['CATEGORY', 'DIFFICULTY', 'ALL'];
 const CATEGORY = [ 'Array', 'String', 'Heap', 'Linked List', 'Tree', 'Graph', 'Sorting', 'Dynamic Programming'];
@@ -34,9 +34,15 @@ const DIFFICULTY_LEVEL = [{level: 'Easy', value: 25}, {level: 'Intermediate', va
 const EditControl = props => {
   return (
     <span className='btn-group'>
-      <Create onClick={() => props.handleClick(0)} />
-      <Update onClick={() => props.handleClick(1)} />
-      <Delete onClick={() => props.handleClick(2)} />
+      <span className='m-1'>
+        <Create onClick={() => props.handleClick(0)} />
+      </span>
+      <span className='m-1'>
+        <Update onClick={() => props.handleClick(1)} />
+      </span>
+      <span className='m-1'>
+        <Delete onClick={() => props.handleClick(2)} />
+      </span>
     </span>
   )
 }
@@ -206,9 +212,13 @@ const CodingChallengeDialog = props => {
   )
 }
 
-const GoToCodingRoom = () => <Button variant='outlined'><Link className='link' to='/codingroom'>
-    Go to Coding Room
-  </Link></Button>
+const GoToCodingRoom = () => (
+  <Button variant='outlined'>
+    <Link className='link' to='/codingroom'>
+      Go to Coding Room
+    </Link>
+  </Button>
+)
 
 const SortPanel = props => (
   <div className='questionboard-sortpanel'>
@@ -301,7 +311,6 @@ class CodingBoard extends Component {
 
       popup: null,
       challenge: false,
-      admin: true,
 
       //new question info
       idx: 0,
@@ -417,6 +426,7 @@ class CodingBoard extends Component {
     // of data is relatively small. Once it gets large, the filtering procedure should be done on backend.
     let filteredQuestionList = this.state.questionList
       .filter(each => (each.title.toUpperCase().includes(this.state.searchString.toUpperCase())))
+    let admin = (this.props.currentUser && this.props.currentUser.admin);
     return (
       <>
         <Page>
@@ -439,4 +449,8 @@ class CodingBoard extends Component {
   }
 }
 
-export default CodingBoard;
+const mapStateToProps = state => ({
+  currentUser: state.user.currentUser,
+})
+
+export default connect(mapStateToProps)(CodingBoard);

@@ -1,0 +1,47 @@
+.questionlist-horizontal {
+  display: grid;
+  grid-template-columns: 50px 400px auto;
+  grid-template-rows: auto 1fr;
+  grid-template-areas: "line1 title line2" "empty content content";
+}
+
+
+.questionlist-title {
+  grid-area: title;
+  justify-self: left;
+  margin-bottom: 25px;
+}
+
+.questionlist-line1 {
+  grid-area: line1;
+  align-self: center;
+}
+
+.questionlist-line2 {
+  grid-area: line2;
+  align-self: center;
+}
+
+.questionlist-horizontal-content {
+  grid-area: content;
+  display: grid;
+  justify-items: left;
+  grid-gap: 20px;
+  grid-template-columns: repeat(auto-fit, 400px);
+}
+
+.questionlist-vertical {
+  display: grid;
+  max-width: 400px;
+  grid-template-columns: 400px;
+  grid-template-rows: auto 1fr;
+  grid-template-areas: "title" "content";
+}
+
+.questionlist-vertical-content {
+  grid-area: content;
+  width: 400px;
+  display: grid;
+  grid-gap: 20px;
+  grid-template-rows: repeat(auto-fill, 50px);
+}

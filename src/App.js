@@ -1,7 +1,7 @@
 import React from 'react';
-import {Provider} from "react-redux";
-import {Switch, Route, BrowserRouter} from "react-router-dom";
-import './App.css';
+import {Switch, Route} from "react-router-dom";
+import {connect} from "react-redux";
+import {setCurrentUser} from "./redux/user/user.actions";
 
 import HomePage from "./pages/HomePage/HomePage";
 import CodingRoom from "./pages/CodingRoom/CodingRoom";
@@ -13,37 +13,28 @@ import AboutThisWebsitePage from "./pages/AboutThisWebsitePage/AboutThisWebsiteP
 import CodingBoard from "./pages/CodingRoom/CodingBoard";
 import WebsiteSetting from "./pages/WebsiteSetting/WebsiteSetting";
 
-import store from "./redux/store";
 import UIPassword from "./pages/UIPassword/UIPassword";
 import NotFound from "./components/NotFound/NotFound";
 import {auth, createNewUserIfNoMatch, firestore} from "./firebase/firebase.utils";
-import NavBar from "./components/NavBar/NavBar";
 
+import './App.css';
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      currentUser: null,
-    }
-  }
-
   unsubscribeFromAuth = null
 
   componentDidMount() {
+    const { setCurrentUser } = this.props;
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async user => {
       if (!user) {
-        this.setState({currentUser: user})
+        setCurrentUser(user);
       }
       else {
         const userRef = await createNewUserIfNoMatch(user, {admin: false});
         //on snapchat change (i.e. fired if a new user is created)
         userRef.onSnapshot(async snapshot => {
-          this.setState({
-            currentUser: {
-              id: userRef.id,
-              ...snapshot.data(),
-            }
+          setCurrentUser({
+            id: userRef.id,
+            ...snapshot.data(),
           })
         })
       }
@@ -55,31 +46,28 @@ class App extends React.Component {
   }
 
   render() {
-    console.log(this.state.currentUser);
     return (
-      <div className="App light">
-        <Provider store={store}>
-          <BrowserRouter>
-            <Switch>
-              <Route exact path="/" component={HomePage}/>
-              <Route path="/mydesk/" component={MyDeskPage}/>
-              <Route path="/uipasswd/" component={UIPassword}/>
-              <Route path="/classboard/" component={ClassBoard}/>
-              <Route path="/classroom/:class" component={ClassRoom}/>
-              <Route path="/codingroom/:question" component={CodingRoom}/>
-              <Route path="/codingroom/" component={CodingRoom}/>
-              <Route path="/codingboard" component={CodingBoard}/>
-              <Route path="/questionboard/:question" component={CodingBoard}/>
-              <Route path="/myprofile" component={MyProfilePage}/>
-              <Route path="/aboutthiswebsite" component={AboutThisWebsitePage}/>
-              <Route path="/admin" component={WebsiteSetting}/>
-              <Route path="/" render={() => <NotFound page/>}/>
-            </Switch>
-          </BrowserRouter>
-        </Provider>
-      </div>
+      <Switch>
+        <Route exact path="/" component={HomePage}/>
+        <Route path="/mydesk/" component={MyDeskPage}/>
+        <Route path="/uipasswd/" component={UIPassword}/>
+        <Route path="/classboard/" component={ClassBoard}/>
+        <Route path="/classroom/:class" component={ClassRoom}/>
+        <Route path="/codingroom/:question" component={CodingRoom}/>
+        <Route path="/codingroom/" component={CodingRoom}/>
+        <Route path="/codingboard" component={CodingBoard}/>
+        <Route path="/questionboard/:question" component={CodingBoard}/>
+        <Route path="/myprofile" component={MyProfilePage}/>
+        <Route path="/aboutthiswebsite" component={AboutThisWebsitePage}/>
+        <Route path="/admin" component={WebsiteSetting}/>
+        <Route path="/" render={() => <NotFound page/>}/>
+      </Switch>
     );
   }
 }
 
-export default App;
+const mapDispatchToProps = dispatch => ({
+  setCurrentUser: user => dispatch(setCurrentUser(user)),
+})
+
+export default connect(null, mapDispatchToProps)(App);

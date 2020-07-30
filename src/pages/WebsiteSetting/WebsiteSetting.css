@@ -1,0 +1,16 @@
+.row {
+  margin: 50px;
+  text-align: left;
+  padding: 0 50px;
+}
+
+.website-setting-serverLocation {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.website-setting-buttons {
+  grid-row: 3 / 4;
+  justify-self: right;
+  margin-right: 15vw;
+}

@@ -1,0 +1,26 @@
+.under-construction {
+  width: 100%;
+  height: 100%;
+}
+
+.under-construction > img {
+  width: 100%;
+  height: 100%;
+}
+
+.under-construction > .title {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 10vh;
+  font-size: 4rem;
+  text-align: center;
+  font-family: "Toppan Bunkyu Gothic";
+}
+
+.under-construction > .close {
+  position: fixed;
+  bottom: 1vmin;
+  right: 1vmin;
+}
+

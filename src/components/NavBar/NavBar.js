@@ -13,9 +13,14 @@ import {SignIn} from "../Register/SignIn";
 const admin = true;
 
 const NavBar = props => {
+  let admin = props.currentUser && props.currentUser.admin
   return (
     <Navbar bg='light' expand='sm'>
-      <Navbar.Brand href="/"><span className='brand'>ClassPlatform</span></Navbar.Brand>
+      <Navbar.Brand href="/">
+        <span className='brand'>
+          ClassPlatform {admin && <span className='admin'> Admin</span>}
+        </span>
+      </Navbar.Brand>
       <Navbar.Collapse>
         <Nav className='mr-auto'>
           <Nav.Link href="/mydesk">My Desk</Nav.Link>

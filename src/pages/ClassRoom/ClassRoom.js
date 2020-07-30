@@ -1,8 +1,7 @@
 import React, {Component, Fragment, useState} from 'react';
-import titlize from 'titlize';
+import {connect} from 'react-redux';
 import NotFound from "../../components/NotFound/NotFound";
 import {Page} from "../../components/Page/Page";
-import SearchBox from "../../components/SearchBox/SearchBox";
 import Separator from "../../components/Blob/Separator";
 import {VerticalGrip, Edit, XSquare, Update, Doc as DocIcon} from "../../icons";
 import Doc from "../../components/Doc/Doc";
@@ -13,10 +12,10 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import MenuItem from "@material-ui/core/MenuItem";
+import titlize from 'titlize';
 
 const nodeFetch = require('node-fetch');
 const API_URL = 'http://localhost:3001/api';
-const admin = true;
 const CLASS_LEVEL = ['None', 'Easy', 'Intermediate', 'Advanced', 'Research'];
 const TIME_UNIT = ['None', 'min', 'hour', 'day', 'week', 'month', 'year'];
 const THEME = new Map([['default', {fontFamily: "Tsukushi A Round Gothic", backgroundColor: 'darkblue', color: 'white'}], ['modern', {}], ['classic', {}], ['mono', {}],]);
@@ -26,6 +25,10 @@ const THEME = new Map([['default', {fontFamily: "Tsukushi A Round Gothic", backg
 //TODO: user authentification, admin, editing deployment with redux
 //TODO: data structure of page and api call
 
+
+const mapStateToProps = state => ({
+  currentUser: state.user.currentUser,
+})
 
 //Info
 const EditDialog = props => {
@@ -100,7 +103,8 @@ const EditDialog = props => {
   );
 }
 
-const ClassInfo = props => {
+
+const ClassInfo = connect(mapStateToProps)(props => {
   const InfoPanel = () =>  (
     <div className='infopanel'>
       <div>
@@ -136,12 +140,12 @@ const ClassInfo = props => {
       <EditDialog info={props.info} onUpdate={props.onUpdate}/>
     </div>
   )
-}
+})
 
-//Sidebar
-const SideBarCol = props => {
+const SideBarCol = connect(mapStateToProps)(props => {
   const [draggable, setDraggable] = useState(false)
   const [editable, setEditable] = useState(false);
+  let admin = props.currentUser && props.currentUser.admin;
   let titleElement = editable ?
     <input className='w-100 h-100' value={props.title} onChange={e => props.onChange(e.target.value)} autoFocus/> :
     <div className='mr-5 sidebar-title scrollable' onClick={props.setCurrent}>{props.title}</div>;
@@ -151,29 +155,29 @@ const SideBarCol = props => {
          onDragEnd={() => setDraggable(false)}
          style={{fontWeight: props.current ? 'bolder' : null}}>
       {titleElement}
-      {admin &&
-      <div className='sidebar-ops'>
-        <span className='m-1'>
-          <VerticalGrip onMouseDown={() => setDraggable(true)}/>
-        </span>
-        <span className='m-1'>
-          <Edit onClick={() => {
-            if(editable) {
-              props.onUpdate();
-            }
-            setEditable(!editable)
-          }}/>
-        </span>
-        <span className='m-1'>
-          <XSquare onClick={props.onDelete} />
-        </span>
-      </div>
-      }
+      {admin && (
+        <div className='sidebar-ops'>
+          <span className='m-1'>
+            <VerticalGrip onMouseDown={() => setDraggable(true)}/>
+          </span>
+          <span className='m-1'>
+            <Edit onClick={() => {
+                                   if(editable) {
+                                   props.onUpdate();
+                                   }
+                                   setEditable(!editable)
+                                   }}/>
+          </span>
+          <span className='m-1'>
+            <XSquare onClick={props.onDelete} />
+          </span>
+        </div>
+      )}
     </div>
   )
-}
-
-const SideBar = props => {
+})
+const SideBar = connect(mapStateToProps)(props => {
+  let admin = props.currentUser && props.currentUser.admin;
   return (
     <div>
       <div className='sidebar' style={{fontFamily: props.style.fontFamily}}>
@@ -200,7 +204,7 @@ const SideBar = props => {
       </div>
     </div>
   )
-}
+})
 
 
 class ClassRoom extends Component {
@@ -331,6 +335,7 @@ class ClassRoom extends Component {
   }
 
   render() {
+    let admin = this.props.currentUser && this.props.currentUser.admin;
     return (
       <Page>
         <div className='classroom'>
@@ -363,4 +368,4 @@ class ClassRoom extends Component {
   }
 }
 
-export default ClassRoom;
+export default connect(mapStateToProps)(ClassRoom);

@@ -1,7 +1,7 @@
 import React, {Component} from "react";
+import {connect} from 'react-redux';
 import ClassList from "../../components/ClassList/ClassList";
 import SearchBox from "../../components/SearchBox/SearchBox";
-import "./ClassRoom.css";
 import {Create, Delete, Edit, Update, XSquare} from "../../icons";
 import {Header, Page} from "../../components/Page/Page";
 import Button from "@material-ui/core/Button";
@@ -12,7 +12,7 @@ import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import DialogActions from "@material-ui/core/DialogActions";
 import titlize from "titlize";
-import NotFound from "../../components/NotFound/NotFound";
+import "./ClassRoom.css";
 
 const nodeFetch = require('node-fetch');
 const API_URL = 'http://localhost:3001/api';
@@ -24,9 +24,15 @@ const THEME = new Map([['default', {}], ['modern', {}], ['classic', {}], ['mono'
 const EditControl = props => {
   return (
     <span className='btn-group'>
-      <Create onClick={() => props.handleClick(0)} />
-      <Update onClick={() => props.handleClick(1)} />
-      <Delete onClick={() => props.handleClick(2)} />
+      <span className='m-1'>
+        <Create onClick={() => props.handleClick(0)} />
+      </span>
+      <span className='m-1'>
+        <Update onClick={() => props.handleClick(1)} />
+      </span>
+      <span className='m-1'>
+        <Delete onClick={() => props.handleClick(2)} />
+      </span>
     </span>
   )
 }
@@ -218,7 +224,6 @@ class ClassBoard extends Component {
       cls: { title: '', theme: '', tags: ''},
 
       popup: null,
-      admin: true,
     }
   }
 
@@ -327,26 +332,37 @@ class ClassBoard extends Component {
   }
 
   render() {
-    let matchedClasses = this.state.classList.filter(each =>
-      each.title.toLowerCase().includes(this.state.searchSubstring.toLowerCase()));
+    let {classList, searchSubstring} = this.state;
+    let matchedClasses = classList.filter(each =>
+      each.title.toLowerCase().includes(searchSubstring.toLowerCase()));
+    let admin = (this.props.currentUser && this.props.currentUser.admin);
     return (
       <>
         <Page>
-          <Header left={(
-            <div className='title'> Class Board
-              {this.state.admin && <EditControl handleClick={idx => this.setState(state => ({popup: state.popup === null ? idx : null}))} />}
-            </div>
-          )}
-                  center={<SearchBox onChange={e => this.setState({searchSubstring: e.target.value})}/>} />
+          <Header
+            left={(
+              <div className='title'> Class Board
+                {admin &&
+                <EditControl handleClick={idx => this.setState(state => ({popup: state.popup === null ? idx : null}))} />
+                }
+              </div>
+            )}
+            center={
+              <SearchBox onChange={e => this.setState({searchSubstring: e.target.value})}/>
+            }
+          />
         <ClassList classList={matchedClasses}/>
         </Page>
         {this.editDialogs()}
       </>
     )
   }
-
 }
 
-export default ClassBoard;
+const mapStateToProps = state => ({
+  currentUser: state.user.currentUser,
+})
+
+export default connect(mapStateToProps)(ClassBoard);
 
 

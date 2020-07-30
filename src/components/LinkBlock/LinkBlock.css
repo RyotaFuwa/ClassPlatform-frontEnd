@@ -1,0 +1,32 @@
+.block {
+  display: grid;
+  justify-items: left;
+  width: 100%;
+  grid-template-columns: 75px auto 1fr;
+  grid-gap: 20px;
+  grid-template-areas: "line1 title line2" "content content content";
+}
+
+.block-title {
+  grid-area: title;
+  font-weight: bold;
+  font-size: 2rem;
+}
+
+
+.block-line1 {
+  grid-area: line1;
+  width: 100%;
+  align-self: center;
+}
+
+.block-line2 {
+  grid-area: line2;
+  width: 100%;
+  align-self: center;
+}
+
+.block-content {
+  grid-area: content;
+  width: 100%;
+}

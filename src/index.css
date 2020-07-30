@@ -18,6 +18,10 @@ textarea, pre {
   font-family: "Tsukushi A Round Gothic", serif;
 }
 
+.brand .admin {
+  color: deeppink;
+}
+
 .no-display {
   display: none;
 }

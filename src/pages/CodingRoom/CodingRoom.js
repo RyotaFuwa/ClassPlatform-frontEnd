@@ -1,12 +1,11 @@
-import titlize from 'titlize';
 import React from "react";
-import NavBar from "../../components/NavBar/NavBar";
+import {connect} from 'react-redux';
 import TimerBox from "../../components/TimerBox/TimerBox";
 import AceEditor from "react-ace";
 import CollapibleBlock from "../../components/CollapibleBlock/CollapibleBlock";
 import {Tab, TabBlock} from "../../components/Tab/Tab";
 import CodeEditor from "../../components/CodeEditor/CodeEditor";
-import Button from "react-bootstrap/Button";
+import titlize from 'titlize';
 
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/mode-java";
@@ -19,20 +18,18 @@ import "ace-builds/src-noconflict/keybinding-vim";
 import "ace-builds/src-noconflict/keybinding-emacs";
 import "ace-builds/src-noconflict/keybinding-sublime";
 
-import "./CodingRoom.css";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
 import {Create, Delete, Update} from "../../icons";
 import {AppPage, Header} from "../../components/Page/Page";
+import "./CodingRoom.css";
 
 const fetch = require('node-fetch');
 const API_URL = 'http://localhost:3001/api';
-const admin = true;
 
 const Instruction = props => {
   if (props.editing)
     return (<textarea className="h-100 w-100 pl-4 border-0 scrollable size-fixed" value={props.instruction} onChange={props.onChange}/>)
   else
-    return (<textarea className="h-100 w-100 pl-4 scrollable size-fixed" value={props.instruction}/>)
+    return (<pre className="h-100 w-100 pl-4 border-0 scrollable size-fixed" value={props.instruction}/>)
 }
 
 const Helps = props => {
@@ -69,7 +66,7 @@ class CodingRoom extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: props.match.params.question ? titlize(props.match.params.question) : '',
+      title: props.match.params.question ? titlize(props.match.params.question) : 'Coding Room',
       instruction: '',
       helps: [],
       tests: [],
@@ -84,7 +81,7 @@ class CodingRoom extends React.Component {
       controllable: true,
       durationMinute: 45,
 
-      editing: admin,
+      editing: this.props.currentUser && this.props.currentUser.admin,
     };
   }
 
@@ -122,10 +119,15 @@ class CodingRoom extends React.Component {
   }
 
   renderTitle() {
+    let admin = (this.props.currentUser && this.props.currentUser.admin);
     return (
       <div className='title'>
-        {this.state.title !== '' ? this.state.title : 'Coding Room'}
-        {admin && <Update disabled={this.state.title === ''} onClick={() => this.saveQuestion()}/>}
+        {this.state.title}
+        {admin &&
+          <span className='btn-group'>
+            <Update disabled={this.state.title === 'Coding Room'} onClick={() => this.saveQuestion()}/>
+          </span>
+        }
       </div>
     )
   }
@@ -191,4 +193,8 @@ class CodingRoom extends React.Component {
   }
 }
 
-export default CodingRoom;
+const mapStateToProps = state => ({
+  currentUser: state.user.currentUser,
+})
+
+export default connect(mapStateToProps)(CodingRoom);
