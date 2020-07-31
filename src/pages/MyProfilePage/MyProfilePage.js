@@ -1,13 +1,9 @@
 import React, {Component} from 'react';
-import {Card, Accordion} from 'react-bootstrap';
-import NavBar from '../../components/NavBar/NavBar';
-import Footer from '../../components/Footer/Footer';
 import ProjectFrame from '../../components/ProjectFrame/ProjectFrame';
 
 import './MyProfilePage.css';
 import LinkBlock from "../../components/LinkBlock/LinkBlock";
 import LinkPanel from "../../components/LinkPanel/LinkPanel";
-import ScrollBar from "../../components/ScrollBar/ScrollBar";
 import CollapibleBlock from "../../components/CollapibleBlock/CollapibleBlock";
 import {Page} from "../../components/Page/Page";
 

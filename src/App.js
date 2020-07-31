@@ -1,5 +1,5 @@
 import React from 'react';
-import {Switch, Route} from "react-router-dom";
+import {Switch, Route, Redirect} from "react-router-dom";
 import {connect} from "react-redux";
 import {setCurrentUser} from "./redux/user/user.actions";
 
@@ -15,7 +15,7 @@ import WebsiteSetting from "./pages/WebsiteSetting/WebsiteSetting";
 
 import UIPassword from "./pages/UIPassword/UIPassword";
 import NotFound from "./components/NotFound/NotFound";
-import {auth, createNewUserIfNoMatch, firestore} from "./firebase/firebase.utils";
+import {auth, createNewUserIfNoMatch} from "./firebase/firebase.utils";
 
 import './App.css';
 import NavBar from "./components/NavBar/NavBar";
@@ -48,20 +48,77 @@ class App extends React.Component {
   }
 
   render() {
+    const { currentUser } = this.props;
     return (
       <Switch>
         <Route exact path="/" component={HomePage}/>
-        <Route path="/mydesk/" component={MyDeskPage}/>
-        <Route path="/uipasswd/" component={UIPassword}/>
-        <Route path="/classboard/" component={ClassBoard}/>
-        <Route path="/classroom/:class" component={ClassRoom}/>
-        <Route path="/codingroom/:question" component={CodingRoom}/>
-        <Route path="/codingroom/" component={CodingRoom}/>
-        <Route path="/codingboard" component={CodingBoard}/>
-        <Route path="/questionboard/:question" component={CodingBoard}/>
+        <Route
+          path="/mydesk/"
+          render={() =>
+            currentUser ?
+              <MyDeskPage/> :
+              <Redirect to='/'/>
+          }
+        />
+        <Route
+          path="/uipasswd/"
+          render={() =>
+          currentUser ?
+            <MyDeskPage/> :
+            <Redirect to='/'/>
+          }
+        />
+
+        <Route
+          path="/classboard/"
+          render={() =>
+            currentUser ?
+              <ClassBoard/> :
+              <Redirect to='/'/>
+          }
+        />
+        <Route
+          path="/classroom/:class"
+          render={() =>
+            currentUser ?
+              <ClassRoom /> :
+              <Redirect to='/'/>
+          }
+        />
+        <Route
+          path="/codingroom/:question"
+          render={() =>
+          currentUser ?
+            <CodingRoom/> :
+            <Redirect to='/'/>
+          }
+        />
+        <Route
+          path="/codingroom/"
+          render={() =>
+          currentUser ?
+            <CodingRoom/> :
+            <Redirect to='/'/>
+          }
+        />
+        <Route
+          path="/codingboard"
+          render={() =>
+          currentUser ?
+            <CodingBoard/> :
+            <Redirect to='/'/>
+          }
+        />
+        <Route
+          path="/admin"
+          render={() =>
+            currentUser && currentUser.admin ?
+              <WebsiteSetting /> :
+              <Redirect to='/'/>
+          }
+        />
         <Route path="/myprofile" component={MyProfilePage}/>
         <Route path="/aboutthiswebsite" component={AboutThisWebsitePage}/>
-        <Route path="/admin" component={WebsiteSetting}/>
         <Route path="/" render={() => <NotFound page/>}/>
       </Switch>
     );

@@ -146,10 +146,10 @@ class CodeEditor extends React.Component {
         </div>
 
         <div className="editor-terminal">
-                    <pre className='editor-stdout border-basic'
-                         style={{color: this.state.output.stdout ? 'floralwhite' : 'crimson'}}>
-                        {this.state.output.stdout || (this.state.output.stderr + this.state.output.error)}
-                    </pre>
+          <pre className='editor-stdout border-basic'
+               style={{color: this.state.output.stdout ? 'floralwhite' : 'crimson'}}>
+              {this.state.output.stdout || (this.state.output.stderr + this.state.output.error)}
+          </pre>
         </div>
       </div>
     )

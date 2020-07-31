@@ -2,7 +2,6 @@ import titlize from 'titlize';
 import React, {Component, useState} from 'react';
 import SearchBox from '../../components/SearchBox/SearchBox';
 import QuestionList from '../../components/QuestionList/QuestionList';
-import ToggleButton from 'react-bootstrap/ToggleButton';
 
 import './CodingRoom.css';
 import Button from '@material-ui/core/Button'
@@ -211,7 +210,7 @@ const CodingChallengeDialog = props => {
   )
 }
 
-const GoToCodingRoom = () => (
+const GoToCodingRoom  = () => (
   <Button variant='outlined'>
     <Link className='link' to='/codingroom'>
       Go to Coding Room
@@ -234,7 +233,7 @@ const SortPanel = props => (
 )
 
 
-
+//sorting questions
 function categoricalSort(questions) {
   const categories = new Map(CATEGORY.map(each => [each, []]));
   categories.set('Misc', []);

@@ -13,6 +13,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import MenuItem from "@material-ui/core/MenuItem";
 import titlize from 'titlize';
+import {getClassByName} from "../../firebase/firebase.firestore.classes";
 
 const nodeFetch = require('node-fetch');
 const API_URL = 'http://localhost:3001/api';
@@ -213,10 +214,13 @@ class ClassRoom extends Component {
 
     this.state = {
       // class info
-      title: props.match.params.class ? titlize(props.match.params.class) : '',
-      info: {author: {name: '', email: ''}, level: 0, duration: {number: 0, unit: 'None'}, description: ''},
-      docs: [],
+      name: props.match && props.match.params.class ? props.match.params.class : '',
+      tags: '',
       theme: 'default',
+      docs: [],
+      author: null,
+      level: 'Not Specified',
+      duration: 'Not Specified',
 
       current: 0,
       focusIdx: null,
@@ -226,11 +230,20 @@ class ClassRoom extends Component {
     }
   }
 
-  componentWillMount() {
-    nodeFetch(`${API_URL}/classes/${this.state.title}`)
-      .then(res => res.json())
-      .then(json => this.setState({...json, loading: false}))
-      .catch(rej => console.log(rej))
+  async componentDidMount() {
+    console.log(`name: ${this.state.name}`);
+    console.log(this.props);
+    try {
+        const doc = await getClassByName(this.state.name);
+        this.setState({
+          ...doc.data(),
+          loading: false,
+        })
+      }
+      catch(err) {
+        alert('Failed to load the requested class page.')
+        console.log(err);
+      }
   }
 
   setTitle(idx, title) {
@@ -317,8 +330,6 @@ class ClassRoom extends Component {
   }
 
   renderPage() {
-    if(this.state.loading)
-      return <div>Page Loading...</div>
     if(this.state.docs.length === 0)
       return <NotFound inline />;
     let docId = this.state.docs[this.state.current]._id;
@@ -335,6 +346,13 @@ class ClassRoom extends Component {
   }
 
   render() {
+    if(this.state.loading) {
+      return (
+        <Page>
+          <div className='loading w-100 h-100 text-center'>Loading Page...</div>
+        </Page>
+      )
+    }
     let admin = this.props.currentUser && this.props.currentUser.admin;
     return (
       <Page>

@@ -66,7 +66,7 @@ class CodingRoom extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: props.match.params.question ? titlize(props.match.params.question) : 'Coding Room',
+      title: (props.match && props.match.params.question) ? titlize(props.match.params.question) : 'Coding Room',
       instruction: '',
       helps: [],
       tests: [],

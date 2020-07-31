@@ -14,8 +14,12 @@ import DialogActions from "@material-ui/core/DialogActions";
 import titlize from "titlize";
 import "./ClassRoom.css";
 
+/* mongodb locally
 const nodeFetch = require('node-fetch');
 const API_URL = 'http://localhost:3001/api';
+ */
+
+import { getClasses, createClass, updateClass } from '../../firebase/firebase.firestore.classes';
 
 
 //TODO: data structure of page and api call
@@ -38,6 +42,7 @@ const EditControl = props => {
 }
 
 const CreateClassDialog = props => {
+  const {name, tags, theme} = props.editingClass;
   return (
     <Dialog fullWidth maxWidth='sm' open={props.open} onClose={props.onClose}>
       <DialogTitle>Create a New Class</DialogTitle>
@@ -46,8 +51,8 @@ const CreateClassDialog = props => {
           Title: &nbsp;
           <div className='ml-4'>
             <TextField margin="dense"  type="name"
-                       value={props.cls.title}
-                       onChange={e => props.onChange({...props.cls, title: e.target.value})}
+                       value={name}
+                       onChange={e => props.onChange({name: e.target.value})}
                        fullWidth/>
           </div>
         </div>
@@ -55,16 +60,16 @@ const CreateClassDialog = props => {
           Tags: &nbsp;
           <div className='m-4'>
             <TextField label='Comma Separated'
-                       value={props.cls.tags}
-                       onChange={e => props.onChange({...props.cls, tags: e.target.value})}
+                       value={tags}
+                       onChange={e => props.onChange({tags: e.target.value})}
                        fullWidth />
           </div>
         </div>
         <div className='mb-5'>
           Theme: &nbsp;
           <div className='ml-4'>
-            <TextField value={props.cls.theme}
-                       onChange={e => props.onChange({...props.cls, theme: e.target.value})}
+            <TextField value={theme}
+                       onChange={e => props.onChange({theme: e.target.value})}
                        select fullWidth>
               {Array.from(THEME, ([key, value]) =>
                 <MenuItem key={key} value={key}>
@@ -84,129 +89,103 @@ const CreateClassDialog = props => {
 }
 
 const EditClassDialog = props => {
-  if(props.classList.length === 0) {
-    return (
-      <Dialog fullWidth maxWidth='sm'  open={props.open} onClose={props.onClose}>
-        <DialogTitle>No Class To Edit</DialogTitle>
-        <DialogContent />
-        <DialogActions>
-          <Button onClick={props.onClose}>Close</Button>
-        </DialogActions>
-      </Dialog>
-    )
-  }
+  const {name, tags, theme } = props.editingClass;
   return (
-    <>
-      <Dialog fullWidth maxWidth='sm'  open={props.open} onClose={props.onClose}>
-        <DialogTitle>Edit a New Class</DialogTitle>
-        <DialogContent>
+    <Dialog fullWidth maxWidth='sm'  open={props.open} onClose={props.onClose}>
+      <DialogTitle>Edit a New Class</DialogTitle>
+      <DialogContent>
+        <div className='mb-5'>
+          Class to Edit: &nbsp;
+          <div className='ml-4'>
+            <TextField select margin="dense"  type="name"
+                       value={props.selectedIdx !== null ? props.selectedIdx : props.classList.length}
+                       onChange={e => props.onSelect(e.target.value)}
+                       fullWidth>
+              {props.classList.map((each, idx) => (
+                <MenuItem key={each.name} value={idx}>
+                  {each.name}
+                </MenuItem>
+              ))}
+            </TextField>
+          </div>
+        </div>
           <div className='mb-5'>
-            Class to Edit: &nbsp;
-            <div className='ml-4'>
-              <TextField select margin="dense"  type="name"
-                         value={props.idx !== null ? props.idx : props.classList.length}
-                         onChange={e => props.onSelect(e.target.value)}
-                         fullWidth>
-                {props.classList.map((each, idx) => (
-                  <MenuItem key={each.title} value={idx}>
-                    {each.title}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </div>
+          Title: &nbsp;
+          <div className='ml-4'>
+            <TextField margin="dense"  type="name"
+                       value={name}
+                       onChange={e => props.onChange({name: e.target.value})}
+                       fullWidth />
           </div>
-            <div className='mb-5'>
-            Title: &nbsp;
-            <div className='ml-4'>
-              <TextField margin="dense"  type="name"
-                         value={props.cls.title}
-                         onChange={e => props.onChange({...props.cls, title: e.target.value})}
-                         fullWidth />
-            </div>
+        </div>
+        <div className='mb-5'>
+          Tags: &nbsp;
+          <div className='m-4'>
+            <TextField label='Comma Separated'
+                       value={tags}
+                       onChange={e => props.onChange({tags: e.target.value})}
+                       fullWidth />
           </div>
-          <div className='mb-5'>
-            Tags: &nbsp;
-            <div className='m-4'>
-              <TextField label='Comma Separated'
-                         value={props.cls.tags}
-                         onChange={e => props.onChange({...props.cls, tags: e.target.value})}
-                         fullWidth />
-            </div>
+        </div>
+        <div className='mb-5'>
+          Theme: &nbsp;
+          <div className='ml-4'>
+            <TextField select
+                       value={theme}
+                       onChange={e => props.onChange({theme: e.target.value})}
+                       fullWidth>
+              {Array.from(THEME, ([key, value]) =>
+                <MenuItem key={key} value={key}>
+                  {key}
+                </MenuItem>
+              )}
+            </TextField>
           </div>
-          <div className='mb-5'>
-            Theme: &nbsp;
-            <div className='ml-4'>
-              <TextField select
-                         value={props.cls.theme}
-                         onChange={e => props.onChange({...props.cls, theme: e.target.value})}
-                         fullWidth>
-                {Array.from(THEME, ([key, value]) =>
-                  <MenuItem key={key} value={key}>
-                    {key}
-                  </MenuItem>
-                )}
-              </TextField>
-            </div>
-          </div>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => props.onSubmit()}>
-            Edit
-          </Button>
-          <Button onClick={props.onClose}>
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
+        </div>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => props.onSubmit()}>
+          Edit
+        </Button>
+        <Button onClick={props.onClose}>
+          Cancel
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 
-const DeleteClassDialog = props => {
-  if(props.classList.length === 0) {
-    return (
-      <Dialog fullWidth maxWidth='sm' open={props.open} onClose={props.onClose}>
-        <DialogTitle>No Class To Delete</DialogTitle>
-        <DialogContent />
-        <DialogActions>
-          <Button onClick={props.onClose}>Close</Button>
-        </DialogActions>
-      </Dialog>
-    )
-  }
-  return (
-    <>
-      <Dialog fullWidth maxWidth='sm'  open={props.open} onClose={props.onClose}>
-        <DialogTitle>Create a New Class</DialogTitle>
-        <DialogContent>
-          <div className='mb-5'>
-            Class to Delete: &nbsp;
-            <div className='ml-4'>
-              <TextField select margin="dense"  type="name"
-                         value={props.idx !== null ? props.idx : props.classList.length}
-                         onChange={e => props.onSelect(e.target.value)}
-                         fullWidth>
-                {props.classList.map((each, idx) => (
-                  <MenuItem key={each.title} value={idx}>
-                    {each.title}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </div>
-          </div>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => props.onSubmit()}>
-            Delete
-          </Button>
-          <Button onClick={props.onClose}>
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
-  );
-}
+const DeleteClassDialog = props => (
+  <Dialog fullWidth maxWidth='sm'  open={props.open} onClose={props.onClose}>
+    <DialogTitle>Delete a New Class</DialogTitle>
+    <DialogContent>
+      <div className='mb-5'>
+        Class to Delete: &nbsp;
+        <div className='ml-4'>
+          <TextField select margin="dense"  type="name"
+                     value={props.selectedIdx !== null ? props.selectedIdx : props.classList.length}
+                     onChange={e => props.onSelect(e.target.value)}
+                     fullWidth>
+            {props.classList.map((each, idx) => (
+              <MenuItem key={each.name} value={idx}>
+                {each.name}
+              </MenuItem>
+            ))}
+          </TextField>
+        </div>
+      </div>
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={() => props.onSubmit()}>
+        Delete
+      </Button>
+      <Button onClick={props.onClose}>
+        Cancel
+      </Button>
+    </DialogActions>
+  </Dialog>
+)
+
 
 //TODO: Use TextField, DialogTitle
 //TODO: deploy ways to upload img and retreive it
@@ -219,15 +198,18 @@ class ClassBoard extends Component {
       searchSubstring: "",
       classList: [],
 
-      //new class info
-      idx: null,
-      cls: { title: '', theme: '', tags: ''},
+      //editing class info
+      selectedIdx: null,
+      name: '',
+      tags: '',
+      theme: 'default',
 
       popup: null,
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    /* mongodb
     nodeFetch(`${API_URL}/classes`, {
       method: 'GET',
       headers: {'Content-Type': 'application/json'}
@@ -235,97 +217,124 @@ class ClassBoard extends Component {
       .then(res => res.json())
       .then(json => this.setState({classList: json.classes}))
       .catch(rej => console.log(rej));
+   */
+    const querySnapshot = await getClasses();
+    let classList = querySnapshot.docs.map(doc => ({...doc.data(), classId: doc.id}));
+    if(!this.props.currentUser.admin) {
+      classList = classList.filter(cls => cls.active);
+    }
+    console.log(classList);
+    this.setState({classList: classList});
   }
 
   onSelect(idx) {
-    let cls = this.state.classList[idx];
-    let tags = cls.tags.join(', ');
-    this.setState({idx: idx, cls: {...cls, tags: tags}});
+    let {name, tags, theme} = this.state.classList[idx];
+    this.setState({selectedIdx: idx, name: name, tags: tags, theme: theme});
   }
 
-  createClass() {
-    let alreadyExist = this.state.classList
-      .filter(each => each.title === titlize(this.state.cls.title)).length !== 0;
-    if(alreadyExist)
-      return; //Might be ask users to override it.
 
-    let title = titlize(this.state.cls.title);
-    let tags = this.state.cls.tags.split(',').map(each => each.replace(/^\s+|\s+$/g, ''));
-    let newClass = {title: title, theme: this.state.cls.theme, tags: tags,
-      docs: [], info: {author: {name: '', email: ''}, level: '', duration: {number: 0, unit: 'None'}, description: ''}};
-    nodeFetch(`${API_URL}/classes`, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({class: newClass}),
-    })
-      .then(res => {
-        if(res.status === 201) {
-          this.setState(state => {
-            return {classList: [...state.classList, {...state.cls, tags: tags}], cls: {title: '', theme: '', tags: ''}, popup: null}
-          })
-        }
-      })
-      .catch(rej => console.log(rej));
+  async createClass() {
+    // const tags = tagString.split(',').map(each => each.replace(/^\s+|\s+$/g, ''));
+
+    // cloud firestore
+    const {name, theme, tags} = this.state;
+    const titlizedName = titlize(name);
+    let sameNameClassAlreadyExists = this.state.classList.filter(each => each.name === titlizedName).length > 0
+    if(sameNameClassAlreadyExists) {
+      alert('a class with the same name already exists.');
+      return;
+    }
+
+    const newClass = {name: titlizedName, tags: tags, theme: theme, author: this.props.currentUser, active: true};
+
+    try {
+      const documentRefernce = await createClass(newClass);
+      this.setState(state => ({
+        classList: [...state.classList, {...newClass, classId: documentRefernce.id}],
+        name: '',
+        tags: '',
+        theme: 'default',
+        popup: null
+      }))
+    }
+    catch(err) {
+      alert(`Failed to create a new class: ${err}`);
+    }
   }
 
-  editClass() {
-    let cls = this.state.cls;
-    let newClass = {...cls, title: titlize(cls.title),
-      tags: cls.tags.split(',').map(each => each.replace(/^\s+|\s+$/g, ''))}
-    nodeFetch(`${API_URL}/classes/${this.state.classList[this.state.idx].title}`, {
-      method: 'PUT',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({'class': newClass}),
-    })
-      .then(res => {
-        if (res.status === 201) {
-          this.setState(state => {
-            state.classList[state.idx] = newClass;
-            return {classList: [...state.classList], cls: {title: '', theme: '', tags: ''}, idx: null, popup: null};
-          })
-        }
+  async editClass() {
+    /* now edit operation is active only for admin users so this functionality is not needed.
+    const { classId, author } = this.state.classList[this.state.selectedIdx];
+    let qualifiedToEdit = !this.props.currentUser.admin && author !== this.props.currentUser;
+    if(qualifiedToEdit) {
+      alert('Not authorized to edit')
+      return;
+    }
+    */
+
+    //firebase
+    const { classId } = this.state.classList[this.state.selectedIdx];
+    const {name, tags, theme } = this.state;
+    const titlizedName = titlize(name);
+    const updatingFields = {name: titlizedName, tags: tags, theme: theme};
+    try {
+      await updateClass(classId, updatingFields);
+      this.setState(state => {
+        Object.assign(state.classList[state.selectedIdx], updatingFields);
+        return {
+          classList: [...state.classList],
+          name: '',
+          tags: '',
+          theme: 'default',
+          selectedIdx: null,
+          popup: null,
+        };
       })
-      .catch(rej => console.log(rej));
+    }
+    catch(err) {
+      alert(`Failed to update a class: ${err}`);
+    }
   }
 
-  deleteClass() {
-    fetch(`${API_URL}/classes/${this.state.cls.title}`, {
-      method: 'DELETE',
-      headers: {'Content-Type': 'application/json'},
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          this.setState(state => {
-            state.classList.splice(state.idx, 1);
-            return {classList: [...state.classList], cls: {title: '', theme: '', tags: ''}, idx: null, popup: null};
-          });
-        }
+  async deleteClass() {
+    //firebase
+    // this function doesn't delete classes. what it actually does is to make a class inactive.
+    const { classId } = this.state.classList[this.state.selectedIdx];
+    try {
+      await updateClass(classId, {active: false});
+      this.setState(state => {
+        Object.assign(state.classList[state.selectedIdx], {active: false});
+        return {classList: [...state.classList]}
       })
-      .catch(rej => console.log(rej));
+    }
+    catch(err) {
+      alert('Failed to delete(inactivate) the class');
+    }
   }
 
   editDialogs() {
+    const {name, tags, theme, selectedIdx} = this.state;
     return (
       <>
         <CreateClassDialog open={this.state.popup === 0}
-                           onClose={() => this.setState({popup: null})}
-                           cls={this.state.cls}
-                           onChange={cls => this.setState({cls: cls})}
+                           editingClass={{name, tags, theme}}
+                           onChange={updateFields => this.setState(updateFields)}
+                           onClose={() => this.setState({popup: null, name: '', tags: '', theme: ''})}
                            onSubmit={() => this.createClass()} />
         <EditClassDialog open={this.state.popup === 1}
-                         onClose={() => this.setState({popup: null})}
                          classList={this.state.classList}
-                         cls={this.state.cls}
-                         idx={this.state.idx}
+                         selectedIdx={selectedIdx}
+                         editingClass={{name, tags, theme}}
                          onSelect={idx => this.onSelect(idx)}
-                         onChange={cls => this.setState({cls: cls})}
+                         onChange={updateFields => this.setState(updateFields)}
+                         onClose={() => this.setState({popup: null, selectedIdx: null, name: '', tags: '', theme: ''})}
                          onSubmit={() => this.editClass()} />
         <DeleteClassDialog open={this.state.popup === 2}
-                           onClose={() => this.setState({popup: null})}
                            classList={this.state.classList}
-                           idx={this.state.idx}
-                           cls={this.state.cls}
+                           selectedIdx={selectedIdx}
+                           editingClass={{name, tags, theme}}
                            onSelect={idx => this.onSelect(idx)}
+                           onClose={() => this.setState({popup: null, selectedIdx: null})}
                            onSubmit={() => this.deleteClass()} />
      </>
     )
@@ -334,7 +343,7 @@ class ClassBoard extends Component {
   render() {
     let {classList, searchSubstring} = this.state;
     let matchedClasses = classList.filter(each =>
-      each.title.toLowerCase().includes(searchSubstring.toLowerCase()));
+      each.name.toLowerCase().includes(searchSubstring.toLowerCase()));
     let admin = (this.props.currentUser && this.props.currentUser.admin);
     return (
       <>
@@ -348,7 +357,7 @@ class ClassBoard extends Component {
               </div>
             )}
             center={
-              <SearchBox onChange={e => this.setState({searchSubstring: e.target.value})}/>
+              <SearchBox placeholder='Search Class' onChange={e => this.setState({searchSubstring: e.target.value})}/>
             }
           />
         <ClassList classList={matchedClasses}/>

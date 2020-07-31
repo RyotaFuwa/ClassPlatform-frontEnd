@@ -7,8 +7,9 @@ const ClassList = props => {
     <div className="classList">
       {props.classList.map((each, idx) => (
           <ClassCard key={idx}
-                     title={each.title}
+                     name={each.name}
                      imgURL={each.imgURL}
+                     active={each.active}
           />
         )
       )}

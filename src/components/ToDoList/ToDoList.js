@@ -13,7 +13,6 @@ class ToDoList extends Component {
 
   componentDidMount() {
     //fetch data from db
-    console.log('to do list init');
   }
 
   add() {
@@ -31,15 +30,18 @@ class ToDoList extends Component {
                  placeholder='To Do List'
                  value={this.state.newTask}
                  onChange={(e) => this.setState({newTask: e.target.value})} /> &nbsp;
-          <button className="btn-none" onClick={() => this.add()}> <Create/> </button>
+          <Create onClick={() => this.add()} />
         </div>
           {this.state.list.map((each, idx) =>
             <div key={idx} className='to-do-block'>
               <div className='block'>{each}</div>
-              <button className='btn-none' onClick={() => this.setState(state => {
-                let newList = [...state.list];
-                newList.splice(idx, 1);
-                return {list: newList};})}><Delete/></button>
+              <Delete
+                onClick={() => this.setState(state => {
+                  let newList = [...state.list];
+                  newList.splice(idx, 1);
+                  return {list: newList};
+                })}
+              />
             </div>
           )}
       </div>
