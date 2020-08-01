@@ -25,7 +25,7 @@
   align-self: center;
   overflow-x: scroll;
   white-space: nowrap;
-  font-family: "Tsukushi A Round Gothic";
+  font-family: "Tsukushi A Round Gothic", sans-serif;
 }
 
 .questioncard-tags {

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './ProjectFrame.css';
 import Button from "@material-ui/core/Button";
-import Badge from "@material-ui/core/Badge";
+import Chip from "@material-ui/core/Chip";
 
 const ProjectFrame = props => {
   return (
@@ -23,7 +23,7 @@ const ProjectFrame = props => {
         </div>
         <div className='tags'>
           {props.tags ? props.tags.map(
-            (each, idx) => <Badge key={idx} className="m-1" variant="secondary">{each}</Badge>) : []}
+            (each, idx) => <Chip key={idx} label={each} size='small' variant="default" />) : []}
         </div>
       </div>
     </div>

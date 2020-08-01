@@ -53,7 +53,7 @@ class SpaceBoard extends React.Component {
   render() {
     //const quote = this.state.qod.contents.quotes[0];
     return (
-      <div className="theme-dark h-100 w-100">
+      <div className="h-100 w-100">
         <svg height="95vh" width="100%" xmlns="http://www.w3.org/2000/svg">
           {this.state.lines}
           {this.state.circles}
@@ -121,7 +121,7 @@ class SpaceBoard extends React.Component {
                 y1={edge1.props.cy}
                 x2={edge2.props.cx}
                 y2={edge2.props.cy}
-                style={{stroke: 'white', strokeWidth: 2}}/>],
+                style={{stroke: 'black', strokeWidth: 4}}/>],
         seq: [...state.seq, idx],
         lastSelected: idx
       }));

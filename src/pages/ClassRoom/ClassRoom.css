@@ -35,6 +35,7 @@
 
 .classroom {
   width: 100%;
+  text-align: center;
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-rows: auto 1fr;
@@ -62,6 +63,7 @@
 
 .classroom-title {
   grid-area: title;
+  text-align: center;
   font-size: 2.5rem;
 }
 

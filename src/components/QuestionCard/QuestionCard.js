@@ -1,8 +1,8 @@
 import React, {Component, useState} from 'react';
 import {Link} from 'react-router-dom';
 import './QuestionCard.css';
-import Badge from "@material-ui/core/Badge";
 import Button from "@material-ui/core/Button";
+import Chip from "@material-ui/core/Chip";
 
 function getColor(level) {
   if (!level)
@@ -16,22 +16,30 @@ function getColor(level) {
   }
 }
 
-const QuestionCard = props => {
+const QuestionCard = ({name, difficulty, category, tags, ...otherProps}) => {
   const [showTags, setShowTags] = useState(false);
-  let tags = props.tags ? [...props.tags, props.category]: [props.category]
-  let levelColor = getColor(props.level)
-  let fontStyle = props.header ? {fontWeight: "bold", fontSize: 28} : {fontSize: 20};
+  let tagsList = tags ?
+    tags.split(',').map(each => each.replace(/^\s+|\s+$/g, '')) :
+    [];
+  tagsList = [...tagsList, category];
+  let levelColor = getColor(difficulty)
+  let fontStyle = otherProps.header ? {fontWeight: "bold", fontSize: 28} : {fontSize: 20};
   return (
-    <div className="questioncard" style={{backgroundColor: props.new ? 'lightgoldenrodyellow' : null}}>
+    <div className="questioncard" style={{backgroundColor: otherProps.new ? 'lightgoldenrodyellow' : 'white'}}>
       <div className='questioncard-color' style={{backgroundColor: levelColor}} />
       <div className='questioncard-title scrollable' style={fontStyle}>
-        <Link className='link' to={`/codingroom/${props.header ? props.question : props.title}`}>
-          {props.title}
+        <Link
+          className='link'
+          to={`/codingroom/${otherProps.header ? otherProps.question : name}`}
+        >
+          <span style={{color: otherProps.active ? 'black' : 'lightgray'}} >
+            {name}
+          </span>
         </Link>
       </div>
       <div className='questioncard-tags link scrollable' onClick={() => setShowTags(!showTags)}>
-        {(!showTags && !props.header) && <Button size='small'>tags</Button>}
-        {showTags && tags.map(each => <Badge key={each} className="m-1" variant="secondary">{each}</Badge>)}
+        {(!showTags && !otherProps.header) && <Button size='small'> tags </Button>}
+        {showTags && tagsList.map(each => <Chip key={each} label={each} size='small' variant='default' />)}
       </div>
     </div>
   )

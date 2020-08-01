@@ -1,9 +1,39 @@
-.codingroom {
+.coding-room {
   height: 100%;
+  padding: 1vmin;
   display: grid;
   grid-gap: 1vmin;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: 30px 60% auto;
+  grid-template-columns: auto 55% 50px;
+  grid-template-areas:
+  "docs-tab console run-button"
+  "docs-tab main-editor main-editor"
+  "docs-tab output-box output-box";
 }
+
+.coding-room .console {
+  grid-area: console;
+}
+
+.coding-room .run-button {
+  grid-area: run-button;
+}
+
+.coding-room .main-editor {
+  grid-area: main-editor;
+}
+
+.coding-room .docs-tab {
+  grid-area: docs-tab;
+}
+
+.coding-room .output-box {
+  grid-area: output-box;
+}
+
+
+
+
 
 .docs-editor {
   width: 100%;

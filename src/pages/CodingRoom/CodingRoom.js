@@ -21,28 +21,131 @@ import "ace-builds/src-noconflict/keybinding-sublime";
 import {Create, Delete, Update} from "../../icons";
 import {AppPage, Header} from "../../components/Page/Page";
 import "./CodingRoom.css";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import Button from "@material-ui/core/Button";
+import SelectPopover from "../../components/SelectPopover/SelectPopover";
 
-const fetch = require('node-fetch');
-const API_URL = 'http://localhost:3001/api';
+const Title = props => {
+  return (
+    <div className='title'>
+      {props.name}
+      {props.admin &&
+      <span className='btn-group'>
+            <Update
+              disabled={props.name === 'Coding Room'}
+              onClick={props.handleClick}
+            />
+          </span>
+      }
+    </div>
+  )
+}
+
+const Console = props => {
+  return (
+    <div className="console">
+      <span className='m-1'/>
+      <SelectPopover
+        options={['monokai', 'github', 'dawn'].map(each => ({label: each, value: each, disabled: false}))}
+        value={props.theme}
+        handleChange={e => props.handleChange({theme: e.target.value})}/>
+
+      <span className='m-1'/>
+      <SelectPopover
+        options={['sublime', 'vim', 'emacs'].map(each => ({label: each, value: each, disabled: false}))}
+        value={props.keybinding}
+        handleChange={e => props.handleChange({keybinding: e.target.value})}/>
+
+      <span className='m-1'/>
+      <SelectPopover
+        options={[
+          {label: 'python', value: 'python', disabled: false},
+          {label: 'javascript', value: 'javascript', disabled: true},
+          {label: 'java', value: 'java', disabled: true},
+          {label: 'C++', value: 'c_cpp', disabled: true},
+        ]}
+        value={props.lang}
+        handleChange={e => props.handleChange({lang: e.target.value})}/>
+    </div>
+  )
+}
+
+const RunButton = props => {
+  return (
+    <Button
+      className='run-button'
+      fullWidth
+      size='small'
+      variant='contained'
+      color="primary"
+      onClick={props.onClick()}
+      disabled={props.running}
+    >
+      Run
+    </Button>
+  )
+}
+
+const MainEditor = props => {
+  return(
+    <div className='main-editor'>
+      {props.running && <LinearProgress/>}
+      <AceEditor
+        showPrintMargin={true}
+        showGutter={true}
+        highlightActiveLine={true}
+        setOptions={{
+          enableBasicAutocompletion: true,
+          enableLiveAutocompletion: true,
+          enableSnippets: true,
+          showLineNumbers: true,
+          tabSize: 4,
+        }}
+        fontSize={14}
+        width="100%"
+        height="100%"
+        placeholder=""
+
+        mode={props.lang}
+        theme={props.theme}
+        keyboardHandler={props.keybinding}
+        value={props.text}
+        onChange={e => props.onChange(e.value.target)}
+      />
+    </div>
+  )
+}
+
+const OutputBox = props => {
+  const {stdout, stderr, error} = props.output;
+  return (
+    <pre
+      className='output-box scrollable'
+      style={{color: stdout ? 'floralwhite' : 'crimson'}}
+    >
+      {stdout || stderr + error}
+    </pre>
+  )
+}
 
 const Instruction = props => {
   if (props.editing)
-    return (<textarea className="h-100 w-100 pl-4 border-0 scrollable size-fixed" value={props.instruction} onChange={props.onChange}/>)
+    return (<textarea className="instruction" value={props.instruction} onChange={props.onChange}/>)
   else
     return (<pre className="h-100 w-100 pl-4 border-0 scrollable size-fixed" value={props.instruction}/>)
 }
 
-const Helps = props => {
+const Tips = props => {
   if (props.editing) {
     return (
-      <div>
+      <div className='tips'>
         <div className='mt-3'>
           <Create  onClick={props.onAdd}/>
           <Delete onClick={props.onDelete} />
         </div>
 
         <div className='codingroom-docs-tips'>
-          {props.helps.map((helpTxt, idx) => (
+          {props.tips.map((helpTxt, idx) => (
             <div key={idx} className='w-100'>
               <div className='w-100 text-left'>Tip {idx + 1}</div>
               <textarea className='w-100 size-fixed' style={{height: '100px'}} value={helpTxt} onChange={e => props.onChange(idx, e)} />
@@ -53,8 +156,8 @@ const Helps = props => {
     )
   } else {
     return (
-      <div className='codingroom-docs-tips'>
-        {props.helps.map((helpTxt, idx) => (
+      <div className='tips'>
+        {props.tips.map((helpTxt, idx) => (
           <CollapibleBlock key={idx} title={`Tip ${idx + 1}`}><p>{helpTxt}</p></CollapibleBlock>
         ))}
       </div>
@@ -62,131 +165,181 @@ const Helps = props => {
   }
 }
 
+const DocsTab = props => {
+  return (
+    <Tab className='docs-tab'>
+      <TabBlock tabName="Instruction">
+        <Instruction
+          instruction={props.instruction}
+          editing={props.editing}
+          onChange={e => props.handleChange({instruction: e.target.value})}
+        />
+      </TabBlock>
+      <TabBlock tabName='Tips'>
+        <Tips
+          tips={props.tips}
+          editing={props.editing}
+          onAdd={() => {
+            props.tips.push('');
+            props.onChange({tips: [...props.tips]})
+          }}
+          onDelete={() => {
+            props.tips.pop();
+            props.onChange({tips: [...props.tips]})
+          }}
+          onChange={(idx, e) => {
+            props.tips[idx] = e.target.value;
+            props.onChange({tips: [...props.tips]})
+          }}
+        />
+      </TabBlock>
+      <TabBlock tabName='Pseudo'>
+        <AceEditor
+          showGutter={true}
+          highlightActiveLine={false}
+          cursorStart={-1}
+          name="coding-solution"
+          width="100%"
+          height="100%"
+          fontSize={14}
+          readOnly={!props.editing}
+          theme='github'
+          value={props.pseudo}
+          onChange={(e) => props.handleChange({pseudo: e})}
+        />
+      </TabBlock>
+      <TabBlock tabName='Memo'>
+        <iframe
+          src="https://docs.google.com/document/d/1nzDH0jBdTicIS5gJZ2AFN82-vD7ojb4eDQjcFEcwl1A/edit?usp=sharing&rm=demo&hl=en"
+          title={'memo'}
+          frameBorder='none'
+          width="100%"
+          height="100%"
+        />
+      </TabBlock>
+    </Tab>
+  )
+}
+
+
 class CodingRoom extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: (props.match && props.match.params.question) ? titlize(props.match.params.question) : 'Coding Room',
+      name: (props.match && props.match.params.question) ? titlize(props.match.params.question) : 'Coding Room',
       instruction: '',
-      helps: [],
+      tips: [],
       tests: [],
       pseudo: '',
+      initialText: '',
 
+      lang: "python",
       theme: 'monokai',
       keybinding: 'sublime',
-      text: '',
       output: {stdout: '', stderr: '', error: ''},
 
       timerType: 'stopwatch',
       controllable: true,
       durationMinute: 45,
 
-      editing: this.props.currentUser && this.props.currentUser.admin,
+      running: false,
+      // editing: this.props.currentUser && this.props.currentUser.admin,
     };
   }
 
-  componentDidMount() {
-    // get question by api call on url
-    if (this.state.title !== '') {
-      fetch(`${API_URL}/coding/questions/${this.state.title}`, {
-        method: 'GET',
-        headers: {'Content-Type': 'application/json'}
-      })
-        .then(res => res.json())
-        .then(json => {
-          this.setState(json);
-        })
-        .catch(rej => console.log(rej));
+  async componentDidMount() {
+    //firestore
+  }
+
+  async runCode() {
+    this.setState({running: true});
+    /*
+    try {
+      const output = await run(this.state.text, this.state.lang)
+      this.setState({output: output, running: false});
+    } catch(err) {
+      this.setState({output: {stdout: '', stderr: '', error: 'Failed to Run'}, running: false});
+    }
+    */
+  }
+
+  async updateQuestion() {
+    try {
+      //get questionContents
+    }
+    catch(err) {
+      alert("Failed to Update Contents.")
     }
   }
 
-  saveQuestion() {
-    fetch(`${API_URL}/coding/questions/${titlize(this.state.title)}`, {
-      method: 'PUT',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-          question: {
-            instruction: this.state.instruction,
-            helps: this.state.helps,
-            tests: this.state.tests,
-            pseudo: this.state.pseudo,
-          }
-        }
-      )
+  handleChange(updatingFields) {
+    this.setState(updatingFields);
+  }
+
+  // DogTabs
+  addTips() {
+    this.setState(state => ({tips: [...state.tips, '']}))
+  }
+
+  deleteTips() {
+    this.setState(state => {state.tips.pop(); return {tips: [...state.tips]}})
+  }
+
+  handleChangeTips(idx, e) {
+    this.setState(state => {
+      state.tips[idx] = e.target.value;
+      return {tips: state.tips};
     })
-      .then(res => console.log(res.status))
-      .catch(rej => console.log(rej));
-  }
-
-  renderTitle() {
-    let admin = (this.props.currentUser && this.props.currentUser.admin);
-    return (
-      <div className='title'>
-        {this.state.title}
-        {admin &&
-          <span className='btn-group'>
-            <Update disabled={this.state.title === 'Coding Room'} onClick={() => this.saveQuestion()}/>
-          </span>
-        }
-      </div>
-    )
-  }
-
-  renderTabs() {
-    return (
-      <Tab className='w-100 h-100'>
-        <TabBlock tabName="Instruction">
-          <Instruction instruction={this.state.instruction}
-                       editing={this.state.editing}
-                       onChange={e => this.setState({instruction: e.target.value})} />
-
-        </TabBlock>
-        <TabBlock tabName='Tips'>
-          <Helps helps={this.state.helps}
-                 editing={this.state.editing}
-                 onAdd={() => this.setState(state => ({helps: [...state.helps, '']}))}
-                 onDelete={() => this.setState(state => {state.helps.pop(); return {helps: [...state.helps]}})}
-                 onChange={(idx, e) => this.setState(state => {state.helps[idx] = e.target.value; return {helps: state.helps};})} />
-        </TabBlock>
-        <TabBlock tabName='Pseudo'>
-          <AceEditor showGutter={true}
-                     highlightActiveLine={false}
-                     cursorStart={-1}
-                     name="coding-solution"
-                     width="100%"
-                     height="100%"
-                     fontSize={14}
-                     readOnly={!this.state.editing}
-                     theme='github'
-                     defaultValue={this.state.pseudo}
-                     value={this.state.pseudo}
-                     onChange={(e) => this.setState({pseudo: e})}/>
-        </TabBlock>
-        <TabBlock tabName='Memo'>
-          <iframe className='border-0'
-                  src="https://docs.google.com/document/d/1nzDH0jBdTicIS5gJZ2AFN82-vD7ojb4eDQjcFEcwl1A/edit?usp=sharing&rm=demo&hl=en"
-                  title={'memo'}
-                  frameBorder='none'
-                  width="100%"
-                  height="100%"/>
-        </TabBlock>
-
-      </Tab>
-    )
   }
 
   render() {
+    let admin = (this.props.currentUser && this.props.currentUser.admin);
     return (
       <AppPage>
+        <Header
+          left={(
+            <Title
+            name={this.state.name}
+            admin={admin}
+            handleClick={() => this.updateQuestion()}
+            />
+          )}
+          right={(
+            <TimerBox
+              timerType={this.state.timerType}
+              durationMinute={this.state.durationMinute}
+              controllable={this.state.controllable}
+            />
+          )}
+        />
         <div className='codingroom'>
-          <Header left={this.renderTitle()}
-                  right={<TimerBox timerType={this.state.timerType}
-                                   durationMinute={this.state.durationMinute}
-                                   controllable={this.state.controllable} />} />
-          <div className='docs-editor'>
-            {this.renderTabs()}
-            <CodeEditor tests={this.state.tests} initialCode={''}/>
-          </div>
+          <Console
+            theme={this.state.theme}
+            keybinding={this.state.keybinding}
+            lang={this.state.lang}
+            handleChange={this.handleChange}
+          />
+          <RunButton
+            running={this.state.running}
+            onClick={() => this.runCode()}
+          />
+          <MainEditor
+            text={this.state.text}
+            theme={this.state.theme}
+            keybinding={this.state.keybinding}
+            lang={this.state.lang}
+            onChange={e => this.setState({text: e.target.value})}
+          />
+          <DocsTab
+            instruction={this.state.instruction}
+            tips={this.state.tips}
+            pseudo={this.state.pseudo}
+            editing={admin}
+            handleChange={this.handleChange}
+          />
+
+
+
         </div>
       </AppPage>
     )

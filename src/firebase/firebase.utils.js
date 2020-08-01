@@ -41,12 +41,12 @@ export const createNewUserIfNoMatch = async (user, additionalData) => {
 
   if(!newUser.exists) {
     const {displayName, email} = user;
-    const createdTime = new Date();
+    const createdAt = new Date();
     try {
       await userRef.set({
         displayName,
         email,
-        createdTime,
+        createdAt,
         ...additionalData,
       })
     } catch(err) {

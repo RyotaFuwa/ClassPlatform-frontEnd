@@ -27,11 +27,9 @@ class App extends React.Component {
     const { setCurrentUser } = this.props;
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async user => {
       if (!user) {
-        console.log('h')
         setCurrentUser(user);
       }
       else {
-        console.log('l')
         const userRef = await createNewUserIfNoMatch(user, {admin: false});
         userRef.onSnapshot(async snapshot => {
           setCurrentUser({
@@ -60,17 +58,10 @@ class App extends React.Component {
               <Redirect to='/'/>
           }
         />
-        <Route
-          path="/uipasswd/"
-          render={() =>
-          currentUser ?
-            <MyDeskPage/> :
-            <Redirect to='/'/>
-          }
-        />
+
 
         <Route
-          path="/classboard/"
+          path="/classboard"
           render={() =>
             currentUser ?
               <ClassBoard/> :
@@ -79,22 +70,22 @@ class App extends React.Component {
         />
         <Route
           path="/classroom/:class"
-          render={() =>
+          render={props =>
             currentUser ?
-              <ClassRoom /> :
+              <ClassRoom match={props.match} /> :
               <Redirect to='/'/>
           }
         />
         <Route
           path="/codingroom/:question"
-          render={() =>
+          render={props =>
           currentUser ?
-            <CodingRoom/> :
+            <CodingRoom match={props.match} /> :
             <Redirect to='/'/>
           }
         />
         <Route
-          path="/codingroom/"
+          path="/codingroom"
           render={() =>
           currentUser ?
             <CodingRoom/> :
@@ -117,6 +108,7 @@ class App extends React.Component {
               <Redirect to='/'/>
           }
         />
+        <Route path="/uipassword/" component={UIPassword} />
         <Route path="/myprofile" component={MyProfilePage}/>
         <Route path="/aboutthiswebsite" component={AboutThisWebsitePage}/>
         <Route path="/" render={() => <NotFound page/>}/>

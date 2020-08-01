@@ -10,24 +10,24 @@ const QuestionList = props => {
     case 'vertical':
       return (
         <div className='questionlist-vertical'>
-          <div className='questionlist-title'>{getRandomQuestion(props.questions, props.title)}</div>
+          <div className='questionlist-title'>{getRandomQuestion(props.questions, props.name)}</div>
           <div className='questionlist-vertical-content'>
-            {props.questions.map(each => <QuestionCard key={each.title} {...each} />)}
+            {props.questions.map(each => <QuestionCard key={each.name} {...each} />)}
           </div>
         </div>
       )
     case 'horizontal':
       return (
         <div className='questionlist-horizontal'>
-          <div className='questionlist-title'>{getRandomQuestion(props.questions, props.title)}</div>
           <div className='questionlist-line1'>
             <div className='w-100 border-basic'/>
           </div>
           <div className='questionlist-line2'>
             <div className='w-100 border-basic'/>
           </div>
-          <div className={'questionlist-horizontal-content'}>
-            {props.questions.map(each => <QuestionCard key={each.title} {...each} />)}
+          <div className='questionlist-title'>{getRandomQuestion(props.questions, props.name)}</div>
+          <div className='questionlist-horizontal-content'>
+            {props.questions.map(each => <QuestionCard key={each.name} {...each} />)}
           </div>
         </div>
       )
@@ -38,11 +38,11 @@ const QuestionList = props => {
 
 function getRandomQuestion(questions, category) {
   if(questions.length === 0) {
-    return <QuestionCard header title={category} question=''/>
+    return <QuestionCard header name={category} question='' active/>
   }
   let random = new Random();
   let card = random.chooseFrom(questions);
-  return <QuestionCard header title={category} question={card.title}/>
+  return <QuestionCard header name={category} question={card.name} active/>
 }
 
 export default QuestionList;

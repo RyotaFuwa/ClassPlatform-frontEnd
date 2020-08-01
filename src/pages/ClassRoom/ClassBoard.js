@@ -19,7 +19,7 @@ const nodeFetch = require('node-fetch');
 const API_URL = 'http://localhost:3001/api';
  */
 
-import { getClasses, createClass, updateClass } from '../../firebase/firebase.firestore.classes';
+import { getAllClasses, createClass, updateClass } from '../../firebase/firebase.firestore.classes';
 
 
 //TODO: data structure of page and api call
@@ -48,36 +48,37 @@ const CreateClassDialog = props => {
       <DialogTitle>Create a New Class</DialogTitle>
       <DialogContent>
         <div className='mb-5'>
-          Title: &nbsp;
-          <div className='ml-4'>
-            <TextField margin="dense"  type="name"
-                       value={name}
-                       onChange={e => props.onChange({name: e.target.value})}
-                       fullWidth/>
-          </div>
+          <TextField
+            label='Name'
+            type="text"
+            value={name}
+            onChange={e => props.onChange({name: e.target.value})}
+            fullWidth
+          />
         </div>
         <div className='mb-5'>
-          Tags: &nbsp;
-          <div className='m-4'>
-            <TextField label='Comma Separated'
-                       value={tags}
-                       onChange={e => props.onChange({tags: e.target.value})}
-                       fullWidth />
-          </div>
+          <TextField
+            label='Tags'
+            placeholder='Comma Separated'
+            value={tags}
+            onChange={e => props.onChange({tags: e.target.value})}
+            fullWidth
+          />
         </div>
         <div className='mb-5'>
-          Theme: &nbsp;
-          <div className='ml-4'>
-            <TextField value={theme}
-                       onChange={e => props.onChange({theme: e.target.value})}
-                       select fullWidth>
-              {Array.from(THEME, ([key, value]) =>
-                <MenuItem key={key} value={key}>
-                  {key}
-                </MenuItem>
-              )}
-            </TextField>
-          </div>
+          <TextField
+            label='Theme'
+            value={theme}
+            onChange={e => props.onChange({theme: e.target.value})}
+            select
+            fullWidth
+          >
+            {Array.from(THEME, ([key, value]) =>
+              <MenuItem key={key} value={key}>
+                {key}
+              </MenuItem>
+            )}
+          </TextField>
         </div>
       </DialogContent>
       <DialogActions>
@@ -218,20 +219,23 @@ class ClassBoard extends Component {
       .then(json => this.setState({classList: json.classes}))
       .catch(rej => console.log(rej));
    */
-    const querySnapshot = await getClasses();
-    let classList = querySnapshot.docs.map(doc => ({...doc.data(), classId: doc.id}));
-    if(!this.props.currentUser.admin) {
-      classList = classList.filter(cls => cls.active);
+    try {
+      const querySnapshot = await getAllClasses();
+      let classList = querySnapshot.docs.map(doc => ({...doc.data(), classId: doc.id}));
+      if (!this.props.currentUser.admin) {
+        classList = classList.filter(cls => cls.active);
+      }
+      this.setState({classList: classList});
     }
-    console.log(classList);
-    this.setState({classList: classList});
+    catch(err) {
+      alert("Failed to load classes");
+    }
   }
 
   onSelect(idx) {
     let {name, tags, theme} = this.state.classList[idx];
     this.setState({selectedIdx: idx, name: name, tags: tags, theme: theme});
   }
-
 
   async createClass() {
     // const tags = tagString.split(',').map(each => each.replace(/^\s+|\s+$/g, ''));
@@ -245,12 +249,19 @@ class ClassBoard extends Component {
       return;
     }
 
-    const newClass = {name: titlizedName, tags: tags, theme: theme, author: this.props.currentUser, active: true};
+    const newClass = {
+      name: titlizedName,
+      tags: tags,
+      theme: theme,
+      author: this.props.currentUser,
+      active: true,
+      createdAt: new Date(),
+    };
 
     try {
-      const documentRefernce = await createClass(newClass);
+      const documentRef = await createClass(newClass);
       this.setState(state => ({
-        classList: [...state.classList, {...newClass, classId: documentRefernce.id}],
+        classList: [...state.classList, {...newClass, classId: documentRef.id}],
         name: '',
         tags: '',
         theme: 'default',
@@ -262,7 +273,7 @@ class ClassBoard extends Component {
     }
   }
 
-  async editClass() {
+  async updateClass() {
     /* now edit operation is active only for admin users so this functionality is not needed.
     const { classId, author } = this.state.classList[this.state.selectedIdx];
     let qualifiedToEdit = !this.props.currentUser.admin && author !== this.props.currentUser;
@@ -313,29 +324,35 @@ class ClassBoard extends Component {
   }
 
   editDialogs() {
-    const {name, tags, theme, selectedIdx} = this.state;
+    const {classList, name, tags, theme, selectedIdx, popup} = this.state;
+    const editingClass = {name, tags, theme};
     return (
       <>
-        <CreateClassDialog open={this.state.popup === 0}
-                           editingClass={{name, tags, theme}}
-                           onChange={updateFields => this.setState(updateFields)}
-                           onClose={() => this.setState({popup: null, name: '', tags: '', theme: ''})}
-                           onSubmit={() => this.createClass()} />
-        <EditClassDialog open={this.state.popup === 1}
-                         classList={this.state.classList}
-                         selectedIdx={selectedIdx}
-                         editingClass={{name, tags, theme}}
-                         onSelect={idx => this.onSelect(idx)}
-                         onChange={updateFields => this.setState(updateFields)}
-                         onClose={() => this.setState({popup: null, selectedIdx: null, name: '', tags: '', theme: ''})}
-                         onSubmit={() => this.editClass()} />
-        <DeleteClassDialog open={this.state.popup === 2}
-                           classList={this.state.classList}
-                           selectedIdx={selectedIdx}
-                           editingClass={{name, tags, theme}}
-                           onSelect={idx => this.onSelect(idx)}
-                           onClose={() => this.setState({popup: null, selectedIdx: null})}
-                           onSubmit={() => this.deleteClass()} />
+        <CreateClassDialog
+          open={popup === 0}
+          editingClass={editingClass}
+          onChange={updateFields => this.setState(updateFields)}
+          onClose={() => this.setState({popup: null, name: '', tags: '', theme: ''})}
+          onSubmit={() => this.createClass()}
+        />
+        <EditClassDialog
+          open={popup === 1}
+          classList={classList}
+          selectedIdx={selectedIdx}
+          editingClass={editingClass}
+          onSelect={idx => this.onSelect(idx)}
+          onChange={updateFields => this.setState(updateFields)}
+          onClose={() => this.setState({popup: null, selectedIdx: null, name: '', tags: '', theme: ''})}
+          onSubmit={() => this.updateClass()}
+        />
+        <DeleteClassDialog
+          open={popup === 2}
+          classList={classList}
+          selectedIdx={selectedIdx}
+          editingClass={editingClass}
+          onSelect={idx => this.setState({selectedIdx: idx})}
+          onClose={() => this.setState({popup: null, selectedIdx: null})}
+          onSubmit={() => this.deleteClass()} />
      </>
     )
   }

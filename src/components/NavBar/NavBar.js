@@ -31,7 +31,7 @@ const NavBar = props => {
             <NavDropdown.Divider/>
             <NavDropdown.Item> Neural Network Architect </NavDropdown.Item>
             <NavDropdown.Divider/>
-            <NavDropdown.Item> UI Password </NavDropdown.Item>
+            <NavDropdown.Item href='/uipassword' > UI Password </NavDropdown.Item>
             <NavDropdown.Divider/>
             <NavDropdown.Item> Programming Language: Kitty </NavDropdown.Item>
           </NavDropdown>

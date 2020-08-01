@@ -13,7 +13,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import MenuItem from "@material-ui/core/MenuItem";
 import titlize from 'titlize';
-import {getClassByName} from "../../firebase/firebase.firestore.classes";
+import {getClassByName, updateClass} from "../../firebase/firebase.firestore.classes";
 
 const nodeFetch = require('node-fetch');
 const API_URL = 'http://localhost:3001/api';
@@ -32,7 +32,7 @@ const mapStateToProps = state => ({
 })
 
 //Info
-const EditDialog = props => {
+const InfoEditDialog = props => {
   const [open, setOpen] = React.useState(false);
   const [info, setInfo] = React.useState(props.info);
   return (
@@ -44,23 +44,34 @@ const EditDialog = props => {
           <div className='mb-5'>
             Author: &nbsp;
             <div className='ml-4'>
-              <TextField margin="dense" label="Name" type="name"
-                         value={info.author.name}
-                         onChange={e => setInfo({...info, author: {...info.author, name: e.target.value}})}
-                         fullWidth/>
-              <TextField margin="dense" label="Email" type="email"
-                         value={info.author.email}
-                         onChange={e => setInfo({...info, author: {...info.author, email: e.target.value}})}
-                         fullWidth autoFocus/>
+              <TextField
+                margin="dense"
+                label="Name"
+                type="name"
+                value={info.author.displayName}
+                disabled
+                fullWidth
+              />
+              <TextField
+                margin="dense"
+                label="Email"
+                type="email"
+                value={info.author.email}
+                disabled
+                fullWidth
+              />
             </div>
           </div>
           <div className='mb-5'>
             Level: &nbsp;
             <div className='m-4'>
-              <TextField select label="Level"
-                         value={info.level}
-                         onChange={e => setInfo({...info, level: e.target.value})}
-                         fullWidth>
+              <TextField
+                select
+                label="Level"
+                value={info.level}
+                onChange={e => setInfo({...info, level: e.target.value})}
+                fullWidth
+              >
                 {CLASS_LEVEL.map((each) => (
                   <MenuItem key={each} value={each}>
                     {each}
@@ -72,13 +83,20 @@ const EditDialog = props => {
           <div className='mb-5'>
             Duration: &nbsp;
             <div className='ml-4 infopanel-duration'>
-              <TextField margin="none" label='Duration' type="number"
-                         value={info.duration.number}
-                         onChange={e => setInfo({...info, duration: {...info.duration, number: e.target.value}})}
-                         autoFocus/>
-              <TextField select label="Unit"
-                         value={info.duration.unit}
-                         onChange={e => setInfo({...info, duration: {...info.duration, unit: e.target.value}})}>
+              <TextField
+                margin="none"
+                label='Duration'
+                type="number"
+                value={info.duration.number}
+                onChange={e => setInfo({...info, duration: {...info.duration, number: e.target.value}})}
+                autoFocus
+              />
+              <TextField
+                select
+                label="Unit"
+                value={info.duration.unit}
+                onChange={e => setInfo({...info, duration: {...info.duration, unit: e.target.value}})}
+              >
                 {TIME_UNIT.map((each) => (
                   <MenuItem key={each} value={each}>
                     {each}
@@ -87,16 +105,9 @@ const EditDialog = props => {
               </TextField>
             </div>
           </div>
-          <div className='mb-5'>
-            Description: &nbsp;
-            <TextField autoFocus margin='dense' type='textarea'
-                       value={info.description}
-                       onChange={e => setInfo({...info, description: e.target.value})}
-                       rows={4} multiline fullWidth/>
-          </div>
         </DialogContent>
         <DialogActions>
-          <Update onClick={() => {props.onUpdate(info); setOpen(false);}} />
+          <Update onClick={() => {props.onSubmit(info); setOpen(false);}} />
           <XSquare onClick={() => setOpen(false)}/>
         </DialogActions>
       </Dialog>
@@ -105,43 +116,31 @@ const EditDialog = props => {
 }
 
 
-const ClassInfo = connect(mapStateToProps)(props => {
-  const InfoPanel = () =>  (
-    <div className='infopanel'>
+const Info = props => {
+  const { author, level, duration } = props.info;
+  return (
+    <div className='infopanel' style={{fontFamily: props.style.fontFamily}}>
       <div>
         <b>Author</b>
         <div>
-          {props.info.author.name} &nbsp; &nbsp; [ {props.info.author.email} ]
+          {author.displayName} &nbsp; &nbsp; [ {author.email} ]
         </div>
       </div>
       <div>
         <b>Level</b>
         <div>
-          {props.info.level}
+          {level}
         </div>
       </div>
       <div>
         <b>Duration</b>
         <div>
-          {props.info.duration.number} {props.info.duration.unit}
+          {duration.number === 0 ? '' : `${duration.number} ${duration.unit}`}
         </div>
       </div>
-      <div>
-        <b>Description</b>
-        <p className='text-left'>
-          {props.info.description}
-        </p>
-      </div>
     </div>
   )
-
-  return (
-    <div style={{fontFamily: props.style.fontFamily}}>
-      <InfoPanel />
-      <EditDialog info={props.info} onUpdate={props.onUpdate}/>
-    </div>
-  )
-})
+}
 
 const SideBarCol = connect(mapStateToProps)(props => {
   const [draggable, setDraggable] = useState(false)
@@ -211,16 +210,15 @@ const SideBar = connect(mapStateToProps)(props => {
 class ClassRoom extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       // class info
       name: props.match && props.match.params.class ? props.match.params.class : '',
       tags: '',
       theme: 'default',
       docs: [],
-      author: null,
-      level: 'Not Specified',
-      duration: 'Not Specified',
+      author: {displayName: '', email: ''},
+      level: '',
+      duration: {number: 0, unit: ''},
 
       current: 0,
       focusIdx: null,
@@ -231,12 +229,11 @@ class ClassRoom extends Component {
   }
 
   async componentDidMount() {
-    console.log(`name: ${this.state.name}`);
-    console.log(this.props);
     try {
         const doc = await getClassByName(this.state.name);
         this.setState({
           ...doc.data(),
+          classId: doc.id,
           loading: false,
         })
       }
@@ -271,26 +268,19 @@ class ClassRoom extends Component {
     }
   }
 
-  updateClass(json) {
-    return nodeFetch(`${API_URL}/classes/${this.state.title}`, {
-      method: 'PUT',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({'class': {...json}}),
-    });
-  }
-
-  updateInfo(info) {
-    this.updateClass({info: info})
-        .then(res => {
-          if(res.status === 201)
-            console.log('succeeded')
-          else
-            console.log('failed')
-        })
-        .catch(console.log('failed'))
+  async updateClass(updatingFields) {
+    const { classId } = this.state;
+    try {
+      await updateClass(classId, updatingFields);
+      this.setState(updatingFields);
+    }
+    catch(err) {
+      alert(`Failed to update a class: ${err}`);
+    }
   }
 
   createDoc() {
+    /*
     nodeFetch(`${API_URL}/classes/${this.state.title}`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -307,9 +297,11 @@ class ClassRoom extends Component {
           .catch(() => console.log('failed'))
       })
       .catch(() => console.log('failed'))
+     */
   }
 
   deleteDoc(idx) {
+    /*
     nodeFetch(`${API_URL}/classes/${this.state.title}/${this.state.docs[idx]._id}`, {
       method: 'Delete',
       headers: {'Content-Type': 'application/json'},
@@ -327,6 +319,8 @@ class ClassRoom extends Component {
         }
       })
       .catch(() => console.log('failed'))
+
+     */
   }
 
   renderPage() {
@@ -354,15 +348,19 @@ class ClassRoom extends Component {
       )
     }
     let admin = this.props.currentUser && this.props.currentUser.admin;
+    let {name, author, level, duration} = this.state;
     return (
       <Page>
         <div className='classroom'>
           <div className='classroom-header' style={THEME.get(this.state.theme)}>
-            <div className='classroom-title'>{this.state.title}</div>
+            <div className='classroom-title'>{name}</div>
             <div className='classroom-info'>
-              <ClassInfo style={THEME.get(this.state.theme)}
-                         info={this.state.info}
-                         onUpdate={info => this.updateInfo(info)} />
+              <Info style={THEME.get(this.state.theme)} info={{author, level, duration}} />
+              {admin &&
+                <InfoEditDialog
+                  info={{author, level, duration}}
+                  onSubmit = {updatingFields => this.updateClass(updatingFields)} />
+              }
             </div>
           </div>
           <div className='classroom-sidebar'>
