@@ -1,6 +1,8 @@
 import firebase from 'firebase/app';
-import 'firebase/firestore';
 import 'firebase/auth';
+import 'firebase/firestore';
+import 'firebase/functions';
+import 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDTlGKeiqPJpMvMijIR5xSR1E-QnjIAEo8",
@@ -17,6 +19,8 @@ firebase.initializeApp(firebaseConfig);
 
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
+export const functions = firebase.functions();
+export const storage = firebase.storage();
 
 export const signInWithGoogle = async () => {
   const provider = new firebase.auth.GoogleAuthProvider();
@@ -57,17 +61,3 @@ export const createNewUserIfNoMatch = async (user, additionalData) => {
   return userRef;
 }
 
-/*
-export const signUp = () => {
-  const ui = new firebaseui.auth.AuthUI(firebase.auth());
-  ui.start('#firebaseui-auth-container', {
-    signInOptions: [
-      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-      firebase.auth.TwitterAuthProvider.PROVIDER_ID,
-      firebase.auth.GithubAuthProvider.PROVIDER_ID
-    ],
-    signInFlow: 'popup',
-  });
-}
-*/

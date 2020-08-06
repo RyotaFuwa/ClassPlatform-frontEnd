@@ -1,12 +1,10 @@
 import React from "react";
 import {connect} from 'react-redux';
 import TimerBox from "../../components/TimerBox/TimerBox";
-import AceEditor from "react-ace";
-import CollapibleBlock from "../../components/CollapibleBlock/CollapibleBlock";
 import {Tab, TabBlock} from "../../components/Tab/Tab";
-import CodeEditor from "../../components/CodeEditor/CodeEditor";
 import titlize from 'titlize';
 
+import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/mode-javascript";
@@ -18,12 +16,19 @@ import "ace-builds/src-noconflict/keybinding-vim";
 import "ace-builds/src-noconflict/keybinding-emacs";
 import "ace-builds/src-noconflict/keybinding-sublime";
 
-import {Create, Delete, Update} from "../../icons";
+import { Update} from "../../icons";
 import {AppPage, Header} from "../../components/Page/Page";
 import "./CodingRoom.css";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Button from "@material-ui/core/Button";
 import SelectPopover from "../../components/SelectPopover/SelectPopover";
+import Tips from "../../components/Tips/Tips";
+
+import {
+  getCodingQuestionByName, getContent, updateContent,
+} from "../../firebase/firebase.firestore.codingQuestions";
+
+import {setCurrentCodingQuestion} from "../../redux/coding/coding.actions";
 
 const Title = props => {
   return (
@@ -47,17 +52,20 @@ const Console = props => {
       <span className='m-1'/>
       <SelectPopover
         options={['monokai', 'github', 'dawn'].map(each => ({label: each, value: each, disabled: false}))}
+        color='primary'
         value={props.theme}
-        handleChange={e => props.handleChange({theme: e.target.value})}/>
-
+        handleChange={e => props.handleChange({theme: e.target.value})}
+      />
       <span className='m-1'/>
       <SelectPopover
         options={['sublime', 'vim', 'emacs'].map(each => ({label: each, value: each, disabled: false}))}
+        color='primary'
         value={props.keybinding}
-        handleChange={e => props.handleChange({keybinding: e.target.value})}/>
-
+        handleChange={e => props.handleChange({keybinding: e.target.value})}
+      />
       <span className='m-1'/>
       <SelectPopover
+        color='primary'
         options={[
           {label: 'python', value: 'python', disabled: false},
           {label: 'javascript', value: 'javascript', disabled: true},
@@ -65,7 +73,30 @@ const Console = props => {
           {label: 'C++', value: 'c_cpp', disabled: true},
         ]}
         value={props.lang}
-        handleChange={e => props.handleChange({lang: e.target.value})}/>
+        handleChange={e => props.handleChange({lang: e.target.value})}
+      />
+      {props.admin &&
+        <>
+          <span className='m-1'/>
+          <SelectPopover
+          color='secondary'
+          options={[
+            {label: 'Initial Text', value: 'text'},
+            {label: 'Solution', value: 'solution'},
+          ]}
+          value={props.editorMode}
+          handleChange={e => props.handleChange({editorMode: e.target.value})}
+          />
+          <span className='m-1'/>
+          <SelectPopover
+            color='secondary'
+            options={[
+              {label: 'Tests', value: 'tests'},
+            ]}
+            value='tests' //now its not working
+          />
+        </>
+      }
     </div>
   )
 }
@@ -78,7 +109,7 @@ const RunButton = props => {
       size='small'
       variant='contained'
       color="primary"
-      onClick={props.onClick()}
+      onClick={props.onClick}
       disabled={props.running}
     >
       Run
@@ -110,7 +141,7 @@ const MainEditor = props => {
         theme={props.theme}
         keyboardHandler={props.keybinding}
         value={props.text}
-        onChange={e => props.onChange(e.value.target)}
+        onChange={txt => props.onChange(txt)}
       />
     </div>
   )
@@ -130,44 +161,15 @@ const OutputBox = props => {
 
 const Instruction = props => {
   if (props.editing)
-    return (<textarea className="instruction" value={props.instruction} onChange={props.onChange}/>)
+    return (<textarea className="instruction scrollable size-fixed" value={props.instruction} onChange={props.onChange}/>)
   else
-    return (<pre className="h-100 w-100 pl-4 border-0 scrollable size-fixed" value={props.instruction}/>)
-}
-
-const Tips = props => {
-  if (props.editing) {
-    return (
-      <div className='tips'>
-        <div className='mt-3'>
-          <Create  onClick={props.onAdd}/>
-          <Delete onClick={props.onDelete} />
-        </div>
-
-        <div className='codingroom-docs-tips'>
-          {props.tips.map((helpTxt, idx) => (
-            <div key={idx} className='w-100'>
-              <div className='w-100 text-left'>Tip {idx + 1}</div>
-              <textarea className='w-100 size-fixed' style={{height: '100px'}} value={helpTxt} onChange={e => props.onChange(idx, e)} />
-            </div>
-          ))}
-        </div>
-      </div>
-    )
-  } else {
-    return (
-      <div className='tips'>
-        {props.tips.map((helpTxt, idx) => (
-          <CollapibleBlock key={idx} title={`Tip ${idx + 1}`}><p>{helpTxt}</p></CollapibleBlock>
-        ))}
-      </div>
-    )
-  }
+    return (<pre className="instruction scrollable size-fixed">{props.instruction}</pre>)
 }
 
 const DocsTab = props => {
   return (
-    <Tab className='docs-tab'>
+    <div className='docs-tab'>
+    <Tab>
       <TabBlock tabName="Instruction">
         <Instruction
           instruction={props.instruction}
@@ -181,15 +183,15 @@ const DocsTab = props => {
           editing={props.editing}
           onAdd={() => {
             props.tips.push('');
-            props.onChange({tips: [...props.tips]})
+            props.handleChange({tips: [...props.tips]})
           }}
           onDelete={() => {
             props.tips.pop();
-            props.onChange({tips: [...props.tips]})
+            props.handleChange({tips: [...props.tips]})
           }}
           onChange={(idx, e) => {
             props.tips[idx] = e.target.value;
-            props.onChange({tips: [...props.tips]})
+            props.handleChange({tips: [...props.tips]})
           }}
         />
       </TabBlock>
@@ -218,6 +220,7 @@ const DocsTab = props => {
         />
       </TabBlock>
     </Tab>
+    </div>
   )
 }
 
@@ -231,7 +234,8 @@ class CodingRoom extends React.Component {
       tips: [],
       tests: [],
       pseudo: '',
-      initialText: '',
+      text: '',
+      solution: ' ',
 
       lang: "python",
       theme: 'monokai',
@@ -243,19 +247,44 @@ class CodingRoom extends React.Component {
       durationMinute: 45,
 
       running: false,
+      editorMode: 'text'
       // editing: this.props.currentUser && this.props.currentUser.admin,
     };
   }
 
   async componentDidMount() {
     //firestore
+    let hasValidQuestionName = this.props.match && this.props.match.params.question
+    if(hasValidQuestionName) {
+      try {
+        let questionNotSet = this.props.currentCodingQuestion === null;
+
+        //codingQuestion should always be set if the user comes to this page from clicking a QuestionCard.
+        //now requesting contents by typing url directly is disabled so this if block is not supposed to be run.
+        if(questionNotSet) {
+          const codingQuestion = await getCodingQuestionByName(this.props.match.params.question);
+          await this.props.setCurrentCodingQuestion(codingQuestion);
+        }
+
+        const documentSnapshot = await getContent(this.props.currentCodingQuestion.contentId);
+        this.setState(documentSnapshot.data());
+      }
+      catch (err) {
+        alert("Failed to load the question.");
+        console.log(err);
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.setCurrentCodingQuestion(null);
   }
 
   async runCode() {
-    this.setState({running: true});
+    // this.setState({running: true});
     /*
     try {
-      const output = await run(this.state.text, this.state.lang)
+      const output = await run(this.state.lang, this.state.text)
       this.setState({output: output, running: false});
     } catch(err) {
       this.setState({output: {stdout: '', stderr: '', error: 'Failed to Run'}, running: false});
@@ -263,11 +292,14 @@ class CodingRoom extends React.Component {
     */
   }
 
-  async updateQuestion() {
+  async updateContent() {
+    const updatingFields = (({instruction, tips, tests, pseudo, text, solution}) =>
+      ({instruction, tips, tests, pseudo, text, solution}))(this.state);
     try {
-      //get questionContents
+      await updateContent(this.props.currentCodingQuestion.contentId, updatingFields);
     }
     catch(err) {
+      console.log(err)
       alert("Failed to Update Contents.")
     }
   }
@@ -276,70 +308,58 @@ class CodingRoom extends React.Component {
     this.setState(updatingFields);
   }
 
-  // DogTabs
-  addTips() {
-    this.setState(state => ({tips: [...state.tips, '']}))
-  }
-
-  deleteTips() {
-    this.setState(state => {state.tips.pop(); return {tips: [...state.tips]}})
-  }
-
-  handleChangeTips(idx, e) {
-    this.setState(state => {
-      state.tips[idx] = e.target.value;
-      return {tips: state.tips};
-    })
-  }
-
   render() {
-    let admin = (this.props.currentUser && this.props.currentUser.admin);
+    const admin = (this.props.currentUser && this.props.currentUser.admin);
+    let code = this.state.text;
+    if(this.state.editorMode === 'solution') {
+      code = this.state.solution;
+    }
     return (
       <AppPage>
-        <Header
-          left={(
-            <Title
-            name={this.state.name}
-            admin={admin}
-            handleClick={() => this.updateQuestion()}
-            />
-          )}
-          right={(
-            <TimerBox
-              timerType={this.state.timerType}
-              durationMinute={this.state.durationMinute}
-              controllable={this.state.controllable}
-            />
-          )}
-        />
-        <div className='codingroom'>
+        <div className='coding-room'>
+          <Header
+            left={(
+              <Title
+                name={this.state.name}
+                admin={admin}
+                handleClick={() => this.updateContent()}
+              />
+            )}
+            right={(
+              <TimerBox
+                timerType={this.state.timerType}
+                durationMinute={this.state.durationMinute}
+                controllable={this.state.controllable}
+              />
+            )}
+          />
           <Console
+            admin={admin}
             theme={this.state.theme}
             keybinding={this.state.keybinding}
             lang={this.state.lang}
-            handleChange={this.handleChange}
+            editorMode={this.state.editorMode}
+            handleChange={updatingFields => this.handleChange(updatingFields)}
           />
           <RunButton
             running={this.state.running}
             onClick={() => this.runCode()}
           />
           <MainEditor
-            text={this.state.text}
+            text={code}
             theme={this.state.theme}
             keybinding={this.state.keybinding}
             lang={this.state.lang}
-            onChange={e => this.setState({text: e.target.value})}
+            onChange={txt => this.setState({[this.state.editorMode]: txt})}
           />
+          <OutputBox output={this.state.output} />
           <DocsTab
             instruction={this.state.instruction}
             tips={this.state.tips}
             pseudo={this.state.pseudo}
             editing={admin}
-            handleChange={this.handleChange}
+            handleChange={updatingFields => this.handleChange(updatingFields)}
           />
-
-
-
         </div>
       </AppPage>
     )
@@ -348,6 +368,11 @@ class CodingRoom extends React.Component {
 
 const mapStateToProps = state => ({
   currentUser: state.user.currentUser,
+  currentCodingQuestion: state.coding.currentCodingQuestion,
 })
 
-export default connect(mapStateToProps)(CodingRoom);
+const mapDispatchToProps = dispatch => ({
+  setCurrentCodingQuestion: question => dispatch(setCurrentCodingQuestion(question)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(CodingRoom);

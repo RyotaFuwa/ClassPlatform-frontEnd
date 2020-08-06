@@ -1,15 +1,24 @@
-.footer-grid {
-  height: 50px;
-  display: grid;
-  align-items: center;
+.footer {
+  z-index: -1;
 }
 
-.footer-item-left {
-  grid-column: 1/2;
+.footer-grid {
+  margin-top: 200px;
+  padding: 0 1vw;
+  height: 50px;
+  color: black;
+  display: grid;
+  align-items: center;
+  grid-template-areas:
+  "left center right";
+}
+
+.footer-grid .left {
+  grid-area: left;
   text-align: left;
 }
 
-.footer-item-right {
-  grid-column: 3/4;
+.footer-grid .right {
+  grid-area: right;
   text-align: right;
 }

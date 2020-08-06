@@ -55,8 +55,16 @@ class TimerBox extends Component {
           <Timer.Seconds/> &nbsp;
         </div>
         <span className="timerbox-ops">
-          <TimerOp op={this.state.op} onClick={e => this.onClick(e, start, stop)} disabled={!this.state.controllable} />
-          <Restart onClick={e => {this.setState(state => ({op: 0})); stop(e); reset(e);}} disabled={!this.state.controllable}/>
+          <TimerOp
+            op={this.state.op}
+            onClick={e => this.onClick(e, start, stop)}
+            disabled={!this.state.controllable}
+          />
+          <span className='m-1' />
+          <Restart
+            onClick={e => {this.setState(state => ({op: 0})); stop(e); reset(e);}}
+            disabled={!this.state.controllable}
+          />
         </span>
 
       </div>

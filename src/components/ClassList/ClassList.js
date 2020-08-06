@@ -5,14 +5,7 @@ import './ClassList.css';
 const ClassList = props => {
   return (
     <div className="classList">
-      {props.classList.map((each, idx) => (
-          <ClassCard key={idx}
-                     name={each.name}
-                     imgURL={each.imgURL}
-                     active={each.active}
-          />
-        )
-      )}
+      {props.classList.map((each, idx) => <ClassCard key={idx} class={each} />)}
     </div>
   )
 }

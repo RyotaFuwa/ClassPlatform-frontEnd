@@ -97,7 +97,7 @@ export const SignIn = props => {
   const id = open ? 'simple-popover' : undefined;
 
   return (
-    <div>
+    <>
       <Button aria-describedby={id} onClick={handleClick}>
         Sign In
       </Button>
@@ -130,6 +130,6 @@ export const SignIn = props => {
           </div>
         </div>
       </Popover>
-    </div>
+    </>
   );
 }

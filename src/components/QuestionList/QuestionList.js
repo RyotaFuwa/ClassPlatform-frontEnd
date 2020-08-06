@@ -12,7 +12,7 @@ const QuestionList = props => {
         <div className='questionlist-vertical'>
           <div className='questionlist-title'>{getRandomQuestion(props.questions, props.name)}</div>
           <div className='questionlist-vertical-content'>
-            {props.questions.map(each => <QuestionCard key={each.name} {...each} />)}
+            {props.questions.map(each => <QuestionCard key={each.name} codingQuestion={each} />)}
           </div>
         </div>
       )
@@ -27,7 +27,7 @@ const QuestionList = props => {
           </div>
           <div className='questionlist-title'>{getRandomQuestion(props.questions, props.name)}</div>
           <div className='questionlist-horizontal-content'>
-            {props.questions.map(each => <QuestionCard key={each.name} {...each} />)}
+            {props.questions.map(each => <QuestionCard key={each.name} codingQuestion={each}  />)}
           </div>
         </div>
       )
@@ -37,12 +37,15 @@ const QuestionList = props => {
 }
 
 function getRandomQuestion(questions, category) {
+  let codingQuestion = {header: true, name: category, active: true};
   if(questions.length === 0) {
-    return <QuestionCard header name={category} question='' active/>
+    codingQuestion.question = '';
+    return <QuestionCard codingQuestion={codingQuestion} />
   }
   let random = new Random();
   let card = random.chooseFrom(questions);
-  return <QuestionCard header name={category} question={card.name} active/>
+  codingQuestion.question = card.name
+  return <QuestionCard codingQuestion={codingQuestion} />
 }
 
 export default QuestionList;

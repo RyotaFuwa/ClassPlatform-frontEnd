@@ -25,8 +25,6 @@ import {
 import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 
-//TODO: Edit Forms to Dialog
-
 const nodeFetch = require('node-fetch');
 const API_URL = 'http://localhost:3001/api';
 
@@ -55,7 +53,7 @@ const EditControl = props => {
 const CreateQuestionDialog = props => {
   const {name, difficulty, category, tags} = props.editingQuestion;
     return (
-      <Dialog fullWidth maxWidth='sm' open={props.open}>
+      <Dialog maxWidth='sm' open={props.open} fullWidth >
         <DialogTitle>Create a New Question</DialogTitle>
         <DialogContent>
           <div className='mb-5'>
@@ -112,99 +110,108 @@ const CreateQuestionDialog = props => {
 }
 
 const EditQuestionDialog = props => {
-  let questionList = props.questionList
-    .map((each, idx) => ({label: each.name, value: idx}))
-    .sort((a, b) => (a.label >= b.label));
+  const {name, difficulty, category, tags} = props.editingQuestion;
   return (
-    <Dialog open={props.open}>
-      <form className='form' onSubmit={e => {e.preventDefault(); props.onSubmit()}}>
-        <label>
-        <div>Question to Edit</div>
-          <Select className="basic-single"
-                  classNamePrefix="select"
-                  isClearable
-                  isSearchable
-                  name="quesiton"
-                  options={questionList}
-                  onChange={e => {if(e) {props.onSelect(e.value)}}} />
-        </label>
-        <label>
-          <div>Title</div>
-          <input value={props.editingQuestion.name} onChange={e => props.setTitle(e.target.value)} />
-        </label>
-        <label>
-          <div>Category</div>
-          <Select className="basic-single"
-                  classNamePrefix="select"
-                  isSearchable
-                  name="category"
-                  value={{label: props.editingQuestion.category, value: props.editingQuestion.category}}
-                  options={[...CATEGORY, 'Misc'].map(each => ({label: each, value: each}))}
-                  onChange={e => props.setCategory(e.label)} />
-        </label>
-        <label>
-          <div>Level</div>
-            <Slider style={{width: 200}}
-                    value={props.editingQuestion.difficulty}
-                    valueLabelDisplay='auto'
-                    onChange={(e, v) => props.setLevel(v)} />
-
-        </label>
-        <label>
-          <div>Tags</div>
-          <input value={props.editingQuestion.tags} placeholder='Comma Separated' onChange={e => props.setTags(e.target.value)} />
-        </label>
-
-        <Button className='form-button' type="submit">
-          Edit
-        </Button>
-      </form>
+    <Dialog maxWidth='sm' open={props.open} fullWidth>
+      <DialogTitle>Edit a Question</DialogTitle>
+      <DialogContent>
+        <div className='mb-5'>
+          <TextField
+            select
+            value={props.selectedIdx !== null ? props.selectedIdx : props.questionList.length}
+            onChange={e => props.onSelect(e.target.value)}
+            fullWidth
+          >
+            {
+              props.questionList.map((each, idx) => (
+                <MenuItem key={each.name} value={idx}>
+                  {each.name}
+                </MenuItem>
+              ))
+            }
+          </TextField>
+        </div>
+        <div className='mb-5'>
+          <TextField
+            label='Name'
+            value={name}
+            onChange={e => props.onChange({name: e.target.value})}
+            fullWidth
+          />
+        </div>
+        <div className='mb-5'>
+          <TextField
+            label="Category"
+            value={category}
+            onChange={e => props.onChange({category: e.target.value})}
+            select
+            fullWidth
+          >
+            {
+              CATEGORY.map(each => (
+                <MenuItem key={each} value={each}>
+                  {each}
+                </MenuItem>
+              ))
+            }
+          </TextField>
+        </div>
+        <div className='mb-5'>
+          <Typography id="continuous-slider" gutterBottom>
+            Difficulty
+          </Typography>
+          <Slider
+            value={difficulty}
+            valueLabelDisplay='auto'
+            onChange={(e, v) => props.onChange({difficulty: v})}
+          />
+        </div>
+        <div className='mb-5'>
+          <TextField
+            label='Tags'
+            placeholder='Comma Separated'
+            value={tags}
+            onChange={e => props.onChange({tags: e.target.value})}
+            fullWidth
+          />
+        </div>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={props.onSubmit}> Edit </Button>
+        <Button onClick={props.onClose}> Cancel </Button>
+      </DialogActions>
     </Dialog>
   )
 }
 
 const DeleteQuestionDialog = props => {
-  let [sure, setSure] = useState(false);
-  let questionList = props.questionList
-    .map((each, idx) => ({label: each.name, value: idx}))
-    .sort((a, b) => (a.label >= b.label));
   return (
-    <Dialog open={props.open} maxWidth='sm'>
-      <form className='form' onSubmit={e => {
-                                              if(sure) {
-                                              e.preventDefault();
-                                              props.onSubmit();
-                                              }
-                                              else {
-                                              setSure(true);
-                                              }
-                                              }}>
-        <label>
-          <div>Question to Delete</div>
-          <Select className="basic-single"
-                  classNamePrefix="select"
-                  isClearable
-                  isSearchable
-                  name="quesiton"
-                  options={questionList}
-                  onChange={e => {if(e) {props.onSelect(e.value)}}} />
-        </label>
-        {!sure &&
-          <Button className='form-button' onClick={() => setSure(true)}>
-            Delete
-          </Button>
-        }
-        {sure &&
-          <span>
-            <Button className='form-button m-1'  type="submit">
-              Sure
-            </Button>
-            <Button className='form-button m-1' onClick={() => setSure(false)}>
-              Nah
-            </Button>
-          </span>
-        }
-      </form>
+    <Dialog open={props.open} maxWidth='sm' fullWidth>
+      <DialogTitle>Delete a Class</DialogTitle>
+      <DialogContent>
+        <TextField
+          select
+          value={props.selectedIdx !== null ? props.selectedIdx : props.questionList.length}
+          onChange={e => props.onSelect(e.target.value)}
+          fullWidth
+        >
+          {
+            props.questionList.map((each, idx) => (
+              <MenuItem key={each.name} value={idx}>
+                {each.name}
+              </MenuItem>
+            ))
+          }
+        </TextField>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => props.onSubmit()}>
+          Delete
+        </Button>
+        <Button onClick={props.onClose}>
+          Cancel
+        </Button>
+      </DialogActions>
     </Dialog>
   )
 }
@@ -238,29 +245,33 @@ const CodingChallengeDialog = props => {
   )
 }
 
-const GoToCodingRoom  = () => (
-  <Button variant='outlined'>
-    <Link className='link' to='/codingroom'>
-      Go to Coding Room
-    </Link>
-  </Button>
-)
+const GoToCodingRoom  = () => {
+  return (
+    <Button variant='outlined'>
+      <Link className='link' to='/codingroom'>
+        Go to Coding Room
+      </Link>
+    </Button>
+  )
+}
 
-const SortPanel = props => (
-  <div className='questionboard-sortpanel'>
-    <ButtonGroup size='large' variant='text'>
-    {SORT_TYPE.map((each, idx) => (
-      <Button
-        key={idx}
-        disabled={props.sortIdx === idx}
-        onClick={() => props.onChange(idx)}
-      >
-        {each}
-      </Button>
-    ))}
-    </ButtonGroup>
-  </div>
-)
+const SortPanel = props => {
+  return (
+    <div className='questionboard-sortpanel'>
+      <ButtonGroup size='large' variant='text'>
+      {SORT_TYPE.map((each, idx) => (
+        <Button
+          key={idx}
+          disabled={props.sortIdx === idx}
+          onClick={() => props.onChange(idx)}
+        >
+          {each}
+        </Button>
+      ))}
+      </ButtonGroup>
+    </div>
+  )
+}
 
 
 //sorting questions
@@ -338,7 +349,7 @@ class CodingBoard extends Component {
       challenge: false,
 
       //editing question info
-      selectedIdx: 0,
+      selectedIdx: null,
       name: '',
       difficulty: 0,
       category: '',
@@ -362,9 +373,9 @@ class CodingBoard extends Component {
   }
 
   handleSelect(idx) {
-    const selectedQuestion = this.state.questionList[idx];
-    const { name, difficulty, category, tags } = selectedQuestion;
+    const { name, difficulty, category, tags } = this.state.questionList[idx];
     this.setState({
+      selectedIdx: idx,
       name: name,
       difficulty: difficulty,
       category: category,
@@ -395,7 +406,7 @@ class CodingBoard extends Component {
           onClose={() => this.setState({popup: null, selectedIdx: null, name: '', difficulty: 0, category: '', tags: ''})}
         />
         <DeleteQuestionDialog
-          open={this.state.popup === 1}
+          open={this.state.popup === 2}
           questionList={this.state.questionList}
           selectedIdx={selectedIdx}
           onSelect={idx => this.setState({selectedIdx: idx})}
@@ -421,15 +432,14 @@ class CodingBoard extends Component {
       category: category,
       difficulty: difficulty,
       tags: tags,
-      active: true,
       createdAt: new Date(),
     }
 
     //firestore
     try {
-      const documentRef = await createCodingQuestion(newQuestion);
+      const [questionRef, contentRef] = await createCodingQuestion(newQuestion);
       this.setState(state => ({
-        quesitonList: [...state.questionList, {...newQuestion, questionId: documentRef.id}],
+        questionList: [...state.questionList, {...newQuestion, active: true, outStanding: true, contentId: contentRef.id}], //
         name: '',
         difficulty: 0,
         category: '',
@@ -443,7 +453,7 @@ class CodingBoard extends Component {
   }
 
   async editQuestion() {
-    const { questionId } = this.state.classList[this.state.selectedIdx];
+    const { questionId } = this.state.questionList[this.state.selectedIdx];
     const {name, difficulty, category, tags} = this.state;
     const titlizedName = titlize(name);
     const updatingFields = {
@@ -457,7 +467,7 @@ class CodingBoard extends Component {
     try {
       await updateCodingQuestion(questionId, updatingFields);
       this.setState(state => {
-        Object.assign(state.questionList[state.selectedIdx], updatingFields);
+        Object.assign(state.questionList[state.selectedIdx], {...updatingFields, outStanding: true});
         return {
           questionList: [...state.questionList],
           name: '',
@@ -482,11 +492,16 @@ class CodingBoard extends Component {
       await updateCodingQuestion(questionId, {active: false});
       this.setState(state => {
         Object.assign(state.questionList[state.selectedIdx], {active: false});
-        return {questionList: [...state.questionList]}
+        return {
+          questionList: [...state.questionList],
+          selectedIdx: null,
+          popup: null,
+        }
       })
     }
     catch(err) {
       alert('Failed to delete(inactivate) the question');
+      console.log(err);
     }
 
   }
@@ -501,28 +516,48 @@ class CodingBoard extends Component {
     if(!admin) {
       filteredQuestionList = filteredQuestionList.filter(each => each.active);
     }
-
     return (
       <>
         <Page>
-          <Header left={(
-            <div className='title'>
-              Coding Board
-              {admin && <EditControl handleClick={idx => this.setState(state => ({popup: state.popup === null ? idx : null}))}/>}
-            </div>
-          )}
-                  center={<SearchBox placeholder='Search Question'
-                                     onChange={e => this.setState({searchString: e.target.value})}/>}
-                  right={<div className='codingboard-right'><GoToCodingRoom /><CodingChallengeDialog /></div>} />
-          <SortPanel sortIdx={this.state.sortIdx}
-                     onChange={idx => this.setState({sortIdx: idx})} />
-          <QuestionBoard questionList={filteredQuestionList} sortIdx={this.state.sortIdx} />
+          <Header
+            left={
+              <div className='title'>
+                Coding Board
+                {admin &&
+                  <EditControl
+                    handleClick={idx => this.setState(state => ({popup: state.popup === null ? idx : null}))}
+                  />
+                }
+              </div>
+            }
+            center={
+              <SearchBox
+                placeholder='Search Question'
+                onChange={e => this.setState({searchString: e.target.value})}
+              />
+            }
+            right={
+              <div className='codingboard-right' >
+                <GoToCodingRoom />
+                <CodingChallengeDialog />
+              </div>
+            }
+          />
+          <SortPanel
+            sortIdx={this.state.sortIdx}
+            onChange={idx => this.setState({sortIdx: idx})}
+          />
+          <QuestionBoard
+            questionList={filteredQuestionList}
+            sortIdx={this.state.sortIdx}
+          />
         </Page>
         {this.editDialogs()}
       </>
   )
   }
 }
+
 
 const mapStateToProps = state => ({
   currentUser: state.user.currentUser,

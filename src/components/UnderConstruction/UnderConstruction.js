@@ -13,7 +13,6 @@ const UnderConstruction = props => {
       <Dialog open={open} onClose={() => setOpen(false)} fullScreen>
           <AppPage>
             <div className='under-construction'>
-              <img src={underConstruction} />
               <div className='title'>Under Construction</div>
               <Button className='close' onClick={() => setOpen(false)}>
                 Close

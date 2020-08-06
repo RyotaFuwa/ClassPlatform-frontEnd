@@ -22,8 +22,19 @@ const ProjectFrame = props => {
           {props.description ? props.description.map((each, idx) => <p key={idx}> {each}</p>) : []}
         </div>
         <div className='tags'>
-          {props.tags ? props.tags.map(
-            (each, idx) => <Chip key={idx} label={each} size='small' variant="default" />) : []}
+          {props.tags ?
+            props.tags.map((each, idx) =>
+              <span className='m-1'>
+                <Chip
+                  key={idx}
+                  label={each}
+                  size='small'
+                  variant="default"
+                />
+              </span>
+            ) :
+            []
+          }
         </div>
       </div>
     </div>

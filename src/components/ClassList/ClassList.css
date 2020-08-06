@@ -3,6 +3,6 @@
   margin: 2vh auto;
   padding-top: 200px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(auto-fill, 350px);
   grid-gap: 20px;
 }

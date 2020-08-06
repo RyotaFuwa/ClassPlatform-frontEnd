@@ -120,7 +120,7 @@ export const SignUp = props => {
   const id = open ? 'simple-popover' : undefined;
 
   return (
-    <div>
+    <>
       <Button aria-describedby={id} onClick={handleClick}>
         Sign Up
       </Button>
@@ -147,6 +147,6 @@ export const SignUp = props => {
           </div>
         </div>
       </Popover>
-    </div>
+    </>
   );
 }

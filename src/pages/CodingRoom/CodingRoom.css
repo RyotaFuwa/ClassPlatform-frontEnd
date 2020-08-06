@@ -1,18 +1,27 @@
 .coding-room {
+  width: 100%;
   height: 100%;
-  padding: 1vmin;
   display: grid;
+  padding: 10px 10px;
   grid-gap: 1vmin;
-  grid-template-rows: 30px 60% auto;
-  grid-template-columns: auto 55% 50px;
+  grid-template-rows: auto 30px 60% 1fr;
+  grid-template-columns: auto 55% 100px;
   grid-template-areas:
+  "header header header"
   "docs-tab console run-button"
   "docs-tab main-editor main-editor"
   "docs-tab output-box output-box";
+
+}
+
+.coding-room .header {
+  grid-area: header;
 }
 
 .coding-room .console {
   grid-area: console;
+  display: flex;
+  flex-direction: row;
 }
 
 .coding-room .run-button {
@@ -20,34 +29,36 @@
 }
 
 .coding-room .main-editor {
+  width: 100%;
+  height: 100%;
   grid-area: main-editor;
 }
 
+.coding-room .output-box {
+  width: 100%;
+  height: 100%;
+  background-color: #151518;
+  grid-area: output-box;
+  overflow-y: scroll;
+  text-align: left;
+}
+
 .coding-room .docs-tab {
+  width: 100%;
+  height: 100%;
   grid-area: docs-tab;
 }
 
-.coding-room .output-box {
-  grid-area: output-box;
-}
-
-
-
-
-
-.docs-editor {
+.docs-tab .instruction {
   width: 100%;
-  display: grid;
-  grid-gap: 1vmin 1vmin;
-  grid-template-columns: 40% auto;
+  height: 100%;
+  padding-left: 1em;
+  border: 0;
 }
 
-.codingroom-docs-tips {
-  display: grid;
-  margin-top: 30px;
-  padding: 0 30px;
-  grid-gap: 30px;
-  grid-template-rows: repeat(auto-fit, auto);
+.docs-tab .tips {
+  width: 100%;
+  height: 100%;
 }
 
 .questionboard-sortpanel {

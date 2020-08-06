@@ -1,9 +1,9 @@
 .myprofile-title {
   background-color: midnightblue;
   color: white;
-  margin: 0;
   height: 500px;
   display: grid;
+  justify-items: center;
   margin-bottom: 7vh;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 2fr 2fr 1fr 1fr;

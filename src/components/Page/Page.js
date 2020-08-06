@@ -30,7 +30,7 @@ const AppPage = props => {
 
 const Header = props => {
   return (
-    <div className='page-header'>
+    <div className='header'>
       <div className='left'>
         {props.left}
       </div>

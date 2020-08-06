@@ -19,8 +19,12 @@ textarea, pre {
   font-family: "Tsukushi A Round Gothic", serif;
 }
 
+.brand.admin {
+  color: deeppink;
+}
 
-.brand:link, .brand:hover {
+
+.brand:hover {
   color: dimgray;
   text-decoration: none;
 }
@@ -44,11 +48,20 @@ textarea:focus, input:focus {
 
 .link {
   color: inherit;
-  text-decoration: inherit;
+  text-decoration: none;
 }
 
-.link:hover, .link:link {
-  color: dimgray;
+.link:hover {
+  color: lightgray;
+  text-decoration: none;
+}
+
+.no-link {
+  color: black;
+}
+
+.no-link:hover {
+  color: black;
   text-decoration: none;
 }
 

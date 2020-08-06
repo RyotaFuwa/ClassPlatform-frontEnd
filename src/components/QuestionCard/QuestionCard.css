@@ -5,6 +5,7 @@
   height: 55px;
   border: 1px solid black;
   border-radius: 3px;
+  grid-gap: 5px;
   grid-template-columns: 50px 1fr auto;
   box-shadow: 1px 3px 5px #666666;
 }
@@ -14,21 +15,21 @@
   transform: scale(1.1);
 }
 
-.questioncard-color {
+.questioncard .color {
   grid-column: 1 / 2;
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px;
 }
 
-.questioncard-title {
+.questioncard .title {
+  font-family: "Tsukushi A Round Gothic", sans-serif;
   grid-column: 2 / 3;
   align-self: center;
   overflow-x: scroll;
   white-space: nowrap;
-  font-family: "Tsukushi A Round Gothic", sans-serif;
 }
 
-.questioncard-tags {
+.questioncard .tags {
   grid-column: 3 / 4;
   min-width: 50px;
   max-width: 250px;

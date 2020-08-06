@@ -1,66 +1,98 @@
-import React, {useState} from "react";
-import NavBar from "../../components/NavBar/NavBar";
-import SpaceBoard from "../../components/GraphicBoard/GraphicBoard";
-import Footer from "../../components/Footer/Footer";
+import React, {useEffect, useState} from "react";
+import {connect} from 'react-redux';
+import styled from 'styled-components';
+import {AppPage, Page} from "../../components/Page/Page";
 import "./HomePage.css";
-import {Page} from "../../components/Page/Page";
-import algorithm from '../../data/algorithm.jpg';
-import UnderConstruction from "../../components/UnderConstruction/UnderConstruction";
+import Button from "@material-ui/core/Button";
+import {LinearRightDown, LinearRightUp, WaveDown} from "../../data/svgs";
+import {Link} from "react-router-dom";
+import {SignIn} from "../../components/Register/SignIn";
+import {SignUp} from "../../components/Register/SignUp";
+import {AbsoluteBottom, AbsoluteTop} from "../../components/Primitives/Primitives";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 
-const Test = props => {
-  const [idx, setIdx] = useState(props.idx)
-  return (
-    <div>{idx} <button onClick={() => setIdx(idx + 1)}>One Step Up</button></div>
-  )
-}
+const Home = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+`
 
-class TestList extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      list: [],
-      listIdx: [],
-    }
-  }
+const Brand = styled.span`
+  color: lightpink;
+  text-decoration: none;
+  font-weight: bolder;
+  font-family: "Tsukushi A Round Gothic", serif;
+`
 
-  componentDidMount() {
-    let listIdx = [];
-    let list = [];
-    for(let i = 0; i < 10; i++) {
-      listIdx.push(i);
-      list.push(<Test key={i} idx={i} />)
-    }
-    this.setState({list: list, listIdx: listIdx});
-  }
+const Banner = styled.div`
+  width: 100%;
+  height: 65vh;
+  padding: 5vh 10vw;
+  background-color: royalblue;
+  color: white;
+  display: grid;
+  grid-template-areas:
+  "wave wave"
+  "title links";
+`
 
-  render() {
-    let out =(this.state.listIdx.map(idx => this.state.list[idx]));
-    return <div>
-      {out}
-      <button onClick={() => this.setState(state => {
-        let poped = state.list.pop();
-        state.list.splice(0, 0, poped);
-        return {list: [...state.list]}
-      })}>shift to right</button>
-    </div>
-    /*
-    return (
-      <div>
-        {this.state.listIdx.map(each => this.state.list[each])}
-        <button onClick={this.setState(state => ({listIdx: state.listIdx.shift()}))}>shift to right</button>
-      </div>
-    )
+const Title = styled.div`
+  grid-area: title;
+  font-size: 2rem;
+  margin: 2rem;
+  text-align: left;
+  align-self: center;
+`
 
-     */
-  }
-}
+const Links = styled.div`
+  grid-area: links;
+  font-size: 2rem;
+  margin: 2rem;
+  text-align: center;
+  align-self: center;
+  color: black;
+`
 
-const HomePage = () => {
+const HomePage = props => {
   return (
     <Page>
-      <UnderConstruction />
+      <Home>
+        <Banner>
+          <Title>
+            Welcome to <Brand>Class Platform</Brand>!
+          </Title>
+          <Links>
+            {props.currentUser ?
+              <ButtonGroup variant='text' size='large'>
+                <Button>
+                  <Link className='no-link' to='/classboard'>
+                    Go to Class
+                  </Link>
+                </Button>
+                <Button>
+                  <Link className='no-link' to='/codingboard'>
+                    Go Coding
+                  </Link>
+                </Button>
+              </ButtonGroup> :
+              <Button size='large' variant='text' disabled>
+                Sign in First From Top Right Corner. <br />
+              </Button>
+            }
+          </Links>
+        </Banner>
+        <LinearRightUp color={'royalblue'} />
+        <AbsoluteTop>
+          <WaveDown color={'midnightblue'} />
+        </AbsoluteTop>
+      </Home>
     </Page>
   );
 }
 
-export default HomePage;
+const mapStateToProps = state => ({
+  currentUser: state.user.currentUser
+})
+
+export default connect(mapStateToProps)(HomePage);

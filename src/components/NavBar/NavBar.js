@@ -9,6 +9,7 @@ import {SignUp} from "../Register/SignUp";
 import {SignIn} from "../Register/SignIn";
 import {Link} from "react-router-dom";
 import UserPopover from "../UserPopover/UserPopover";
+import styled from 'styled-components';
 
 
 //TODO: redesign
@@ -18,7 +19,7 @@ const NavBar = props => {
     <Navbar bg='light' expand='sm'>
       <Navbar.Brand>
         <Link className='brand' to='/'>
-          ClassPlatform {admin && 'Admin.'}
+          ClassPlatform
         </Link>
       </Navbar.Brand>
 
@@ -38,7 +39,10 @@ const NavBar = props => {
         </Nav>
         <Nav>
           {props.currentUser ?
-            <UserPopover />
+            <>
+              {admin && <Navbar.Brand><span className='brand admin'>Admin</span></Navbar.Brand>}
+              <UserPopover />
+            </>
             :
             <>
               <SignUp />

@@ -1,0 +1,9 @@
+
+.tips {
+  display: flex;
+  flex-direction: column;
+}
+
+.tip-box {
+  margin: 5% 5%;
+}
