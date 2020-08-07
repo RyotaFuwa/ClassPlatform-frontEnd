@@ -1,12 +1,18 @@
-import React, {Component, useState} from "react";
+import React from "react";
+import {connect} from 'react-redux';
 import './ClassCard.css'
 import {Link} from "react-router-dom";
+import {setCurrentClass} from "../../redux/class/class.actions";
 
 const ClassCard = props => {
-  const { name, active, imageUrl } = props.class;
+  const {name, active, imageUrl} = props.class;
   // check if imgURL does return a valid img
   return (
-    <Link className='link' to={`/classroom/${name}`}>
+    <Link
+      className='link'
+      onClick={() => props.setCurrentClass(props.class)}
+      to={`/classroom/${name}`}
+    >
       <div className="class-card">
         <div className='img'>
           {imageUrl && <img src={imageUrl}/> }
@@ -17,5 +23,8 @@ const ClassCard = props => {
   );
 }
 
+const mapDispatchToProps = dispatch => ({
+  setCurrentClass: cls => dispatch(setCurrentClass(cls)),
+})
 
-export default ClassCard;
+export default connect(null, mapDispatchToProps)(ClassCard);

@@ -12,24 +12,19 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import MenuItem from "@material-ui/core/MenuItem";
-import titlize from 'titlize';
-import {getClassByName, updateClass} from "../../firebase/firebase.firestore.classes";
+import {createDoc, getClassByName, updateClass} from "../../firebase/firebase.firestore.classes";
+import {setCurrentClass} from "../../redux/class/class.actions";
 
-const nodeFetch = require('node-fetch');
-const API_URL = 'http://localhost:3001/api';
 const CLASS_LEVEL = ['None', 'Easy', 'Intermediate', 'Advanced', 'Research'];
 const TIME_UNIT = ['None', 'min', 'hour', 'day', 'week', 'month', 'year'];
 const THEME = new Map([['default', {fontFamily: "Tsukushi A Round Gothic", backgroundColor: 'darkblue', color: 'white'}], ['modern', {}], ['classic', {}], ['mono', {}],]);
 
-//HACK: on backend proxy, set up in-memory db to alleviate load of doc content update to main db.
-
-//TODO: user authentification, admin, editing deployment with redux
-//TODO: data structure of page and api call
-
 
 const mapStateToProps = state => ({
   currentUser: state.user.currentUser,
+  currentClass: state.class.currentClass,
 })
+
 
 //Info
 const InfoEditDialog = props => {
@@ -115,11 +110,10 @@ const InfoEditDialog = props => {
   );
 }
 
-
 const Info = props => {
   const { author, level, duration } = props.info;
   return (
-    <div className='infopanel' style={{fontFamily: props.style.fontFamily}}>
+    <div className='infopanel'>
       <div>
         <b>Author</b>
         <div>
@@ -150,10 +144,14 @@ const SideBarCol = connect(mapStateToProps)(props => {
     <input className='w-100 h-100' value={props.title} onChange={e => props.onChange(e.target.value)} autoFocus/> :
     <div className='mr-5 sidebar-title scrollable' onClick={props.setCurrent}>{props.title}</div>;
   return (
-    <div key={props.title} className='sidebar-col' draggable={draggable}
-         onDragStart={props.onDragStart}
-         onDragEnd={() => setDraggable(false)}
-         style={{fontWeight: props.current ? 'bolder' : null}}>
+    <div
+      key={props.title}
+      className='sidebar-col'
+      draggable={draggable}
+      onDragStart={props.onDragStart}
+      onDragEnd={() => setDraggable(false)}
+      style={{fontWeight: props.current ? 'bolder' : null}}
+    >
       {titleElement}
       {admin && (
         <div className='sidebar-ops'>
@@ -161,12 +159,14 @@ const SideBarCol = connect(mapStateToProps)(props => {
             <VerticalGrip onMouseDown={() => setDraggable(true)}/>
           </span>
           <span className='m-1'>
-            <Edit onClick={() => {
-                                   if(editable) {
-                                   props.onUpdate();
-                                   }
-                                   setEditable(!editable)
-                                   }}/>
+            <Edit
+              onClick={() => {
+                if(editable) {
+                  props.onUpdate();
+                }
+                setEditable(!editable);
+              }}
+            />
           </span>
           <span className='m-1'>
             <XSquare onClick={props.onDelete} />
@@ -176,32 +176,32 @@ const SideBarCol = connect(mapStateToProps)(props => {
     </div>
   )
 })
+
 const SideBar = connect(mapStateToProps)(props => {
   let admin = props.currentUser && props.currentUser.admin;
   return (
-    <div>
-      <div className='sidebar' style={{fontFamily: props.style.fontFamily}}>
-        {admin && <Separator onDrop={() => props.move(0)}/>}
-        {props.docs.map((each, idx) => (
-          <Fragment key={idx}>
-            <SideBarCol title={each.title}
-                        current={idx === props.current}
-                        onChange={title => props.setTitle(idx, title)}
-                        onUpdate={props.onUpdate}
-                        onDragStart={() => props.setFocusIdx(idx)}
-                        onDelete={() => props.deleteDoc(idx)}
-                        setCurrent={() => props.setCurrent(idx)} />
-
-            {admin && <Separator onDrop={() => props.move(idx + 1)}/>}
-          </Fragment>
-          ))
-        }
-        {admin && (
-          <span>
-            <DocIcon onClick={props.createDoc}/>
-          </span>
-        )}
-      </div>
+    <div className='sidebar'>
+      {admin && <Separator onDrop={() => props.move(0)}/>}
+      {props.currentClass.docs.map((each, idx) => (
+        <Fragment key={idx}>
+          <SideBarCol
+            title={each.name}
+            current={idx === props.current}
+            onChange={title => props.setTitle(idx, title)}
+            onUpdate={props.onUpdate}
+            onDragStart={() => props.setFocusIdx(idx)}
+            onDelete={() => props.deleteDoc(idx)}
+            setCurrent={() => props.setCurrent(idx)}
+          />
+          {admin && <Separator onDrop={() => props.move(idx + 1)}/>}
+        </Fragment>
+        ))
+      }
+      {admin && (
+        <span>
+          <DocIcon onClick={props.createDoc}/>
+        </span>
+      )}
     </div>
   )
 })
@@ -243,6 +243,10 @@ class ClassRoom extends Component {
       }
   }
 
+  componentWillUnmount() {
+    this.props.setCurrentClass(null);
+  }
+
   setTitle(idx, title) {
     this.setState(state => {
       state.docs[idx] = {...state.docs[idx], title: title};
@@ -272,14 +276,14 @@ class ClassRoom extends Component {
     const { classId } = this.state;
     try {
       await updateClass(classId, updatingFields);
-      this.setState(updatingFields);
+      this.props.setCurrentClass({...this.props.currentClass, ...updatingFields});
     }
     catch(err) {
       alert(`Failed to update a class: ${err}`);
     }
   }
 
-  createDoc() {
+  async createDoc() {
     /*
     nodeFetch(`${API_URL}/classes/${this.state.title}`, {
       method: 'POST',
@@ -298,6 +302,18 @@ class ClassRoom extends Component {
       })
       .catch(() => console.log('failed'))
      */
+    //firestore
+    const newDoc = {name: 'Untitled'};
+    try {
+      const documentRef = await createDoc(this.props.currentClass.classId, newDoc);
+      let docs = [...this.props.currentClass.docs, documentRef.id];
+      this.updateClass({docs: docs});
+    }
+    catch(err) {
+      console.log('Failed to create a new doc.');
+    }
+    //create new doc
+    //set state.
   }
 
   deleteDoc(idx) {
@@ -319,8 +335,8 @@ class ClassRoom extends Component {
         }
       })
       .catch(() => console.log('failed'))
-
      */
+    //firestore
   }
 
   renderPage() {
@@ -340,7 +356,7 @@ class ClassRoom extends Component {
   }
 
   render() {
-    if(this.state.loading) {
+    if(!this.props.currentClass && this.state.loading) {
       return (
         <Page>
           <div className='loading w-100 h-100 text-center'>Loading Page...</div>
@@ -348,7 +364,7 @@ class ClassRoom extends Component {
       )
     }
     let admin = this.props.currentUser && this.props.currentUser.admin;
-    let {name, author, level, duration} = this.state;
+    const {name, author, level, duration} = this.props.currentClass;
     return (
       <Page>
         <div className='classroom'>
@@ -363,18 +379,16 @@ class ClassRoom extends Component {
               }
             </div>
           </div>
-          <div className='classroom-sidebar'>
-            <SideBar docs={this.state.docs}
-                     style={THEME.get(this.state.theme)}
-                     current={this.state.current}
-                     move={idx => this.move(idx)}
-                     createDoc={() => this.createDoc()}
-                     deleteDoc={idx => this.deleteDoc(idx)}
-                     onUpdate={() => this.updateClass({docs: this.state.docs}).then(() => console.log('success')).catch(() => console.log('failed'))}
-                     setTitle={(idx, title) => this.setTitle(idx, title)}
-                     setCurrent={idx => this.setState({current: idx})}
-                     setFocusIdx={idx => this.setState({focusIdx: idx})} />
-          </div>
+          <SideBar
+            current={this.state.current}
+            move={idx => this.move(idx)}
+            createDoc={() => this.createDoc()}
+            deleteDoc={idx => this.deleteDoc(idx)}
+            onUpdate={() => this.updateClass({docs: this.state.docs}).then(() => console.log('success')).catch(() => console.log('failed'))}
+            setTitle={(idx, title) => this.setTitle(idx, title)}
+            setCurrent={idx => this.setState({current: idx})}
+            setFocusIdx={idx => this.setState({focusIdx: idx})}
+          />
           <div className='classroom-page'>
             {this.renderPage()}
           </div>
@@ -384,4 +398,8 @@ class ClassRoom extends Component {
   }
 }
 
-export default connect(mapStateToProps)(ClassRoom);
+const mapDispatchToProps = dispatch => ({
+  setCurrentClass: cls => dispatch(setCurrentClass(cls)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(ClassRoom);

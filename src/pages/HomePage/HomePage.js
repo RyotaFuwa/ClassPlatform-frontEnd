@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import {AppPage, Page} from "../../components/Page/Page";
 import "./HomePage.css";
 import Button from "@material-ui/core/Button";
-import {LinearRightDown, LinearRightUp, WaveDown} from "../../data/svgs";
+import {LinearRightDown, LinearLeftUp, WaveDown} from "../../data/svgs";
 import {Link} from "react-router-dom";
 import {SignIn} from "../../components/Register/SignIn";
 import {SignUp} from "../../components/Register/SignUp";
@@ -27,7 +27,7 @@ const Brand = styled.span`
 
 const Banner = styled.div`
   width: 100%;
-  height: 65vh;
+  height: 50vh;
   padding: 5vh 10vw;
   background-color: royalblue;
   color: white;
@@ -35,6 +35,10 @@ const Banner = styled.div`
   grid-template-areas:
   "wave wave"
   "title links";
+`
+
+const ShiftTop = styled.div`
+  margin-top: -${props => props.by};
 `
 
 const Title = styled.div`
@@ -52,6 +56,10 @@ const Links = styled.div`
   text-align: center;
   align-self: center;
   color: black;
+`
+
+const Content = styled.div`
+  min-height: 50vh;
 `
 
 const HomePage = props => {
@@ -82,7 +90,11 @@ const HomePage = props => {
             }
           </Links>
         </Banner>
-        <LinearRightUp color={'royalblue'} />
+        <ShiftTop by='10px' />
+        <LinearLeftUp color={'royalblue'} />
+
+        <Content />
+
         <AbsoluteTop>
           <WaveDown color={'midnightblue'} />
         </AbsoluteTop>

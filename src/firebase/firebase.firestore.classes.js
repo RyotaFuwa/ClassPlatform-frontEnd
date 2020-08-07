@@ -13,13 +13,19 @@ export const getClassByName = async name => {
 }
 
 export const createClass = async newClass => {
-  let query = firestore.collection('classes');
-  let documentRef = await query.add(newClass);
+  const query = firestore.collection('classes');
+  const documentRef = await query.add(newClass);
   return documentRef;
 }
 
 export const updateClass = async (classId, updatingFields) => {
-  let documentRef = firestore.collection('classes').doc(classId);
-  let writeResult = await documentRef.set(updatingFields, {merge: true});
+  const documentRef = firestore.collection('classes').doc(classId);
+  const writeResult = await documentRef.set(updatingFields, {merge: true});
   return writeResult;
+}
+
+export const createDoc = async (classId, newDoc) => {
+  const query = firestore.collection('classes').doc(classId).collection('docs');
+  const documentRef =  query.add(newDoc);
+  return documentRef;
 }

@@ -324,7 +324,6 @@ class ClassBoard extends Component {
     try {
       const snapshot = await uploadImageAt(this.state.name, imageFile);
       const url = await snapshot.ref.getDownloadURL();
-      console.log(url);
       this.setState({imageUrl: url});
     }
     catch(err) {

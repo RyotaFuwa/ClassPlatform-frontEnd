@@ -4,7 +4,8 @@
 }
 
 .sidebar {
-  display: grid;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar-col {
@@ -45,9 +46,8 @@
 }
 
 .classroom-header {
-  min-height: 600px;
-  padding: 1vh 5vw;
-  padding-bottom: 7.5vh;
+  min-height: 50vh;
+  padding: 2vh 5vw;
   grid-area: header;
   color: white;
   margin: 0;
@@ -71,7 +71,7 @@
   grid-area: info;
 }
 
-.classroom-sidebar {
+.classroom .sidebar {
   grid-area: sidebar;
   border-right: 1px solid lightgray;
   margin: 5vh 0;

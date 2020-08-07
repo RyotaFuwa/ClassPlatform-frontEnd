@@ -25,9 +25,10 @@ const NavBar = props => {
 
       <Navbar.Collapse>
         <Nav className='mr-auto'>
-          <Button disabled={!props.currentUser} ><Link className='link' to='/mydesk'>My Desk</Link></Button>
+          {/*<Button disabled={!props.currentUser} ><Link className='link' to='/mydesk'>My Desk</Link></Button> */}
           <Button disabled={!props.currentUser} ><Link className='link' to='/classboard'>Class Board</Link></Button>
           <Button disabled={!props.currentUser} ><Link className='link' to='/codingboard'>Coding Board</Link></Button>
+          {/*
           <NavDropdown title="Warehouse">
             <NavDropdown.Divider/>
             <NavDropdown.Item> Neural Network Architect </NavDropdown.Item>
@@ -36,6 +37,7 @@ const NavBar = props => {
             <NavDropdown.Divider/>
             <NavDropdown.Item> Programming Language: Kitty </NavDropdown.Item>
           </NavDropdown>
+          */}
         </Nav>
         <Nav>
           {props.currentUser ?

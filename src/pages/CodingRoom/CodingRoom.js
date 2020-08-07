@@ -262,6 +262,7 @@ class CodingRoom extends React.Component {
         //codingQuestion should always be set if the user comes to this page from clicking a QuestionCard.
         //now requesting contents by typing url directly is disabled so this if block is not supposed to be run.
         if(questionNotSet) {
+          console.log('hello')
           const codingQuestion = await getCodingQuestionByName(this.props.match.params.question);
           await this.props.setCurrentCodingQuestion(codingQuestion);
         }
