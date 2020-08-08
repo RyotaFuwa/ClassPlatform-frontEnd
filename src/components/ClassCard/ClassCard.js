@@ -4,13 +4,15 @@ import './ClassCard.css'
 import {Link} from "react-router-dom";
 import {setCurrentClass} from "../../redux/class/class.actions";
 
+//TODO: currentDocId might slow this site down when users click on page
+// Maybe you wanna hold the value separately
+
 const ClassCard = props => {
   const {name, active, imageUrl} = props.class;
-  // check if imgURL does return a valid img
   return (
     <Link
       className='link'
-      onClick={() => props.setCurrentClass(props.class)}
+      onClick={() => props.setCurrentClass({...props.class, currentDocId: 0})}
       to={`/classroom/${name}`}
     >
       <div className="class-card">

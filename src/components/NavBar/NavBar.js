@@ -2,14 +2,12 @@ import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import './NavBar.css';
 import Button from "@material-ui/core/Button";
 import {SignUp} from "../Register/SignUp";
 import {SignIn} from "../Register/SignIn";
 import {Link} from "react-router-dom";
 import UserPopover from "../UserPopover/UserPopover";
-import styled from 'styled-components';
 
 
 //TODO: redesign
@@ -28,6 +26,7 @@ const NavBar = props => {
           {/*<Button disabled={!props.currentUser} ><Link className='link' to='/mydesk'>My Desk</Link></Button> */}
           <Button disabled={!props.currentUser} ><Link className='link' to='/classboard'>Class Board</Link></Button>
           <Button disabled={!props.currentUser} ><Link className='link' to='/codingboard'>Coding Board</Link></Button>
+
           {/*
           <NavDropdown title="Warehouse">
             <NavDropdown.Divider/>
@@ -40,6 +39,17 @@ const NavBar = props => {
           */}
         </Nav>
         <Nav>
+          {props.currentClass &&
+          <Button color='primary'>
+            <Link className='link' to={`/classroom/${props.currentClass.name}`}>Back to Class</Link>
+          </Button>
+          }
+          {props.currentCodingQuestion &&
+          <Button color='primary'>
+            <Link className='link' to={`/codingroom/${props.currentCodingQuestion.name}`}>Back to Coding</Link>
+          </Button>
+          }
+          <span className='mr-2' />
           {props.currentUser ?
             <>
               {admin && <Navbar.Brand><span className='brand admin'>Admin</span></Navbar.Brand>}
@@ -58,7 +68,9 @@ const NavBar = props => {
 }
 
 const mapStateToProps = state => ({
-  currentUser: state.user.currentUser
+  currentUser: state.user.currentUser,
+  currentClass: state.class.currentClass,
+  currentCodingQuestion: state.coding.currentCodingQuestion,
 })
 
 export default connect(mapStateToProps)(NavBar);

@@ -1,14 +1,12 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {connect} from 'react-redux';
 import styled from 'styled-components';
-import {AppPage, Page} from "../../components/Page/Page";
+import {Page} from "../../components/Page/Page";
 import "./HomePage.css";
 import Button from "@material-ui/core/Button";
-import {LinearRightDown, LinearLeftUp, WaveDown} from "../../data/svgs";
+import {LinearLeftUp, WaveDown} from "../../data/svgs";
 import {Link} from "react-router-dom";
-import {SignIn} from "../../components/Register/SignIn";
-import {SignUp} from "../../components/Register/SignUp";
-import {AbsoluteBottom, AbsoluteTop} from "../../components/Primitives/Primitives";
+import {AbsoluteTop} from "../../components/Primitives/Primitives";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 
 const Home = styled.div`
@@ -22,7 +20,7 @@ const Brand = styled.span`
   color: lightpink;
   text-decoration: none;
   font-weight: bolder;
-  font-family: "Tsukushi A Round Gothic", serif;
+  font-family: "Varela Round", sans-serif;
 `
 
 const Banner = styled.div`
@@ -68,18 +66,18 @@ const HomePage = props => {
       <Home>
         <Banner>
           <Title>
-            Welcome to <Brand>Class Platform</Brand>!
+            Welcome to <Brand>ClassPlatform</Brand>!
           </Title>
           <Links>
             {props.currentUser ?
               <ButtonGroup variant='text' size='large'>
                 <Button>
-                  <Link className='no-link' to='/classboard'>
+                  <Link className='link' to='/classboard'>
                     Go to Class
                   </Link>
                 </Button>
                 <Button>
-                  <Link className='no-link' to='/codingboard'>
+                  <Link className='link' to='/codingboard'>
                     Go Coding
                   </Link>
                 </Button>

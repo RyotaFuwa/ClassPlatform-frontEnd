@@ -22,7 +22,7 @@
 }
 
 .questioncard .title {
-  font-family: "Tsukushi A Round Gothic", sans-serif;
+  font-family: "Varela Round", sans-serif;
   grid-column: 2 / 3;
   align-self: center;
   overflow-x: scroll;

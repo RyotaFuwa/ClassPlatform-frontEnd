@@ -9,6 +9,11 @@ const codingReducers = (state = INITIAL_STATE, action) => {
         ...state,
         currentClass: action.payload,
       };
+    case 'UPDATE_CURRENT_CLASS':
+      return {
+        ...state,
+        currentClass: {...state.currentClass, ...action.payload},
+      }
     default:
       return state;
   }

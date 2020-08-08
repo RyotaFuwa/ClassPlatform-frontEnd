@@ -1,11 +1,8 @@
-import React, {Component, useState} from 'react';
+import React, {useState} from 'react';
 import './UnderConstruction.css';
 import Dialog from "@material-ui/core/Dialog";
-import {AppPage, Header, Page} from "../Page/Page";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
+import {AppPage} from "../Page/Page";
 import {Button} from "@material-ui/core";
-import underConstruction from '../../data/under_construction.jpg';
 
 const UnderConstruction = props => {
   const [open, setOpen] = useState(true);

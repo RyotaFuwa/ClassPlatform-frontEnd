@@ -38,8 +38,6 @@ class Doc extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      blobs: [],
-
       focusIdx: null,
       mode: 0,
     };

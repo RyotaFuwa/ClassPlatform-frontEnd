@@ -21,7 +21,7 @@ const Tab = props => {
             </div>
           ))}
       </div>
-      <div className='tab-block border-basic'>
+      <div className='tab-block border-basic scrollable'>
         {props.children[idx]}
       </div>
     </div>

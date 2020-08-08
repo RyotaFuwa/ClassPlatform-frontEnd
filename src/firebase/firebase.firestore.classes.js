@@ -24,6 +24,15 @@ export const updateClass = async (classId, updatingFields) => {
   return writeResult;
 }
 
+
+//Doc: JSON-like object which holds document data (Delta from Quill like data).
+
+export const getDoc = async (classId, docId) => {
+  const query = firestore.collection('classes').doc(classId).collection('docs').doc(docId);
+  const docSnapshot = await query.get();
+  return docSnapshot;
+}
+
 export const createDoc = async (classId, newDoc) => {
   const query = firestore.collection('classes').doc(classId).collection('docs');
   const documentRef =  query.add(newDoc);

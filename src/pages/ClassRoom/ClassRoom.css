@@ -46,7 +46,7 @@
 }
 
 .classroom-header {
-  min-height: 50vh;
+  min-height: 70vh;
   padding: 2vh 5vw;
   grid-area: header;
   color: white;
@@ -54,7 +54,7 @@
   display: grid;
   grid-gap: 3em;
   grid-template-columns: 1fr 2fr 1fr;
-  grid-template-rows: 50px 3rem 1fr;
+  grid-template-rows: 1fr 3rem 3fr;
   grid-template-areas:
   "none none1 none2"
   "none3 title none4"
@@ -90,18 +90,16 @@
   margin-bottom: 50px;
 }
 
-.infopanel {
+.info {
   text-align: center;
 }
 
-.infopanel > div {
+.info > div {
   margin-bottom: 2rem;
 }
 
-.infopanel-duration {
-  display: grid;
-  grid-gap: 1em;
-  grid-template-columns: 1fr 30%;
+.info .duration {
+  margin: 0 1em;
 }
 
 .btn-group {

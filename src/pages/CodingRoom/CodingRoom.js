@@ -2,7 +2,6 @@ import React from "react";
 import {connect} from 'react-redux';
 import TimerBox from "../../components/TimerBox/TimerBox";
 import {Tab, TabBlock} from "../../components/Tab/Tab";
-import titlize from 'titlize';
 
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-python";
@@ -29,6 +28,8 @@ import {
 } from "../../firebase/firebase.firestore.codingQuestions";
 
 import {setCurrentCodingQuestion} from "../../redux/coding/coding.actions";
+
+//TODO: use redux-session to hold question text.
 
 const Title = props => {
   return (
@@ -212,6 +213,7 @@ const DocsTab = props => {
       </TabBlock>
       <TabBlock tabName='Memo'>
         <iframe
+          className='border-0'
           src="https://docs.google.com/document/d/1nzDH0jBdTicIS5gJZ2AFN82-vD7ojb4eDQjcFEcwl1A/edit?usp=sharing&rm=demo&hl=en"
           title={'memo'}
           frameBorder='none'
@@ -229,7 +231,7 @@ class CodingRoom extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: (props.match && props.match.params.question) ? titlize(props.match.params.question) : 'Coding Room',
+      questionName: (props.match && props.match.params.question) ? props.match.params.question : 'Coding Room',
       instruction: '',
       tips: [],
       tests: [],
@@ -254,18 +256,14 @@ class CodingRoom extends React.Component {
 
   async componentDidMount() {
     //firestore
-    let hasValidQuestionName = this.props.match && this.props.match.params.question
-    if(hasValidQuestionName) {
+    let wrongQuestion = this.state.questionName !== 'Coding Room' &&
+      (this.state.questionName !== this.props.currentCodingQuestion.name)
+    if(wrongQuestion) {
       try {
-        let questionNotSet = this.props.currentCodingQuestion === null;
-
         //codingQuestion should always be set if the user comes to this page from clicking a QuestionCard.
         //now requesting contents by typing url directly is disabled so this if block is not supposed to be run.
-        if(questionNotSet) {
-          console.log('hello')
-          const codingQuestion = await getCodingQuestionByName(this.props.match.params.question);
-          await this.props.setCurrentCodingQuestion(codingQuestion);
-        }
+        const codingQuestion = await getCodingQuestionByName(this.props.match.params.question);
+        await this.props.setCurrentCodingQuestion(codingQuestion);
 
         const documentSnapshot = await getContent(this.props.currentCodingQuestion.contentId);
         this.setState(documentSnapshot.data());
@@ -275,10 +273,6 @@ class CodingRoom extends React.Component {
         console.log(err);
       }
     }
-  }
-
-  componentWillUnmount() {
-    this.props.setCurrentCodingQuestion(null);
   }
 
   async runCode() {
@@ -321,7 +315,7 @@ class CodingRoom extends React.Component {
           <Header
             left={(
               <Title
-                name={this.state.name}
+                name={this.state.questionName}
                 admin={admin}
                 handleClick={() => this.updateContent()}
               />
