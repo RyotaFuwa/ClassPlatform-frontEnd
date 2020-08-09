@@ -4,12 +4,14 @@
 }
 
 .sidebar {
+  min-width: 200px;
   display: flex;
   flex-direction: column;
 }
 
 .sidebar-col {
   height: 1.5em;
+  margin: 0.25em 0;
   font-size: 1em;
   border-radius: 0.1em;
   padding: 0 2em;
@@ -18,7 +20,7 @@
   grid-template-columns: 3fr auto;
 }
 
-.sidebar-title {
+.sidebar-col .title {
   width: 100%;
   height: 100%;
   overflow-x: scroll;
@@ -30,7 +32,7 @@
   justify-self: right;
 }
 
-.sidebar-title:hover {
+.sidebar .title:hover {
   transform: scale(1.25);
 }
 
@@ -45,7 +47,7 @@
   "sidebar page";
 }
 
-.classroom-header {
+.classroom .header {
   min-height: 70vh;
   padding: 2vh 5vw;
   grid-area: header;
@@ -61,13 +63,13 @@
   "none5 info none6";
 }
 
-.classroom-title {
+.classroom .header .title {
   grid-area: title;
   text-align: center;
   font-size: 2.5rem;
 }
 
-.classroom-info {
+.classroom .info {
   grid-area: info;
 }
 
@@ -79,7 +81,7 @@
   width: 300px;
 }
 
-.classroom-page {
+.classroom .doc {
   grid-area: page;
   min-height: 100vh;
   padding: 100px 10px;

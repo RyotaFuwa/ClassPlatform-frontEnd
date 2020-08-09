@@ -1,5 +1,34 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import './Doc.css';
+import {Delete, Update, View} from "../../icons";
+
+import EditorJs from 'react-editor-js';
+import Header from '@editorjs/header';
+import Paragraph from '@editorjs/paragraph';
+import Code from '@editorjs/code'
+import {getCleanDoc, updateCleanDoc} from "../../firebase/firebase.firestore.classes";
+
+const EDITOR_JS_TOOLS = {
+  paragraph: {
+   class: Paragraph,
+   config: {
+     inlineToolbar: true,
+   }
+  },
+  header: {
+    class: Header,
+    config: {
+      levels: [4, 5, 6],
+      placeholder: 'Enter a Header...',
+      defaultLevel: 4,
+      shortcut: 'CMD+SHIFT+H',
+    }
+  },
+  code: Code,
+}
+
+/*
 import Separator from "../Blob/Separator";
 import {Blob, BlobEditBox} from "../Blob/Blob";
 import {Code, Delete, Image, TextCard, TextHeader, Update, View, XSquare} from "../../icons";
@@ -43,8 +72,10 @@ class Doc extends Component {
     };
   }
 
-  componentDidMount() {
-    this.load();
+  async componentDidMount() {
+    if(!this.props.doc) {
+      this.setState()
+    }
   }
 
   deleteAt(idx) {
@@ -52,15 +83,6 @@ class Doc extends Component {
       state.blobs.splice(idx, 1);
       return {blobs: [...state.blobs]}
     })
-  }
-
-  load() {
-    nodeFetch(`${API_URL}/classes/${this.props.classTitle}/${this.props.doc._id}`, {
-      method: 'GET',
-      headers: {'Content-Type': 'application/json'},
-    })
-      .then(res => res.json())
-      .then(json => this.setState({blobs: json.doc.blobs.map(each => ({...each, mode: 0}))}))
   }
 
   update() {
@@ -144,7 +166,7 @@ class Doc extends Component {
   render() {
     let admin = this.props.currentUser && this.props.currentUser.admin;
     return (
-      <div>
+      <div className='doc'>
         <div className='class-title' style={this.props.theme}>
           {this.props.doc.title}
 
@@ -159,6 +181,91 @@ class Doc extends Component {
                         setMode={() => this.setState({mode: this.state.mode === 0 ? 1 : 0})} />
         )
         }
+      </div>
+    )
+  }
+}
+*/
+
+class Doc extends Component {
+  constructor(props) {
+    super(props);
+
+    const admin = this.props.currentUser && this.props.currentUser.admin;
+    this.state = {
+      cleanDoc: {},
+      mode: admin ? 1 : 0,
+    }
+    this.editor = null;
+  }
+
+  componentDidMount() {
+    const {cleanDocId} = this.props.doc;
+    if(cleanDocId) {
+      getCleanDoc(cleanDocId)
+        .then(snapShot => {
+          this.setState({cleanDoc: snapShot.data()}, () => {
+
+          })
+        })
+        .catch(err => console.log(err))
+    }
+  }
+
+  async updateCleanDoc() {
+    const {cleanDocId} = this.props.doc;
+    if(this.editor && cleanDocId) {
+      this.editor.save()
+        .then(cleanData => {
+          console.log(cleanData);
+          updateCleanDoc(cleanDocId, cleanData);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    }
+  }
+
+  render() {
+    console.log(this.state.cleanDoc)
+    if(!this.props.doc) {
+      return <div className='doc'>Document Not Found.</div>
+    }
+    const admin = this.props.currentUser && this.props.currentUser.admin;
+    return (
+      <div className='doc'>
+        <div className='title' style={this.props.theme}>
+          {this.props.doc.name}
+          <span className='m-2' />
+          {admin &&
+            <span className='h4'>
+              <View
+                pushed={this.state.mode === 0}
+                onClick={() => this.setState(state => ({
+                  mode: state.mode === 0 ? 1 : 0,
+                }))}
+              />
+              <Update onClick={() => this.updateCleanDoc()} />
+              <Delete />
+            </span>
+          }
+        </div>
+        <div
+          className='content'
+          style={{
+            fontFamily: 'Roboto, sans-serif',
+            border: admin ? '2px solid lightgray' : null,
+          }}
+        >
+          <EditorJs
+            holder='holder'
+            enableReInitialize={true}
+            instanceRef={instance => this.editor = instance}
+            data={this.state.cleanDoc}
+            tools={EDITOR_JS_TOOLS}
+          />
+          <div id='holder' />
+        </div>
       </div>
     )
   }

@@ -12,7 +12,7 @@ const ClassCard = props => {
   return (
     <Link
       className='link'
-      onClick={() => props.setCurrentClass({...props.class, currentDocId: 0})}
+      onClick={() => props.setCurrentClass({...props.class, currentDocIdx: 0})}
       to={`/classroom/${name}`}
     >
       <div className="class-card">

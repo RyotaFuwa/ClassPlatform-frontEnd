@@ -18,7 +18,6 @@ import NotFound from "./components/NotFound/NotFound";
 import {auth, createNewUserIfNoMatch} from "./firebase/firebase.utils";
 
 import './App.css';
-import NavBar from "./components/NavBar/NavBar";
 
 class App extends React.Component {
   unsubscribeFromAuth = null

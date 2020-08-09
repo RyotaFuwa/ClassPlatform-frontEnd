@@ -1,6 +1,5 @@
 import React, {Component, Fragment, useEffect, useState} from 'react';
 import {connect} from 'react-redux';
-import NotFound from "../../components/NotFound/NotFound";
 import {Page} from "../../components/Page/Page";
 import Separator from "../../components/Blob/Separator";
 import {VerticalGrip, Edit, XSquare, Update, Doc as DocIcon} from "../../icons";
@@ -12,7 +11,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import MenuItem from "@material-ui/core/MenuItem";
-import {createDoc, getClassByName, updateClass} from "../../firebase/firebase.firestore.classes";
+import {createCleanDoc, deleteCleanDoc, getClassByName, updateClass} from "../../firebase/firebase.firestore.classes";
 import {setCurrentClass, updateCurrentClass} from "../../redux/class/class.actions";
 
 const CLASS_LEVEL = ['None', 'Easy', 'Intermediate', 'Advanced', 'Research'];
@@ -173,7 +172,7 @@ const SideBarCol = props => {
 
   let titleElement = editing ?
     <input className='w-100 h-100' value={editingName} onChange={e => setEditingName(e.target.value)} autoFocus/> :
-    <div className='mr-5 sidebar-title scrollable' onClick={props.selectDoc} >{props.name}</div>;
+    <div className='title scrollable' onClick={props.selectDoc} >{props.name}</div>;
 
   return (
     <div
@@ -181,11 +180,14 @@ const SideBarCol = props => {
       draggable={draggable}
       onDragStart={props.onDragStart}
       onDragEnd={() => setDraggable(false)}
-      style={{fontWeight: props.currentDoc ? 'bolder' : null}}
+      style={{
+        fontWeight: props.currentDoc ? 'bolder' : null,
+        textDecoration: props.currentDoc ? 'underline' : null,
+      }}
     >
       {titleElement}
       {props.admin && (
-        <div className='sidebar-ops'>
+        <div className='ops'>
           <span className='m-1'>
             <VerticalGrip onMouseDown={() => setDraggable(true)}/>
           </span>
@@ -215,20 +217,14 @@ const SideBar = connect(mapStateToProps, mapDispatchToProps)(props => {
   const [selectedIdx, setSelectedIdx] = useState(null);
 
   const selectDoc = async idx => {
-    try {
-      const updatingFields = {currentDocIdx: idx};
-      await updateClass(classId, updatingFields);
-      props.updateCurrentClass(updatingFields);
-    }
-    catch(err) {
-      console.log(err);
-    }
+    const updatingFields = {currentDocIdx: idx};
+    props.updateCurrentClass(updatingFields);
   }
 
   const createDocAtEnd = async () => {
     try {
-      const documentRef = await createDoc(classId, {});
-      docs.push({name: 'Untitled', docId: documentRef.id});
+      const documentRef = await createCleanDoc();
+      docs.push({name: 'Untitled', cleanDocId: documentRef.id});
       const updatingFields = {docs};
       await updateClass(classId, updatingFields);
       props.updateCurrentClass(updatingFields);
@@ -253,9 +249,10 @@ const SideBar = connect(mapStateToProps, mapDispatchToProps)(props => {
   }
 
   const deleteDocAt = async idx => {
-    docs.splice(idx, 1);
+    const deletingDoc = docs.splice(idx, 1);
     const updatingFields = {docs};
     try {
+      deleteCleanDoc(deletingDoc.cleanDocId);
       await updateClass(classId, updatingFields);
       props.updateCurrentClass(updatingFields);
     }
@@ -341,17 +338,6 @@ class ClassRoom extends Component {
     }
   }
 
-  async updateClass(updatingFields) {
-    const { classId } = this.props.currentClass;
-    try {
-      await updateClass(classId, updatingFields);
-      this.props.updateCurrentClass(updatingFields);
-    }
-    catch(err) {
-      alert(`Failed to update a class: ${err}`);
-    }
-  }
-
   render() {
     if(!this.props.currentClass && this.state.loading) {
       return (
@@ -363,18 +349,13 @@ class ClassRoom extends Component {
     const {name, theme, docs, currentDocIdx} = this.props.currentClass;
     return (
       <Page>
-        <div className='classroom'>
-          <div className='classroom-header' style={THEME.get(theme)}>
-            <div className='classroom-title'>{name}</div>
-            <div className='classroom-info'>
-              <Info />
-            </div>
+        <div className='classroom' style={{fontFamily: THEME.get(theme).fontFamily}}>
+          <div className='header' style={THEME.get(theme)}>
+            <div className='title'>{name}</div>
+            <Info />
           </div>
           <SideBar />
-          <div className='classroom-page'>
-            {/*<Doc doc={docs[currentDocIdx]} /> */}
-            Doc rendered here.
-          </div>
+          <Doc key={docs[currentDocIdx].name} doc={docs[currentDocIdx]} />
         </div>
       </Page>
     )

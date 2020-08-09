@@ -25,16 +25,38 @@ export const updateClass = async (classId, updatingFields) => {
 }
 
 
-//Doc: JSON-like object which holds document data (Delta from Quill like data).
+//Delta: JSON-like object which holds document data (Delta from Quill like data).
 
-export const getDoc = async (classId, docId) => {
-  const query = firestore.collection('classes').doc(classId).collection('docs').doc(docId);
-  const docSnapshot = await query.get();
+export const getCleanDoc = async cleanDocId => {
+  const documentRef = firestore.collection('cleanDoc').doc(cleanDocId);
+  const docSnapshot = await documentRef.get();
   return docSnapshot;
 }
 
-export const createDoc = async (classId, newDoc) => {
-  const query = firestore.collection('classes').doc(classId).collection('docs');
-  const documentRef =  query.add(newDoc);
+export const createCleanDoc = async () => {
+  const query = firestore.collection('cleanDoc');
+  const initialCleanDoc = {
+    time: Date.now(),
+    blocks: [
+      {
+        type: 'header',
+        text: '',
+        level: 4,
+      }
+    ]
+  }
+  const documentRef =  query.add(initialCleanDoc);
   return documentRef;
+}
+
+export const updateCleanDoc = async (cleanDocId, updatingFields) => {
+  const documentRef = firestore.collection('cleanDoc').doc(cleanDocId);
+  const writeResult = await documentRef.set(updatingFields, {merge: true});
+  return writeResult;
+}
+
+export const deleteCleanDoc = async cleanDocId => {
+  const documentRef = firestore.collection('cleanDoc').doc(cleanDocId);
+  const writeResult = await documentRef.delete();
+  return writeResult;
 }

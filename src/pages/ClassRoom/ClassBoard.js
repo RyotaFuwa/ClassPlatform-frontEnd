@@ -17,8 +17,8 @@ import "./ClassRoom.css";
 import { getAllClasses, createClass, updateClass } from '../../firebase/firebase.firestore.classes';
 import Dropzone from "react-dropzone";
 import {uploadImageAt} from "../../firebase/firebase.storage.images";
-import {AbsoluteTop} from "../../components/Primitives/Primitives";
-import {WaveDown} from "../../data/svgs";
+
+//TODO: reflect the edit on the current page.
 
 
 const THEME = new Map([['default', {}], ['modern', {}], ['classic', {}], ['mono', {}],]);
@@ -260,9 +260,12 @@ class ClassBoard extends Component {
 
     const newClass = {
       name: titlizedName,
+      docs: [],
       tags: tags,
       theme: theme,
       author: this.props.currentUser,
+      level: 0,
+      duration: {number: 0, unit: 'None'},
       imageUrl: '',
       active: true,
       createdAt: new Date(),
