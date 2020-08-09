@@ -30,7 +30,6 @@ const NotFound = props => {
       <Dialog open={open} fullScreen>
         <AppPage>
           <div className='not-found'>
-            <img src={spaceMan} />
             <div className='title'>404 Not Found</div>
           </div>
         </AppPage>

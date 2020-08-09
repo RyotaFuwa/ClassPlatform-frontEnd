@@ -7,3 +7,4 @@ export const updateCurrentClass = updatingFields => ({
   type: 'UPDATE_CURRENT_CLASS',
   payload: updatingFields,
 })
+

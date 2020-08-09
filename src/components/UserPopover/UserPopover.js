@@ -3,8 +3,9 @@ import {connect} from 'react-redux';
 import './UserPopover.css';
 import {Button} from "@material-ui/core";
 import Popover from "@material-ui/core/Popover";
-import {auth, signInWithFacebook, signInWithGoogle} from "../../firebase/firebase.utils";
+import {auth} from "../../firebase/firebase.utils";
 import {Link} from "react-router-dom";
+import {resetAll} from "../../redux/actions";
 
 const UserPopover = props => {
 
@@ -17,6 +18,11 @@ const UserPopover = props => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const signOut = () => {
+    auth.signOut();
+    props.resetAll();
+  }
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
@@ -56,7 +62,7 @@ const UserPopover = props => {
           <div className='mb-3'>
           </div>
           <div className='mt-3'>
-            <Button onClick={() => auth.signOut()}>Log Out</Button>
+            <Button onClick={signOut}>Log Out</Button>
           </div>
         </div>
       </Popover>
@@ -68,4 +74,8 @@ const mapStateToProps = state => ({
   currentUser: state.user.currentUser,
 })
 
-export default connect(mapStateToProps)(UserPopover);
+const mapDispatchToProps = dispatch => ({
+  resetAll: () => dispatch(resetAll()),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserPopover);

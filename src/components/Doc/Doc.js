@@ -9,6 +9,9 @@ import Paragraph from '@editorjs/paragraph';
 import Code from '@editorjs/code'
 import {getCleanDoc, updateCleanDoc} from "../../firebase/firebase.firestore.classes";
 
+
+// TODO:Editor-js Code tools and some details
+
 const EDITOR_JS_TOOLS = {
   paragraph: {
    class: Paragraph,

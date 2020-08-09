@@ -14,6 +14,8 @@ const codingReducers = (state = INITIAL_STATE, action) => {
         ...state,
         currentClass: {...state.currentClass, ...action.payload},
       }
+    case 'RESET':
+      return INITIAL_STATE;
     default:
       return state;
   }

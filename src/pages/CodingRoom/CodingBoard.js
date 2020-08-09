@@ -9,7 +9,6 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import {Create, Delete, Update} from "../../icons";
 import {Header, Page} from "../../components/Page/Page";
 import Slider from "@material-ui/core/Slider";
-import Select from "react-select";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -25,8 +24,8 @@ import {
 import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 
-const nodeFetch = require('node-fetch');
-const API_URL = 'http://localhost:3001/api';
+
+//TODO: tabs (instruciton, pesudo and everything) deployed with editor.js might be better
 
 const SORT_TYPE = ['CATEGORY', 'DIFFICULTY', 'ALL'];
 const CATEGORY = [ 'Array', 'String', 'Heap', 'Linked List', 'Tree', 'Graph', 'Sorting', 'Dynamic Programming', 'Misc'];
