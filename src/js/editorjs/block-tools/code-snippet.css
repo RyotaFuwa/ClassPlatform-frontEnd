@@ -1,0 +1,12 @@
+.code-area {
+  width: 97.5%;
+  background-color: #151518;
+  color: white;
+
+  font-family: Menlo, Monaco, "Courier New", monospace;
+  font-size: 14px;
+  border-radius: 7px;
+  resize: none;
+  margin: 0.5em 1.25%;
+  word-wrap: normal;
+}

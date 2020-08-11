@@ -249,10 +249,10 @@ const SideBar = connect(mapStateToProps, mapDispatchToProps)(props => {
   }
 
   const deleteDocAt = async idx => {
-    const deletingDoc = docs.splice(idx, 1);
+    const [deletingDoc] = docs.splice(idx, 1);
     const updatingFields = {docs};
     try {
-      deleteCleanDoc(deletingDoc.cleanDocId);
+      await deleteCleanDoc(deletingDoc.cleanDocId);
       await updateClass(classId, updatingFields);
       props.updateCurrentClass(updatingFields);
     }
@@ -347,6 +347,7 @@ class ClassRoom extends Component {
       )
     }
     const {name, theme, docs, currentDocIdx} = this.props.currentClass;
+    const doc = docs[currentDocIdx];
     return (
       <Page>
         <div className='classroom' style={{fontFamily: THEME.get(theme).fontFamily}}>
@@ -355,7 +356,7 @@ class ClassRoom extends Component {
             <Info />
           </div>
           <SideBar />
-          <Doc key={docs[currentDocIdx].name} doc={docs[currentDocIdx]} />
+          <Doc key={doc ? doc.name : ''} doc={doc}/> :
         </div>
       </Page>
     )

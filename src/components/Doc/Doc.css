@@ -3,6 +3,8 @@
 }
 
 .doc .content {
+  min-height: 100vh;
   border-radius: 1em;
+  font-family: Arial, serif;
   text-align: left;
 }

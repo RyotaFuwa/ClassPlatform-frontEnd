@@ -8,6 +8,8 @@ import Header from '@editorjs/header';
 import Paragraph from '@editorjs/paragraph';
 import Code from '@editorjs/code'
 import {getCleanDoc, updateCleanDoc} from "../../firebase/firebase.firestore.classes";
+import CodeSnippet from "../../js/editorjs/block-tools/code-snippet";
+import {CleanDocViewer} from "../CleanDocViewer/CleanDocViewer";
 
 
 // TODO:Editor-js Code tools and some details
@@ -28,7 +30,7 @@ const EDITOR_JS_TOOLS = {
       shortcut: 'CMD+SHIFT+H',
     }
   },
-  code: Code,
+  code: CodeSnippet,
 }
 
 /*
@@ -190,6 +192,7 @@ class Doc extends Component {
 }
 */
 
+
 class Doc extends Component {
   constructor(props) {
     super(props);
@@ -203,15 +206,15 @@ class Doc extends Component {
   }
 
   componentDidMount() {
-    const {cleanDocId} = this.props.doc;
-    if(cleanDocId) {
-      getCleanDoc(cleanDocId)
-        .then(snapShot => {
-          this.setState({cleanDoc: snapShot.data()}, () => {
-
+    if(this.props.doc) {
+      const {cleanDocId} = this.props.doc;
+      if (cleanDocId) {
+        getCleanDoc(cleanDocId)
+          .then(snapShot => {
+            this.setState({cleanDoc: snapShot.data()})
           })
-        })
-        .catch(err => console.log(err))
+          .catch(err => console.log(err))
+      }
     }
   }
 
@@ -219,9 +222,9 @@ class Doc extends Component {
     const {cleanDocId} = this.props.doc;
     if(this.editor && cleanDocId) {
       this.editor.save()
-        .then(cleanData => {
-          console.log(cleanData);
-          updateCleanDoc(cleanDocId, cleanData);
+        .then(data => {
+          updateCleanDoc(cleanDocId, data);
+          this.setState({cleanDoc: data})
         })
         .catch(err => {
           console.log(err);
@@ -229,8 +232,24 @@ class Doc extends Component {
     }
   }
 
+  async viewCleanDoc() {
+    if(this.state.mode === 0) {
+      this.setState({mode: 1});
+    }
+    else {
+      const {cleanDocId} = this.props.doc;
+      if (this.editor && cleanDocId) {
+        await this.editor.isReady;
+        this.editor.save()
+          .then(cleanData => {
+            this.setState({cleanDoc: cleanData, mode: 0});
+          })
+          .catch(err => console.log(err));
+      }
+    }
+  }
+
   render() {
-    console.log(this.state.cleanDoc)
     if(!this.props.doc) {
       return <div className='doc'>Document Not Found.</div>
     }
@@ -244,29 +263,24 @@ class Doc extends Component {
             <span className='h4'>
               <View
                 pushed={this.state.mode === 0}
-                onClick={() => this.setState(state => ({
-                  mode: state.mode === 0 ? 1 : 0,
-                }))}
+                onClick={() => this.viewCleanDoc()}
               />
               <Update onClick={() => this.updateCleanDoc()} />
               <Delete />
             </span>
           }
         </div>
-        <div
-          className='content'
-          style={{
-            fontFamily: 'Roboto, sans-serif',
-            border: admin ? '2px solid lightgray' : null,
-          }}
-        >
-          <EditorJs
-            holder='holder'
-            enableReInitialize={true}
-            instanceRef={instance => this.editor = instance}
-            data={this.state.cleanDoc}
-            tools={EDITOR_JS_TOOLS}
-          />
+        <div className='content'>
+          {this.state.mode === 0 ?
+            <CleanDocViewer data={this.state.cleanDoc} /> :
+            <EditorJs
+              holder='holder'
+              enableReInitialize={true}
+              instanceRef={instance => this.editor = instance}
+              data={this.state.cleanDoc}
+              tools={EDITOR_JS_TOOLS}
+            />
+          }
           <div id='holder' />
         </div>
       </div>

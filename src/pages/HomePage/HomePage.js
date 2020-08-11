@@ -70,7 +70,7 @@ const HomePage = props => {
           </Title>
           <Links>
             {props.currentUser ?
-              <ButtonGroup variant='text' size='large'>
+              <ButtonGroup variant='text'>
                 <Button>
                   <Link className='link' to='/classboard'>
                     Go to Class
