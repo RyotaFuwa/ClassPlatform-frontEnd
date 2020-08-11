@@ -6,7 +6,6 @@ import {Delete, Update, View} from "../../icons";
 import EditorJs from 'react-editor-js';
 import Header from '@editorjs/header';
 import Paragraph from '@editorjs/paragraph';
-import Code from '@editorjs/code'
 import {getCleanDoc, updateCleanDoc} from "../../firebase/firebase.firestore.classes";
 import CodeSnippet from "../../js/editorjs/block-tools/code-snippet";
 import {CleanDocViewer} from "../CleanDocViewer/CleanDocViewer";
