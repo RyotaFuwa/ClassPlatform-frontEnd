@@ -55,6 +55,7 @@ class CodeSnippet {
     };
   }
 
+  //TODO: make icons responsive and maybe added some other language supports
   renderSettings() {
     let wrapper = document.createElement('div');
     this.settings.forEach( tune => {
