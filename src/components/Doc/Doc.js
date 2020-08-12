@@ -270,17 +270,15 @@ class Doc extends Component {
           }
         </div>
         <div className='content'>
-          {this.state.mode === 0 ?
-            <CleanDocViewer data={this.state.cleanDoc} /> :
-            <EditorJs
-              holder='holder'
-              enableReInitialize={true}
-              instanceRef={instance => this.editor = instance}
-              data={this.state.cleanDoc}
-              tools={EDITOR_JS_TOOLS}
-            />
-          }
-          <div id='holder' />
+          {this.state.mode === 0 && <CleanDocViewer data={this.state.cleanDoc} />}
+          <div id='holder' style={{display: this.state.mode === 0 ? 'none' : null}} />
+          <EditorJs
+            holder='holder'
+            enableReInitialize={true}
+            instanceRef={instance => this.editor = instance}
+            data={this.state.cleanDoc}
+            tools={EDITOR_JS_TOOLS}
+          />
         </div>
       </div>
     )

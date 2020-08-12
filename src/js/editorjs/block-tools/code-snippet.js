@@ -62,7 +62,7 @@ class CodeSnippet {
       button.classList.add('cdx-settings-button');
       button.innerHTML = tune.icon;
       wrapper.appendChild(button);
-      wrapper.addEventListener('click', tune.onClick);
+      button.addEventListener('click', tune.onClick);
     })
     return wrapper;
   }
@@ -102,8 +102,7 @@ class CodeSnippet {
 
     const codeArea = document.createElement('textarea');
     codeArea.classList.add(api.styles.input, 'code-area');
-    codeArea.textContent = this.data.code;
-    autosize(codeArea);
+    codeArea.value = this.data.code;
 
     renderElement.appendChild(codeArea);
     this.nodes.holder = renderElement;
@@ -114,9 +113,13 @@ class CodeSnippet {
     return this.nodes.holder;
   }
 
+  rendered() {
+    autosize(this.nodes.codeArea);
+  }
+
   save(blockContent) {
     return {
-      code: blockContent.querySelector('.code-area').value,
+      code: this.nodes.codeArea.value,
       language: this.data.language,
     }
   }
