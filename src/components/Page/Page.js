@@ -5,7 +5,7 @@ import NavBar from "../NavBar/NavBar";
 
 const Page = props => {
     return (
-      <div className='normal-page'>
+      <div className='normal-page' id='page'>
         <NavBar />
         <div className='main'>
           {props.children}
@@ -19,7 +19,7 @@ const Page = props => {
 
 const AppPage = props => {
   return (
-    <div className="app-page">
+    <div className="app-page" id='page'>
       <NavBar />
       <div className="main">
         {props.children}

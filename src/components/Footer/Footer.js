@@ -18,7 +18,7 @@ function Footer() {
             <Link className='link' to="/myprofile">My Profile</Link>
           </span> |
           <span className="m-1">
-            <Link className='link'  to="/">Back To Home</Link>
+            <a className='link'  href="#page" >Back To Page Top</a>
           </span>
         </span>
       </div>

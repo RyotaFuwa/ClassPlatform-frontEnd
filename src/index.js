@@ -9,10 +9,12 @@ import store from "./redux/store";
 import {BrowserRouter} from "react-router-dom";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
+      <ScrollToTop />
       <App />
     </BrowserRouter>
   </Provider>,

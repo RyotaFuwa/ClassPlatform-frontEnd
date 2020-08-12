@@ -24,6 +24,7 @@
 
 .myprofile-content {
   display: grid;
+  padding: 2vh 2vw;
   grid-template-columns: 20vw 80vw;
   grid-template-rows: auto auto;
   grid-template-areas: "panel blocks" "empty blocks";
@@ -31,7 +32,6 @@
 
 .myprofile-linkpanel {
   grid-area: panel;
-  left: 5vw;
 }
 
 .myprofile-blocks {
