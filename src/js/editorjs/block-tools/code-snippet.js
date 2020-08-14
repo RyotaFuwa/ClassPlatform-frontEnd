@@ -103,7 +103,7 @@ class CodeSnippet {
 
     const codeArea = document.createElement('textarea');
     codeArea.classList.add(api.styles.input, 'code-area');
-    codeArea.value = this.data.code;
+    codeArea.innerHTML = this.data.code;
 
     renderElement.appendChild(codeArea);
     this.nodes.holder = renderElement;

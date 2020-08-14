@@ -3,12 +3,19 @@ import './Footer.css';
 import {AbsoluteBottom} from "../Primitives/Primitives";
 import {LinearRightDown} from "../../data/svgs";
 import {Link} from "react-router-dom";
+import styled from "styled-components";
 
+const Extend = styled.div`
+  height: ${props => props.height ? props.height : null};
+  width: ${props => props.width ? props.width: null};
+`
 function Footer() {
   return (
     <div className='footer'>
       <AbsoluteBottom>
-        <LinearRightDown />
+        <Extend width='110%'>
+          <LinearRightDown />
+        </Extend>
       </AbsoluteBottom>
       <div className="footer-grid">
         <div className='footer-line' />

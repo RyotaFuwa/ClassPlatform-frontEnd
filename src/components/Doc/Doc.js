@@ -23,10 +23,8 @@ const EDITOR_JS_TOOLS = {
   header: {
     class: Header,
     config: {
-      levels: [4, 5, 6],
-      placeholder: 'Enter a Header...',
       defaultLevel: 4,
-      shortcut: 'CMD+SHIFT+H',
+      levels: [4, 5, 6],
     }
   },
   code: CodeSnippet,

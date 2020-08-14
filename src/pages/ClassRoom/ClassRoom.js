@@ -356,7 +356,7 @@ class ClassRoom extends Component {
             <Info />
           </div>
           <SideBar />
-          <Doc key={doc ? doc.name : ''} doc={doc}/> :
+          <Doc key={doc ? doc.name : ''} doc={doc}/>
         </div>
       </Page>
     )

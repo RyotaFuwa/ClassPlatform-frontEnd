@@ -5,7 +5,7 @@
   padding: 10px 10px;
   grid-gap: 1vmin;
   grid-template-rows: auto 30px 60% 1fr;
-  grid-template-columns: auto 55% 100px;
+  grid-template-columns: 35% 1fr auto;
   grid-template-areas:
   "header header header"
   "docs-tab console run-button"
@@ -50,9 +50,8 @@
 }
 
 .docs-tab .instruction {
-  width: 100%;
   height: 100%;
-  padding-left: 1em;
+  justify-items: left;
   border: 0;
 }
 

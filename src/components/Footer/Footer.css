@@ -1,9 +1,9 @@
 .footer {
+  margin-top: 350px;
   z-index: -1;
 }
 
 .footer-grid {
-  margin-top: 200px;
   padding: 0 1vw;
   height: 50px;
   color: black;

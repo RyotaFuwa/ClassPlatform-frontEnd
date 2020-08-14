@@ -1,7 +1,7 @@
-import React from "react";
+import React, {useState} from "react";
 import {connect} from 'react-redux';
 import TimerBox from "../../components/TimerBox/TimerBox";
-import {Tab, TabBlock} from "../../components/Tab/Tab";
+import {Tab} from "../../components/Tab/Tab";
 
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-python";
@@ -11,6 +11,7 @@ import "ace-builds/src-noconflict/mode-c_cpp";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/theme-github";
 import "ace-builds/src-noconflict/theme-dawn";
+import "ace-builds/src-noconflict/theme-chrome";
 import "ace-builds/src-noconflict/keybinding-vim";
 import "ace-builds/src-noconflict/keybinding-emacs";
 import "ace-builds/src-noconflict/keybinding-sublime";
@@ -22,12 +23,17 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import Button from "@material-ui/core/Button";
 import SelectPopover from "../../components/SelectPopover/SelectPopover";
 import Tips from "../../components/Tips/Tips";
+import EditorJs from 'react-editor-js';
 
 import {
   getCodingQuestionByName, getContent, updateContent,
 } from "../../firebase/firebase.firestore.codingQuestions";
 
 import {setCurrentCodingQuestion} from "../../redux/coding/coding.actions";
+import {CleanDocViewer} from "../../components/CleanDocViewer/CleanDocViewer";
+import Paragraph from "@editorjs/paragraph";
+import Header_Doc from "@editorjs/header";
+import CodeSnippet from "../../js/editorjs/block-tools/code-snippet";
 
 //TODO: use redux-session to hold question text.
 
@@ -113,7 +119,7 @@ const RunButton = props => {
       onClick={props.onClick}
       disabled={props.running}
     >
-      Run
+      {props.running ? 'Not Available For Guests' : 'Run' }
     </Button>
   )
 }
@@ -161,24 +167,52 @@ const OutputBox = props => {
 }
 
 const Instruction = props => {
-  if (props.editing)
-    return (<textarea className="instruction scrollable size-fixed" value={props.instruction} onChange={props.onChange}/>)
-  else
-    return (<pre className="instruction scrollable size-fixed">{props.instruction}</pre>)
+  const EDITOR_JS_TOOLS = {
+    paragraph: {
+      class: Paragraph,
+    },
+    header: {
+      class: Header_Doc,
+      config: {
+        levels: [5],
+        defaultLevel: 5,
+      }
+    },
+    code: CodeSnippet,
+  }
+
+  if (props.editing) {
+    return (
+      <>
+        <div className='instruction' id='instruction-holder' />
+        <EditorJs
+          holder='instruction-holder'
+          data={props.instruction}
+          instanceRef={instance => props.setRef(instance)}
+          enableReInitialize={true}
+          tools={EDITOR_JS_TOOLS}
+        />
+      </>
+    )
+  }
+  else {
+    return <div className='instruction'><CleanDocViewer data={props.instruction}/></div>
+  }
 }
 
 const DocsTab = props => {
   return (
     <div className='docs-tab'>
-    <Tab>
-      <TabBlock tabName="Instruction">
+    <Tab.Tab>
+      <Tab.Block name="Instruction">
         <Instruction
           instruction={props.instruction}
+          setRef={instance => props.setInstructionRef(instance)}
           editing={props.editing}
-          onChange={e => props.handleChange({instruction: e.target.value})}
+          onChange={data => props.handleChange({instruction: data})}
         />
-      </TabBlock>
-      <TabBlock tabName='Tips'>
+      </Tab.Block>
+      <Tab.Block name='Tips'>
         <Tips
           tips={props.tips}
           editing={props.editing}
@@ -195,33 +229,29 @@ const DocsTab = props => {
             props.handleChange({tips: [...props.tips]})
           }}
         />
-      </TabBlock>
-      <TabBlock tabName='Pseudo'>
+      </Tab.Block>
+      <Tab.Block className='w-100 h-100' name='Pseudo'>
         <AceEditor
           showGutter={true}
           highlightActiveLine={false}
-          cursorStart={-1}
-          name="coding-solution"
+          setOptions={{
+            enableBasicAutocompletion: true,
+            enableLiveAutocompletion: true,
+            enableSnippets: true,
+            showLineNumbers: true,
+            tabSize: 4,
+          }}
           width="100%"
           height="100%"
           fontSize={14}
           readOnly={!props.editing}
-          theme='github'
+          theme='chrome'
+          mode='java'
           value={props.pseudo}
           onChange={(e) => props.handleChange({pseudo: e})}
         />
-      </TabBlock>
-      <TabBlock tabName='Memo'>
-        <iframe
-          className='border-0'
-          src="https://docs.google.com/document/d/1nzDH0jBdTicIS5gJZ2AFN82-vD7ojb4eDQjcFEcwl1A/edit?usp=sharing&rm=demo&hl=en"
-          title={'memo'}
-          frameBorder='none'
-          width="100%"
-          height="100%"
-        />
-      </TabBlock>
-    </Tab>
+      </Tab.Block>
+    </Tab.Tab>
     </div>
   )
 }
@@ -252,6 +282,8 @@ class CodingRoom extends React.Component {
       editorMode: 'text'
       // editing: this.props.currentUser && this.props.currentUser.admin,
     };
+
+    this.instructionRef = null;
   }
 
   async componentDidMount() {
@@ -264,32 +296,45 @@ class CodingRoom extends React.Component {
         //now requesting contents by typing url directly is disabled so this if block is not supposed to be run.
         const codingQuestion = await getCodingQuestionByName(this.props.match.params.question);
         await this.props.setCurrentCodingQuestion(codingQuestion);
-
-        const documentSnapshot = await getContent(this.props.currentCodingQuestion.contentId);
-        this.setState(documentSnapshot.data());
       }
       catch (err) {
         alert("Failed to load the question.");
         console.log(err);
       }
     }
+    const documentSnapshot = await getContent(this.props.currentCodingQuestion.contentId);
+    this.setState(documentSnapshot.data());
+  }
+
+  async componentDidUpdate(prevProps, prevState, snapshot) {
+    if(this.state.running) {
+      // currently not available.
+      /*
+      try {
+        const output = await run(this.state.lang, this.state.text)
+        this.setState({output: output, running: false});
+      } catch(err) {
+        this.setState({output: {stdout: '', stderr: '', error: 'Failed to Run'}, running: false});
+      }
+      */
+    }
   }
 
   async runCode() {
-    // this.setState({running: true});
-    /*
-    try {
-      const output = await run(this.state.lang, this.state.text)
-      this.setState({output: output, running: false});
-    } catch(err) {
-      this.setState({output: {stdout: '', stderr: '', error: 'Failed to Run'}, running: false});
-    }
-    */
+    this.setState({running: true})
   }
 
   async updateContent() {
-    const updatingFields = (({instruction, tips, tests, pseudo, text, solution}) =>
-      ({instruction, tips, tests, pseudo, text, solution}))(this.state);
+    let {instruction, tips, tests, pseudo, text, solution} = this.state;
+    if(this.instructionRef) {
+      try {
+        instruction = await this.instructionRef.save();
+      }
+      catch(e) {
+        console.log('failed to get instruction clean data')
+      }
+    }
+    const updatingFields = {tips, tests, pseudo, text, solution, instruction};
     try {
       await updateContent(this.props.currentCodingQuestion.contentId, updatingFields);
     }
@@ -350,6 +395,7 @@ class CodingRoom extends React.Component {
           <OutputBox output={this.state.output} />
           <DocsTab
             instruction={this.state.instruction}
+            setInstructionRef={instance => this.instructionRef = instance}
             tips={this.state.tips}
             pseudo={this.state.pseudo}
             editing={admin}

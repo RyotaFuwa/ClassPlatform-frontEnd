@@ -28,7 +28,14 @@ const Tips = props => {
     return (
       <div className='tips'>
         {props.tips.map((helpTxt, idx) => (
-          <CollapibleBlock key={idx} title={`Tip ${idx + 1}`}><p>{helpTxt}</p></CollapibleBlock>
+          <CollapibleBlock
+            key={idx}
+            title={
+              <div className='title'>Tip {idx + 1}</div>
+            }
+          >
+            <p className='tip'>{helpTxt}</p>
+          </CollapibleBlock>
         ))}
       </div>
     )

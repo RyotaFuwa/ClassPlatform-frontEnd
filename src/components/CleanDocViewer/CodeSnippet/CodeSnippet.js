@@ -1,19 +1,26 @@
 import React from 'react';
 import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
 import './CodeSnippet.css';
-import googlecode from "react-syntax-highlighter/dist/cjs/styles/hljs/googlecode";
+import git from "react-syntax-highlighter/dist/cjs/styles/hljs/github";
 import cb from "react-syntax-highlighter/dist/cjs/styles/prism/cb";
 
+function decodeHTMLEntities(text) {
+  const textArea = document.createElement('textarea');
+  textArea.innerHTML = text;
+  return textArea.value;
+}
+
 const CodeSnippet = ({code, language}) => {
-  console.log(language)
+  const codeText = decodeHTMLEntities(code);
   return (
     <SyntaxHighlighter
-      language={language === 'pseudo' ? 'python' : language}
-      style={language === 'pseudo' ? googlecode : cb}
-      showLineNumbers
+      customStyle={{marginTop: 0}}
+      language={language === 'pseudo' ? '' : language}
+      style={cb}
+      showLineNumbers={language !== 'pseudo'}
     >
-      {code ?
-        code :
+      {codeText ?
+        codeText :
         ''
       }
     </SyntaxHighlighter>

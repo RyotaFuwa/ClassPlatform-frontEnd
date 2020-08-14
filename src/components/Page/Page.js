@@ -10,9 +10,7 @@ const Page = props => {
         <div className='main'>
           {props.children}
         </div>
-        <div className='footer'>
-          <Footer />
-        </div>
+        <Footer />
       </div>
     )
 }

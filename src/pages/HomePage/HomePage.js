@@ -39,6 +39,11 @@ const ShiftTop = styled.div`
   margin-top: -${props => props.by};
 `
 
+const Extend = styled.div`
+  height: ${props => props.height ? props.height : null};
+  width: ${props => props.width ? props.width: null};
+`
+
 const Title = styled.div`
   grid-area: title;
   font-size: 2rem;
@@ -89,12 +94,16 @@ const HomePage = props => {
           </Links>
         </Banner>
         <ShiftTop by='10px' />
-        <LinearLeftUp color={'royalblue'} />
+        <Extend width='110%'>
+          <LinearLeftUp color={'royalblue'} />
+        </Extend>
 
         <Content />
 
         <AbsoluteTop>
-          <WaveDown color={'midnightblue'} />
+          <Extend width='110%'>
+            <WaveDown color={'midnightblue'} />
+          </Extend>
         </AbsoluteTop>
       </Home>
     </Page>
