@@ -1,260 +1,23 @@
-import React, {useState} from "react";
+import React from "react";
 import {connect} from 'react-redux';
 import TimerBox from "../../components/TimerBox/TimerBox";
-import {Tab} from "../../components/Tab/Tab";
 
-import AceEditor from "react-ace";
-import "ace-builds/src-noconflict/mode-python";
-import "ace-builds/src-noconflict/mode-java";
-import "ace-builds/src-noconflict/mode-javascript";
-import "ace-builds/src-noconflict/mode-c_cpp";
-import "ace-builds/src-noconflict/theme-monokai";
-import "ace-builds/src-noconflict/theme-github";
-import "ace-builds/src-noconflict/theme-dawn";
-import "ace-builds/src-noconflict/theme-chrome";
-import "ace-builds/src-noconflict/keybinding-vim";
-import "ace-builds/src-noconflict/keybinding-emacs";
-import "ace-builds/src-noconflict/keybinding-sublime";
-
-import { Update} from "../../icons";
 import {AppPage, Header} from "../../components/Page/Page";
 import "./CodingRoom.css";
-import LinearProgress from "@material-ui/core/LinearProgress";
-import Button from "@material-ui/core/Button";
-import SelectPopover from "../../components/SelectPopover/SelectPopover";
-import Tips from "../../components/Tips/Tips";
-import EditorJs from 'react-editor-js';
 
 import {
   getCodingQuestionByName, getContent, updateContent,
 } from "../../firebase/firebase.firestore.codingQuestions";
 
-import {setCurrentCodingQuestion} from "../../redux/coding/coding.actions";
-import {CleanDocViewer} from "../../components/CleanDocViewer/CleanDocViewer";
-import Paragraph from "@editorjs/paragraph";
-import Header_Doc from "@editorjs/header";
-import CodeSnippet from "../../js/editorjs/block-tools/code-snippet";
+import {mapDispatchToProps, mapStateToProps} from "./consts";
+import Title from "./components/Primitives/Title";
+import Console from "./components/Console/Console";
+import RunButton from "./components/Primitives/RunButton";
+import MainEditor from "./components/MainEditor/MainEditor";
+import OutputBox from "./components/Primitives/OutputBox";
+import DocsTabs from "./DocTabs/DocTabs";
 
 //TODO: use redux-session to hold question text.
-
-const Title = props => {
-  return (
-    <div className='title'>
-      {props.name}
-      {props.admin &&
-      <span className='btn-group'>
-            <Update
-              disabled={props.name === 'Coding Room'}
-              onClick={props.handleClick}
-            />
-          </span>
-      }
-    </div>
-  )
-}
-
-const Console = props => {
-  return (
-    <div className="console">
-      <span className='m-1'/>
-      <SelectPopover
-        options={['monokai', 'github', 'dawn'].map(each => ({label: each, value: each, disabled: false}))}
-        color='primary'
-        value={props.theme}
-        handleChange={e => props.handleChange({theme: e.target.value})}
-      />
-      <span className='m-1'/>
-      <SelectPopover
-        options={['sublime', 'vim', 'emacs'].map(each => ({label: each, value: each, disabled: false}))}
-        color='primary'
-        value={props.keybinding}
-        handleChange={e => props.handleChange({keybinding: e.target.value})}
-      />
-      <span className='m-1'/>
-      <SelectPopover
-        color='primary'
-        options={[
-          {label: 'python', value: 'python', disabled: false},
-          {label: 'javascript', value: 'javascript', disabled: true},
-          {label: 'java', value: 'java', disabled: true},
-          {label: 'C++', value: 'c_cpp', disabled: true},
-        ]}
-        value={props.lang}
-        handleChange={e => props.handleChange({lang: e.target.value})}
-      />
-      {props.admin &&
-        <>
-          <span className='m-1'/>
-          <SelectPopover
-          color='secondary'
-          options={[
-            {label: 'Initial Text', value: 'text'},
-            {label: 'Solution', value: 'solution'},
-          ]}
-          value={props.editorMode}
-          handleChange={e => props.handleChange({editorMode: e.target.value})}
-          />
-          <span className='m-1'/>
-          <SelectPopover
-            color='secondary'
-            options={[
-              {label: 'Tests', value: 'tests'},
-            ]}
-            value='tests' //now its not working
-          />
-        </>
-      }
-    </div>
-  )
-}
-
-const RunButton = props => {
-  return (
-    <Button
-      className='run-button'
-      fullWidth
-      size='small'
-      variant='contained'
-      color="primary"
-      onClick={props.onClick}
-      disabled={props.running}
-    >
-      {props.running ? 'Not Available For Guests' : 'Run' }
-    </Button>
-  )
-}
-
-const MainEditor = props => {
-  return(
-    <div className='main-editor'>
-      {props.running && <LinearProgress/>}
-      <AceEditor
-        showPrintMargin={true}
-        showGutter={true}
-        highlightActiveLine={true}
-        setOptions={{
-          enableBasicAutocompletion: true,
-          enableLiveAutocompletion: true,
-          enableSnippets: true,
-          showLineNumbers: true,
-          tabSize: 4,
-        }}
-        fontSize={14}
-        width="100%"
-        height="100%"
-        placeholder=""
-
-        mode={props.lang}
-        theme={props.theme}
-        keyboardHandler={props.keybinding}
-        value={props.text}
-        onChange={txt => props.onChange(txt)}
-      />
-    </div>
-  )
-}
-
-const OutputBox = props => {
-  const {stdout, stderr, error} = props.output;
-  return (
-    <pre
-      className='output-box scrollable'
-      style={{color: stdout ? 'floralwhite' : 'crimson'}}
-    >
-      {stdout || stderr + error}
-    </pre>
-  )
-}
-
-const Instruction = props => {
-  const EDITOR_JS_TOOLS = {
-    paragraph: {
-      class: Paragraph,
-    },
-    header: {
-      class: Header_Doc,
-      config: {
-        levels: [5],
-        defaultLevel: 5,
-      }
-    },
-    code: CodeSnippet,
-  }
-
-  if (props.editing) {
-    return (
-      <>
-        <div className='instruction' id='instruction-holder' />
-        <EditorJs
-          holder='instruction-holder'
-          data={props.instruction}
-          instanceRef={instance => props.setRef(instance)}
-          enableReInitialize={true}
-          tools={EDITOR_JS_TOOLS}
-        />
-      </>
-    )
-  }
-  else {
-    return <div className='instruction'><CleanDocViewer data={props.instruction}/></div>
-  }
-}
-
-const DocsTab = props => {
-  return (
-    <div className='docs-tab'>
-    <Tab.Tab>
-      <Tab.Block name="Instruction">
-        <Instruction
-          instruction={props.instruction}
-          setRef={instance => props.setInstructionRef(instance)}
-          editing={props.editing}
-          onChange={data => props.handleChange({instruction: data})}
-        />
-      </Tab.Block>
-      <Tab.Block name='Tips'>
-        <Tips
-          tips={props.tips}
-          editing={props.editing}
-          onAdd={() => {
-            props.tips.push('');
-            props.handleChange({tips: [...props.tips]})
-          }}
-          onDelete={() => {
-            props.tips.pop();
-            props.handleChange({tips: [...props.tips]})
-          }}
-          onChange={(idx, e) => {
-            props.tips[idx] = e.target.value;
-            props.handleChange({tips: [...props.tips]})
-          }}
-        />
-      </Tab.Block>
-      <Tab.Block className='w-100 h-100' name='Pseudo'>
-        <AceEditor
-          showGutter={true}
-          highlightActiveLine={false}
-          setOptions={{
-            enableBasicAutocompletion: true,
-            enableLiveAutocompletion: true,
-            enableSnippets: true,
-            showLineNumbers: true,
-            tabSize: 4,
-          }}
-          width="100%"
-          height="100%"
-          fontSize={14}
-          readOnly={!props.editing}
-          theme='chrome'
-          mode='java'
-          value={props.pseudo}
-          onChange={(e) => props.handleChange({pseudo: e})}
-        />
-      </Tab.Block>
-    </Tab.Tab>
-    </div>
-  )
-}
 
 
 class CodingRoom extends React.Component {
@@ -302,8 +65,10 @@ class CodingRoom extends React.Component {
         console.log(err);
       }
     }
-    const documentSnapshot = await getContent(this.props.currentCodingQuestion.contentId);
-    this.setState(documentSnapshot.data());
+    if(this.props.currentCodingQuestion) {
+      const documentSnapshot = await getContent(this.props.currentCodingQuestion.contentId);
+      this.setState(documentSnapshot.data());
+    }
   }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
@@ -325,6 +90,7 @@ class CodingRoom extends React.Component {
   }
 
   async updateContent() {
+    if(!this.props.currentCodingQuestion) return;
     let {instruction, tips, tests, pseudo, text, solution} = this.state;
     if(this.instructionRef) {
       try {
@@ -393,7 +159,7 @@ class CodingRoom extends React.Component {
             onChange={txt => this.setState({[this.state.editorMode]: txt})}
           />
           <OutputBox output={this.state.output} />
-          <DocsTab
+          <DocsTabs
             instruction={this.state.instruction}
             setInstructionRef={instance => this.instructionRef = instance}
             tips={this.state.tips}
@@ -407,13 +173,6 @@ class CodingRoom extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  currentUser: state.user.currentUser,
-  currentCodingQuestion: state.coding.currentCodingQuestion,
-})
 
-const mapDispatchToProps = dispatch => ({
-  setCurrentCodingQuestion: question => dispatch(setCurrentCodingQuestion(question)),
-})
 
 export default connect(mapStateToProps, mapDispatchToProps)(CodingRoom);

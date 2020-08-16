@@ -18,16 +18,11 @@ function Footer() {
         </Extend>
       </AbsoluteBottom>
       <div className="footer-grid">
-        <div className='footer-line' />
-        <span className="left">&copy; All contents reserved. 2020 Ryota Fuwa</span>
-        <span className="right">
-          <span className="m-1">
-            <Link className='link' to="/myprofile">My Profile</Link>
-          </span> |
-          <span className="m-1">
-            <a className='link'  href="#page" >Back To Page Top</a>
-          </span>
-        </span>
+        <div className="left">&copy; All contents reserved. 2020 Ryota Fuwa</div>
+        <div className="right">
+          <Link className='link mr-1' to="/myprofile">My Profile</Link> |
+          <a className='link ml-1'  href="#page" >Back To Page Top</a>
+        </div>
       </div>
     </div>
   );

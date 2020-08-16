@@ -1,5 +1,5 @@
 import React from "react";
 
-export const Paragraph = ({text}) => {
-  return <p dangerouslySetInnerHTML={{__html: text}} />
+export const Paragraph = props => {
+  return <p className='m-2 w-100' dangerouslySetInnerHTML={{__html: props.text}} />
 }

@@ -1,15 +1,12 @@
 
-.clean-doc-viewer {
-  height: 100%;
-  max-width: 700px;
-  margin: auto;
-  margin-top: 2em;
-  padding: 0 1em;
-  display: flex;
-  flex-direction: column;
-  justify-self: center;
-  justify-content: center;
-}
-
-.clean-doc-viewer .block {
-}
+.aaa {
+  text-decoration: none;
+  color: black;
+  font-size: 1em;
+  border-radius: 0.1em;
+  background-color: transparent;
+  border: 1px solid black;
+  text-align: center;
+  margin: 10em 0;
+  padding: 0.25em 1em;
+ }

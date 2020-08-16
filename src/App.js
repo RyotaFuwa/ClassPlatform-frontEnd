@@ -5,12 +5,11 @@ import {setCurrentUser} from "./redux/user/user.actions";
 
 import HomePage from "./pages/HomePage/HomePage";
 import CodingRoom from "./pages/CodingRoom/CodingRoom";
-import ClassBoard from "./pages/ClassRoom/ClassBoard";
+import ClassBoard from "./pages/ClassBoard/ClassBoard";
 import ClassRoom from "./pages/ClassRoom/ClassRoom";
 import MyDeskPage from "./pages/MyDeskPage/MyDeskPage";
 import MyProfilePage from "./pages/MyProfilePage/MyProfilePage";
-import AboutThisWebsitePage from "./pages/AboutThisWebsitePage/AboutThisWebsitePage";
-import CodingBoard from "./pages/CodingRoom/CodingBoard";
+import CodingBoard from "./pages/CodingBoard/CodingBoard";
 import WebsiteSetting from "./pages/WebsiteSetting/WebsiteSetting";
 
 import UIPassword from "./pages/UIPassword/UIPassword";
@@ -57,7 +56,6 @@ class App extends React.Component {
               <Redirect to='/'/>
           }
         />
-
 
         <Route
           path="/classboard"
@@ -109,7 +107,6 @@ class App extends React.Component {
         />
         <Route path="/uipassword/" component={UIPassword} />
         <Route path="/myprofile" component={MyProfilePage}/>
-        <Route path="/aboutthiswebsite" component={AboutThisWebsitePage}/>
         <Route path="/" render={() => <NotFound page/>}/>
       </Switch>
     );

@@ -268,7 +268,12 @@ class Doc extends Component {
           }
         </div>
         <div className='content'>
-          {this.state.mode === 0 && <CleanDocViewer data={this.state.cleanDoc} />}
+          {
+            this.state.mode === 0 &&
+            <CleanDocViewer data={this.state.cleanDoc} />
+          }
+
+          {/*if this.stte.mode !== 0 then it disappears, but don't want it to be rendered so display style used here*/}
           <div id='holder' style={{display: this.state.mode === 0 ? 'none' : null}} />
           <EditorJs
             holder='holder'

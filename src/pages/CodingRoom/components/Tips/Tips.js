@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './Tips.css';
-import {Create, Delete} from "../../icons";
-import CollapibleBlock from "../CollapibleBlock/CollapibleBlock";
+import {Create, Delete} from "../../../../icons";
+import CollapibleBlock from "../../../../components/CollapibleBlock/CollapibleBlock";
 
 
 const Tips = props => {

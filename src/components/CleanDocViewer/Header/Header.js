@@ -1,6 +1,7 @@
 import React from "react";
 
-export const Header = ({text, level}) => {
+export const Header = props => {
+  let {level, text} = props;
   switch(level) {
     case 1:
       return <h1><b>{text}</b></h1>
@@ -9,11 +10,11 @@ export const Header = ({text, level}) => {
     case 3:
       return <h3><b>{text}</b></h3>
     case 4:
-      return <h4 className='mt-5 mb-4'><b>{text}</b></h4>
+      return <h4 className='mt-5 mb-4 w-100'><b>{text}</b></h4>
     case 5:
-      return <h5 className='mt-4 mb-3'><b>{text}</b></h5>
+      return <h5 className='mt-4 mb-3 w-100'><b>{text}</b></h5>
     case 6:
-      return <h6 className='mt-3 mb-2'><b>{text}</b></h6>
+      return <h6 className='mt-3 mb-2 w-100'><b>{text}</b></h6>
     default:
       return <div />
   }
