@@ -1,22 +1,25 @@
-import React from 'react';
+import './App.css';
+import React, {lazy, Suspense} from 'react';
 import {Switch, Route, Redirect} from "react-router-dom";
 import {connect} from "react-redux";
 import {setCurrentUser} from "./redux/user/user.actions";
-
-import HomePage from "./pages/HomePage/HomePage";
-import CodingRoom from "./pages/CodingRoom/CodingRoom";
-import ClassBoard from "./pages/ClassBoard/ClassBoard";
-import ClassRoom from "./pages/ClassRoom/ClassRoom";
-import MyDeskPage from "./pages/MyDeskPage/MyDeskPage";
-import MyProfilePage from "./pages/MyProfilePage/MyProfilePage";
-import CodingBoard from "./pages/CodingBoard/CodingBoard";
-import WebsiteSetting from "./pages/WebsiteSetting/WebsiteSetting";
-
-import UIPassword from "./pages/UIPassword/UIPassword";
-import NotFound from "./components/NotFound/NotFound";
 import {auth, createNewUserIfNoMatch} from "./firebase/firebase.utils";
+import Loading from "./components/Loading/Loading";
 
-import './App.css';
+//pages
+import HomePage from "./pages/HomePage/HomePage";
+import WebsiteSetting from "./pages/WebsiteSetting/WebsiteSetting";
+import NotFound from "./components/NotFound/NotFound";
+
+const MyDeskPage = lazy(() => import("./pages/MyDeskPage/MyDeskPage"));
+
+const ClassBoard = lazy(() => import("./pages/ClassBoard/ClassBoard"));
+const ClassRoom = lazy(() => import("./pages/ClassRoom/ClassRoom"));
+const CodingRoom = lazy(() => import('./pages/CodingRoom/CodingRoom'));
+const CodingBoard = lazy(() => import('./pages/CodingBoard/CodingBoard'));
+const UIPassword = lazy(() => import("./pages/UIPassword/UIPassword"));
+const MyProfilePage = lazy(() => import("./pages/MyProfilePage/MyProfilePage"));
+
 
 class App extends React.Component {
   unsubscribeFromAuth = null
@@ -48,65 +51,67 @@ class App extends React.Component {
     return (
       <Switch>
         <Route exact path="/" component={HomePage}/>
-        <Route
-          path="/mydesk/"
-          render={() =>
-            currentUser ?
-              <MyDeskPage/> :
-              <Redirect to='/'/>
-          }
-        />
+        <Suspense fallback={<Loading />}>
+          <Route
+            path="/mydesk/"
+            render={() =>
+              currentUser ?
+                <MyDeskPage/> :
+                <Redirect to='/'/>
+            }
+          />
 
-        <Route
-          path="/classboard"
-          render={() =>
+          <Route
+            path="/classboard"
+            render={() =>
+              currentUser ?
+                <ClassBoard/> :
+                <Redirect to='/'/>
+            }
+          />
+          <Route
+            path="/classroom/:class"
+            render={props =>
+              currentUser ?
+                <ClassRoom match={props.match} /> :
+                <Redirect to='/'/>
+            }
+          />
+            <Route
+              path="/codingroom/:question"
+              render={props =>
+              currentUser ?
+                <CodingRoom match={props.match} /> :
+                <Redirect to='/'/>
+              }
+            />
+          <Route
+            path="/codingroom"
+            render={() =>
             currentUser ?
-              <ClassBoard/> :
+              <CodingRoom /> :
               <Redirect to='/'/>
-          }
-        />
-        <Route
-          path="/classroom/:class"
-          render={props =>
+            }
+          />
+          <Route
+            path="/codingboard"
+            render={() =>
             currentUser ?
-              <ClassRoom match={props.match} /> :
+              <CodingBoard/> :
               <Redirect to='/'/>
-          }
-        />
-        <Route
-          path="/codingroom/:question"
-          render={props =>
-          currentUser ?
-            <CodingRoom match={props.match} /> :
-            <Redirect to='/'/>
-          }
-        />
-        <Route
-          path="/codingroom"
-          render={() =>
-          currentUser ?
-            <CodingRoom/> :
-            <Redirect to='/'/>
-          }
-        />
-        <Route
-          path="/codingboard"
-          render={() =>
-          currentUser ?
-            <CodingBoard/> :
-            <Redirect to='/'/>
-          }
-        />
-        <Route
-          path="/admin"
-          render={() =>
-            currentUser && currentUser.admin ?
-              <WebsiteSetting /> :
-              <Redirect to='/'/>
-          }
-        />
-        <Route path="/uipassword/" component={UIPassword} />
-        <Route path="/myprofile" component={MyProfilePage}/>
+            }
+          />
+          <Route
+            path="/admin"
+            render={() =>
+              currentUser && currentUser.admin ?
+                <WebsiteSetting /> :
+                <Redirect to='/'/>
+            }
+          />
+          <Route path="/uipassword/" component={UIPassword} />
+          <Route path="/myprofile" component={MyProfilePage}/>
+        </Suspense>
         <Route path="/" render={() => <NotFound page/>}/>
       </Switch>
     );

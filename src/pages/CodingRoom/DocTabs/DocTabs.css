@@ -1,0 +1,10 @@
+.docs-tab .instruction {
+  height: 100%;
+  justify-items: left;
+  border: 0;
+}
+
+.docs-tab .tips {
+  width: 100%;
+  height: 100%;
+}

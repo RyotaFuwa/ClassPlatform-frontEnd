@@ -12,7 +12,6 @@ const SideBarCol = props => {
   const [draggable, setDraggable] = useState(false)
   const [editing, setEditing] = useState(false);
   const [editingName, setEditingName] = useState(props.name);
-
   let titleElement = editing ?
     <input className='w-100 h-100' value={editingName} onChange={e => setEditingName(e.target.value)} autoFocus/> :
     <div className='title scrollable' onClick={props.selectDoc} >{props.name}</div>;

@@ -233,7 +233,6 @@ class ClassBoard extends Component {
             onSubmit={() => this.deleteClass()}
           />
         </Dialogs>
-
       </>
     )
   }
