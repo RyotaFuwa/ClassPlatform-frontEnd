@@ -39,7 +39,6 @@ const Header = props => {
         {props.right}
       </div>
     </div>
-
   )
 }
 

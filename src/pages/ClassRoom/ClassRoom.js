@@ -9,6 +9,9 @@ import Banner from "./components/Primitives/Banner";
 import Title from './components/Primitives/Title'
 import {mapDispatchToProps, mapStateToProps, THEME} from "./consts";
 import {getClassByName} from "../../firebase/firebase.firestore.classes";
+import StickyOnLeft from "./components/StickyOnLeft/StickyOnLeft";
+import {Chat} from "../../icons";
+import ChatBox from "../../components/ChatBox/ChatBox";
 
 
 // components.
@@ -18,7 +21,6 @@ class ClassRoom extends Component {
     this.state = {
       // class info
       className: props.match && props.match.params.class ? props.match.params.class : '',
-
       loading: true,
     }
   }
@@ -36,6 +38,7 @@ class ClassRoom extends Component {
         })
     }
   }
+
 
   render() {
     if(!this.props.currentClass && this.state.loading) {
@@ -56,6 +59,15 @@ class ClassRoom extends Component {
           </Banner>
           <SideBar {...THEME.get(theme)} />
           <Doc key={doc ? doc.name : ''} doc={doc}/>
+          <StickyOnLeft.Box>
+            <StickyOnLeft.Block name={<Chat />}>
+              <ChatBox
+                currentUser={this.props.currentUser}
+                name={this.props.currentClass.name}
+                chatId={this.props.currentClass.chatId}
+              />
+            </StickyOnLeft.Block>
+          </StickyOnLeft.Box>
         </div>
       </Page>
     )

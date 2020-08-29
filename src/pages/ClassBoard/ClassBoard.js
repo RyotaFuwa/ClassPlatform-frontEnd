@@ -7,7 +7,7 @@ import {Header, Page} from "../../components/Page/Page";
 import titlize from "titlize";
 import "../ClassRoom/ClassRoom.css";
 
-import { getAllClasses, createClass, updateClass } from '../../firebase/firebase.firestore.classes';
+import {getAllClasses, createClass, updateClass, createChat} from '../../firebase/firebase.firestore.classes';
 import {uploadImageAt} from "../../firebase/firebase.storage.images";
 import {Dialogs} from "../../components/Primitives/Primitives";
 import {CreateClassDialog} from "./components/Dialogs/CreateClassDialog";
@@ -98,6 +98,8 @@ class ClassBoard extends Component {
     };
 
     try {
+      const chatRef = await createChat();
+      Object.assign(newClass,  {chatId: chatRef.id})
       const documentRef = await createClass(newClass);
       this.setState(state => ({
         classList: [...state.classList, {...newClass, classId: documentRef.id}],

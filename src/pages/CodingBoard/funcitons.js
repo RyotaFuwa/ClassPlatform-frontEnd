@@ -21,7 +21,7 @@ export function categoricalSort(questions) {
   return <div className='questionboard-vertical'>{sortedQuestionList}</div>;
 }
 
-export function levelSort(questions) {
+export function difficultySort(questions) {
   let questionsByLevel = Array.from(DIFFICULTY, each => ({...each, list: []}));
   for (let idx = 0; idx < questions.length; idx++) {
     let question = questions[idx];

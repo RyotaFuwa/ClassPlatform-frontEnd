@@ -25,7 +25,7 @@ export const updateClass = async (classId, updatingFields) => {
 }
 
 
-//Delta: JSON-like object which holds document data (Delta from Quill like data).
+//Clean Doc, json for formatted document.
 
 export const getCleanDoc = async cleanDocId => {
   const documentRef = firestore.collection('cleanDoc').doc(cleanDocId);
@@ -59,4 +59,37 @@ export const deleteCleanDoc = async cleanDocId => {
   const documentRef = firestore.collection('cleanDoc').doc(cleanDocId);
   const writeResult = await documentRef.delete();
   return writeResult;
+}
+
+//Chat
+export const importMessagesAt  = async (chatId) => {
+  const query = firestore.collection('chat').doc(chatId)
+    .collection('messages').orderBy('createdAt')
+  const snapshot = query.get();
+  return snapshot;
+}
+
+export const createChat = async () => {
+  const query = firestore.collection("chat");
+  const documentRef = await query.add({attendees: {}});
+  return documentRef;
+}
+
+export const subscribeLastMessage = (chatId, snapshotCallback) => {
+  const unsubscribe = firestore.collection('chat').doc(chatId)
+    .collection('messages').orderBy('createdAt').limitToLast(1)
+    .onSnapshot(snapshotCallback);
+  return unsubscribe;
+}
+export const postMessageAt = async (chatId, message, author) => {
+  const query = firestore.collection("chat").doc(chatId).collection('messages');
+  const documentRef = await query.add({message: message, author: author, createdAt: new Date()});
+  return documentRef;
+}
+
+export const deleteFirstNMessages = async (chatId, n) => {
+  const query = firestore.collection("chat").doc(chatId)
+    .collection('messages').orderBy('createdAt').limitToFirst(n);
+  const querySnapshot = await query.get();
+  querySnapshot.forEach(doc => doc.ref.delete());
 }

@@ -21,7 +21,7 @@ import {DeleteQuestionDialog} from "./components/Dialogs/DeleteQuestionDialog";
 import {CodingChallengeDialog} from "../ClassBoard/components/Dialogs/CodingChallengeDialog";
 import {CATEGORY, DIFFICULTY, SORT_TYPE} from "./consts";
 import './CodingBoard.css';
-import {categoricalSort, levelSort, randomSort} from "./funcitons";
+import {categoricalSort, difficultySort, randomSort} from "./funcitons";
 
 
 //TODO: tabs (instruciton, pesudo and everything) deployed with editor.js might be better
@@ -70,7 +70,7 @@ const QuestionBoard = ({questionList, sortIdx}) => {
     case 0:
       return categoricalSort(questionList);
       case 1:
-        return levelSort(questionList);
+        return difficultySort(questionList);
       case 2:
         return randomSort(questionList);
       default:

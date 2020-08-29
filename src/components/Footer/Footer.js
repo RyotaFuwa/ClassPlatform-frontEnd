@@ -4,6 +4,8 @@ import {AbsoluteBottom} from "../Primitives/Primitives";
 import {LinearRightDown} from "../../data/svgs";
 import {Link} from "react-router-dom";
 import styled from "styled-components";
+import Button from "@material-ui/core/Button";
+import Nav from "react-bootstrap/Nav";
 
 const Extend = styled.div`
   height: ${props => props.height ? props.height : null};
@@ -20,7 +22,8 @@ function Footer() {
       <div className="footer-grid">
         <div className="left">&copy; All contents reserved. 2020 Ryota Fuwa</div>
         <div className="right">
-          <Link className='link mr-1' to="/myprofile">My Profile</Link> |
+          {/* <Link className='link mr-1' to="/myprofile">My Profile</Link> | */}
+          <a className='link' href='https://github.com/RyotaFuwa/ClassPlatform-frontEnd'>About This Website on GitHub</a> |
           <a className='link ml-1'  href="#page" >Back To Page Top</a>
         </div>
       </div>

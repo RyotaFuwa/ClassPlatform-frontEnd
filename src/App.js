@@ -77,19 +77,19 @@ class App extends React.Component {
                 <Redirect to='/'/>
             }
           />
-            <Route
-              path="/codingroom/:question"
-              render={props =>
-              currentUser ?
-                <CodingRoom match={props.match} /> :
-                <Redirect to='/'/>
-              }
-            />
           <Route
-            path="/codingroom"
+            exact path="/codingroom"
             render={() =>
+              currentUser ?
+                <CodingRoom /> :
+                <Redirect to='/'/>
+            }
+          />
+          <Route
+            path="/codingroom/:question"
+            render={props =>
             currentUser ?
-              <CodingRoom /> :
+              <CodingRoom match={props.match} /> :
               <Redirect to='/'/>
             }
           />
