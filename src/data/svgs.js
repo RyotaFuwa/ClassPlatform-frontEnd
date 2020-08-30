@@ -7,7 +7,7 @@ export const WaveDown = ({color}) => (
 )
 
 export const LinearLeftUp = ({color}) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 220">
     <path fill={color} strokeWidth={0} fillOpacity="1" d="M0,96L1440,224L1440,0L0,0Z" />
   </svg>
 )

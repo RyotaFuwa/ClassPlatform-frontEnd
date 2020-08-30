@@ -1,0 +1,31 @@
+.introduction-card {
+  width: 100%;
+  height: 500px;
+  margin: 40px 0;
+  padding: 1% 1%;
+  border: 2px solid black;
+  border-radius: 10px;
+  justify-self: center;
+  display: grid;
+  grid-template-areas:
+  "name image"
+  "summary image";
+}
+
+.introduction-card .name {
+  grid-area: name;
+  font-family: Arial, sans-serif;
+  font-size: 2em;
+  font-weight: bold;
+  text-align: center;
+}
+
+.introduction-card .summary {
+  grid-area: summary;
+  text-align: center;
+  font-size: 1.5em;
+}
+
+.introduction-card .image {
+  grid-area: image;
+}

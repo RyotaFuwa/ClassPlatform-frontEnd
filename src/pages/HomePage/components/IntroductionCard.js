@@ -6,7 +6,9 @@ const IntroductionCard = props => {
     <div className="introduction-card">
       <div className="name">{props.name}</div>
       <div className="summary">{props.summary}</div>
-      <img className="img" src={props.imageUrl} />
+      <img className="image" src={props.imageUrl} />
     </div>
   )
 }
+
+export default IntroductionCard;

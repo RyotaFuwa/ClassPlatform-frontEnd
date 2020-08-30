@@ -62,4 +62,7 @@ export const Links = styled.div`
 
 export const Content = styled.div`
   min-height: 50vh;
+  margin: 100px 10% 300px 10%;
+  display: grid;
+  grid-gap: 50px;
 `

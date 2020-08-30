@@ -2,10 +2,7 @@ import React from "react";
 import './Footer.css';
 import {AbsoluteBottom} from "../Primitives/Primitives";
 import {LinearRightDown} from "../../data/svgs";
-import {Link} from "react-router-dom";
 import styled from "styled-components";
-import Button from "@material-ui/core/Button";
-import Nav from "react-bootstrap/Nav";
 
 const Extend = styled.div`
   height: ${props => props.height ? props.height : null};
