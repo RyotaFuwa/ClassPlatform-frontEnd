@@ -52,6 +52,7 @@ class App extends React.Component {
       <Switch>
         <Route exact path="/" component={HomePage}/>
         <Suspense fallback={<Loading />}>
+          <Route path='/loading' component={Loading} />
           <Route
             path="/mydesk/"
             render={() =>
