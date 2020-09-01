@@ -7,6 +7,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import React from "react";
 import {THEME} from "../../../ClassRoom/consts";
+import Dropzone from "react-dropzone";
 
 export const CreateClassDialog = props => {
   const {name, tags, theme} = props.editingClass;

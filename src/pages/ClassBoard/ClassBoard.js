@@ -7,7 +7,13 @@ import {Header, Page} from "../../components/Page/Page";
 import titlize from "titlize";
 import "../ClassRoom/ClassRoom.css";
 
-import {getAllClasses, createClass, updateClass, createChat} from '../../firebase/firebase.firestore.classes';
+import {
+  getAllClasses,
+  createClass,
+  updateClass,
+  createChat,
+  deleteClass
+} from '../../firebase/firebase.firestore.classes';
 import {uploadImageAt} from "../../firebase/firebase.storage.images";
 import {Dialogs} from "../../components/Primitives/Primitives";
 import {CreateClassDialog} from "./components/Dialogs/CreateClassDialog";
@@ -77,6 +83,10 @@ class ClassBoard extends Component {
   async createClass() {
     // cloud firestore
     const {name, theme, tags} = this.state;
+    if(!name) {
+      alert('a class needs its name.');
+      return;
+    }
     const titlizedName = titlize(name);
     let sameNameClassAlreadyExists = this.state.classList.filter(each => each.name === titlizedName).length > 0
     if(sameNameClassAlreadyExists) {
@@ -165,20 +175,38 @@ class ClassBoard extends Component {
 
   async deleteClass() {
     //firebase
-    // this function doesn't delete classes. what it actually does is to make a class inactive.
-    const { classId } = this.state.classList[this.state.selectedIdx];
-    try {
-      await updateClass(classId, {active: false});
-      this.setState(state => {
-        Object.assign(state.classList[state.selectedIdx], {active: false});
-        return {
-          classList: [...state.classList],
-          dialog: null,
-        }
-      })
+    const { classId, active } = this.state.classList[this.state.selectedIdx];
+    if(active) {
+      try {
+        await updateClass(classId, {active: false});
+        this.setState(state => {
+          Object.assign(state.classList[state.selectedIdx], {active: false});
+          return {
+            classList: [...state.classList],
+            selectedIdx: null,
+            dialog: null,
+          }
+        })
+      } catch (err) {
+        console.log(err);
+        alert('Failed to delete(inactivate) the class');
+      }
     }
-    catch(err) {
-      alert('Failed to delete(inactivate) the class');
+    else {
+      try {
+        await deleteClass(classId);
+        this.setState(state => {
+          state.classList.splice(this.state.selectedIdx, 1);
+          return {
+            classList: [...state.classList],
+            selectedIdx: null,
+            dialog: null,
+          }
+        })
+      } catch (err) {
+        console.log(err);
+        alert('Failed to hard-delete the class');
+      }
     }
   }
 

@@ -7,3 +7,7 @@ and I run. this is still in progress.
 
 ※ [ClassPlatform BackEnd](https://github.com/RyotaFuwa/ClassPlatform-backEnd) is not used now. Instead, backend is implemented with firebase.
 
+## Guest Login
+website url: https://class-platform.herokuapp.com  
+email: guest@email.com  
+password: guest1234  

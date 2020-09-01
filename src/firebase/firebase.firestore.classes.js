@@ -24,6 +24,14 @@ export const updateClass = async (classId, updatingFields) => {
   return writeResult;
 }
 
+export const deleteClass = async classId => {
+  const documentRef = firestore.collection('classes').doc(classId);
+  const snapshot = await documentRef.get();
+  await snapshot.data().docs.forEach(doc => deleteCleanDoc(doc.cleanDocId))
+  await deleteChat(snapshot.data().chatId)
+  await documentRef.delete();
+}
+
 
 //Clean Doc, json for formatted document.
 
@@ -71,8 +79,17 @@ export const importMessagesAt  = async (chatId) => {
 
 export const createChat = async () => {
   const query = firestore.collection("chat");
-  const documentRef = await query.add({attendees: {}});
+  const documentRef = await query.add({});
   return documentRef;
+}
+
+export const deleteChat = async chatId => {
+  const messageSnapshot = firestore.collection("chat").doc(chatId)
+    .collection('messages').get();
+  if(messageSnapshot.docs) {
+    messageSnapshot.docs.forEach(doc => doc.ref.delete())
+  }
+  await firestore.collection("chat").doc(chatId).delete();
 }
 
 export const subscribeLastMessage = (chatId, snapshotCallback) => {
@@ -91,5 +108,6 @@ export const deleteFirstNMessages = async (chatId, n) => {
   const query = firestore.collection("chat").doc(chatId)
     .collection('messages').orderBy('createdAt').limitToFirst(n);
   const querySnapshot = await query.get();
-  querySnapshot.forEach(doc => doc.ref.delete());
+  querySnapshot.docs.forEach(doc => doc.ref.delete());
 }
+

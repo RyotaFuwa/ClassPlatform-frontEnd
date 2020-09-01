@@ -116,9 +116,11 @@ class CodingRoom extends React.Component {
 
   render() {
     const admin = (this.props.currentUser && this.props.currentUser.admin);
-    let code = this.state.text;
+    let code = '';
     if(this.state.editorMode === 'solution') {
       code = this.state.solution;
+    } else {
+      code = this.state.text;
     }
     return (
       <AppPage>
