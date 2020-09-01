@@ -196,7 +196,7 @@ class ClassBoard extends Component {
       try {
         await deleteClass(classId);
         this.setState(state => {
-          state.classList.splice(this.state.selectedIdx, 1);
+          state.classList.splice(state.selectedIdx, 1);
           return {
             classList: [...state.classList],
             selectedIdx: null,

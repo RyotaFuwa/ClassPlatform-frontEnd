@@ -6,9 +6,11 @@ import MenuItem from "@material-ui/core/MenuItem";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import React from "react";
+import {Alert, AlertTitle} from "@material-ui/lab";
 
 
 export const DeleteQuestionDialog = props => {
+  let hardDeleting = props.selectedIdx !== null && !props.questionList[props.selectedIdx].active;
   return (
     <Dialog open={props.open} maxWidth='sm' fullWidth>
       <DialogTitle>Delete a Class</DialogTitle>
@@ -27,6 +29,14 @@ export const DeleteQuestionDialog = props => {
             ))
           }
         </TextField>
+        <div>
+          {hardDeleting &&
+          <Alert severity="error">
+            <AlertTitle>Hard Delete</AlertTitle>
+            <strong>This class will be permanently deleted.</strong>
+          </Alert>
+          }
+        </div>
       </DialogContent>
       <DialogActions>
         <Button onClick={() => props.onSubmit()}>

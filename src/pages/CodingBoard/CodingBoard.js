@@ -10,7 +10,7 @@ import {Create, Delete, Update} from "../../icons";
 import {Header, Page} from "../../components/Page/Page";
 import {connect} from "react-redux";
 import {
-  createCodingQuestion,
+  createCodingQuestion, deleteCodingQuestion,
   getAllCodingQuestions,
   updateCodingQuestion
 } from "../../firebase/firebase.firestore.codingQuestions";
@@ -194,23 +194,39 @@ class CodingBoard extends Component {
   async deleteQuestion() {
     //firebase
     // this function doesn't delete questions. what it actually does is to make a question inactive.
-    const { questionId } = this.state.questionList[this.state.selectedIdx];
-    try {
-      await updateCodingQuestion(questionId, {active: false});
-      this.setState(state => {
-        Object.assign(state.questionList[state.selectedIdx], {active: false});
-        return {
-          questionList: [...state.questionList],
-          selectedIdx: null,
-          dialog: null,
-        }
-      })
+    const { questionId, active } = this.state.questionList[this.state.selectedIdx];
+    if(active) {
+      try {
+        await updateCodingQuestion(questionId, {active: false});
+        this.setState(state => {
+          Object.assign(state.questionList[state.selectedIdx], {active: false});
+          return {
+            questionList: [...state.questionList],
+            selectedIdx: null,
+            dialog: null,
+          }
+        })
+      } catch (err) {
+        alert('Failed to delete(inactivate) the question');
+        console.log(err);
+      }
     }
-    catch(err) {
-      alert('Failed to delete(inactivate) the question');
-      console.log(err);
+    else {
+      try {
+        await deleteCodingQuestion(questionId);
+        this.setState(state => {
+          state.questionList.splice(state.selectedIdx, 1);
+          return {
+            questionList: [...state.questionList],
+            selectedIdx: null,
+            dialog: null,
+          }
+        });
+      } catch(err) {
+        console.log(err);
+        alert('Failed to hard-delete the question');
+      }
     }
-
   }
 
   render() {

@@ -31,6 +31,14 @@ export const updateCodingQuestion = async (questionId, updatingFields) => {
   return writeResult;
 }
 
+export const deleteCodingQuestion = async questionId => {
+  const documentRef = firestore.collection('codingQuestions').doc(questionId);
+  const snapshot = await documentRef.get();
+  await deleteContent(snapshot.data().contentId);
+  const writeResult = await documentRef.delete();
+  return writeResult;
+}
+
 // Question Content
 //Assumption: there is only one questionContent document.
 
@@ -51,5 +59,10 @@ export const getContent = async contentId => {
 export const updateContent = async (contentId, updatingFields) => {
   const query = firestore.collection('questionContent').doc(contentId);
   const writeResult = await query.set(updatingFields, {merge: true});
+  return writeResult;
+}
+
+export const deleteContent = async contentId => {
+  const writeResult = await firestore.collection('questionContent').doc(contentId).delete();
   return writeResult;
 }
