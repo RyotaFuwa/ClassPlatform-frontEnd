@@ -2,7 +2,7 @@
 a note sharing platform written in React.js where people can share their knowledge. 
 Users can read, chat, and share their knowledge. 
 
-***※ Currently only admin user can add classes***
+***※ Currently only admin user can add classes***  
 ***※ Currently only admin user can add coding quesitons***
 
 [This website](http://class-platform.herokuapp.com) is created for a small study community that my friends
