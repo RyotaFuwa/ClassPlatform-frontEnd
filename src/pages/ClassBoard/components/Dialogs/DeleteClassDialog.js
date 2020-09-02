@@ -17,10 +17,13 @@ export const DeleteClassDialog = props => {
         <div className='mb-3'>
           Class to Delete: &nbsp;
           <div className='ml-4'>
-            <TextField select margin="dense"  type="name"
-                       value={props.selectedIdx !== null ? props.selectedIdx : props.classList.length}
-                       onChange={e => props.onSelect(e.target.value)}
-                       fullWidth>
+            <TextField
+              select margin="dense"
+              type="name"
+              value={props.selectedIdx !== null ? props.selectedIdx : props.classList.length}
+              onChange={e => props.onSelect(e.target.value)}
+              fullWidth
+            >
               {props.classList.map((each, idx) => (
                 <MenuItem key={each.name} value={idx}>
                   {each.name}

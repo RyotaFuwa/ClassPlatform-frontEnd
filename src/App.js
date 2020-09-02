@@ -3,13 +3,14 @@ import React, {lazy, Suspense} from 'react';
 import {Switch, Route, Redirect} from "react-router-dom";
 import {connect} from "react-redux";
 import {setCurrentUser} from "./redux/user/user.actions";
-import {auth, createNewUserIfNoMatch} from "./firebase/firebase.utils";
+import {auth} from "./firebase/firebase.utils";
 import Loading from "./components/Loading/Loading";
 
 //pages
 import HomePage from "./pages/HomePage/HomePage";
 import WebsiteSetting from "./pages/WebsiteSetting/WebsiteSetting";
 import NotFound from "./components/NotFound/NotFound";
+import {createNewUserIfNoMatch} from "./firebase/firebase.firestore.users";
 
 const MyDeskPage = lazy(() => import("./pages/MyDeskPage/MyDeskPage"));
 

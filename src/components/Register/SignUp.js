@@ -5,8 +5,9 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import TextField from "@material-ui/core/TextField";
 import {Button} from "@material-ui/core";
-import {auth, createNewUserIfNoMatch, createNewUserWithGoogle, signInWithGoogle} from "../../firebase/firebase.utils";
+import {auth, createNewUserWithGoogle, signInWithGoogle} from "../../firebase/firebase.utils";
 import Popover from "@material-ui/core/Popover";
+import {createNewUserIfNoMatch} from "../../firebase/firebase.firestore.users";
 
 class SignUpWithEmail extends Component {
   constructor(props) {

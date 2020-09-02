@@ -12,7 +12,7 @@ import {setCurrentClass, updateCurrentClass} from "../../../../redux/class/class
 import './Info.css';
 
 // constants.
-const CLASS_LEVEL = ['None', 'Easy', 'Intermediate', 'Advanced', 'Research'];
+const CLASS_LEVEL = ['None', 'Introduction', 'Intermediate', 'Advanced', 'Research'];
 const TIME_UNIT = ['None', 'min', 'hour', 'day', 'week', 'month', 'year'];
 
 const mapStateToProps = state => ({

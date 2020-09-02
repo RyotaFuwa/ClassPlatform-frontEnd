@@ -1,7 +1,12 @@
-.row {
-  margin: 50px;
+.setting {
+  min-height: 70vh;
+  margin: 5vh 5vw;
+}
+
+.website-setting-row {
+  margin: 1em 0;
   text-align: left;
-  padding: 0 50px;
+  padding: 2em 0;
 }
 
 .website-setting-serverLocation {

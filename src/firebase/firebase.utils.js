@@ -38,26 +38,3 @@ export const signInWithFacebook = async  () => {
   return user;
 }
 
-export const createNewUserIfNoMatch = async (user, additionalData) => {
-  if(!user) return;
-  const userRef = firestore.doc(`/users/${user.uid}`)
-  const newUser = await userRef.get();
-
-  if(!newUser.exists) {
-    const {displayName, email} = user;
-    const createdAt = new Date();
-    try {
-      await userRef.set({
-        displayName,
-        email,
-        createdAt,
-        ...additionalData,
-      })
-    } catch(err) {
-      console.log(err.message);
-    }
-  }
-
-  return userRef;
-}
-
