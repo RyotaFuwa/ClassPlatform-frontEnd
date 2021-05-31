@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const Banner = styled.div`
-  min-height: 60vh;
+  height: 52rem;
   padding: 2vh 5vw;
   grid-area: header;
   color: ${props => props.color};

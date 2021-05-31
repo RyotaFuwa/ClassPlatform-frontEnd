@@ -28,12 +28,11 @@ const UserPopover = props => {
   const id = open ? 'simple-popover' : undefined;
 
   if(!props.currentUser) return <span />
-  const admin = props.currentUser && props.currentUser.admin;
   return (
     <>
-      <Button aria-describedby={id} onClick={handleClick}>
+      <div className='displayName-button' onClick={handleClick}>
         {props.currentUser.displayName}
-      </Button>
+      </div>
       <Popover
         id={id}
         open={open}
@@ -53,9 +52,9 @@ const UserPopover = props => {
             <b>My Account</b>
           </div>
           <div className='mb-3'>
-            {admin &&
-              <Button><Link className='admin' to='/admin'> Admin </Link></Button>
-            }
+            <Button><Link className='admin' to='/admin'>
+              {props.currentUser.admin ? 'Admin' : props.currentUser.userType}
+            </Link></Button>
           </div>
           <div className='mb-3'>
           </div>

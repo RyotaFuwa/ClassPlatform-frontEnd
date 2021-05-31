@@ -5,6 +5,17 @@
   font-family: "Varela Round", sans-serif;
 }
 
+.displayName-button {
+  justify-self: center;
+  align-self: center;
+  font-size: 1.05em;
+  font-weight: bold;
+}
+
+.displayName-button:hover {
+  color: dimgray;
+}
+
 .user-popover .title {
   border-bottom: 1px solid lightgray;
 }

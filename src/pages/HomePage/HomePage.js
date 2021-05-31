@@ -1,16 +1,17 @@
 import React from "react";
 import {connect} from 'react-redux';
-import {AppPage, Page} from "../../components/Page/Page";
+import {Page} from "../../components/Page/Page";
 import "./HomePage.css";
 import Button from "@material-ui/core/Button";
 import {LinearLeftUp, WaveDown} from "../../data/svgs";
-import {AbsoluteTop, GoToButton} from "../../components/Primitives/Primitives";
-import {Banner, Brand, Content, Extend, Home, Links, ShiftTop, Title} from "./components/Primitives";
+import {AbsoluteTop, GoToButton, Content} from "../../components/Primitives/Primitives";
+import {Banner, Brand, Extend, Home, Links, ShiftTop, Title} from "./components/Primitives";
 import IntroductionCard from "./components/IntroductionCard";
+import {Link} from "react-router-dom";
 
 const HomePage = props => {
   return (
-    <AppPage>
+    <Page>
       <Home>
         <Banner>
           <Title>
@@ -42,10 +43,22 @@ const HomePage = props => {
             <WaveDown color={'midnightblue'} />
           </Extend>
         </AbsoluteTop>
-        <Content>
-        </Content>
+
+        <Content.Content>
+          <Content.Header>Class Board</Content.Header>
+          <Link to='/classboard' style={{textDecoration: "none"}}>
+            <Content.Description>Post your notes and share your knowledge here.</Content.Description>
+          </Link>
+        </Content.Content>
+
+        <Content.Content>
+          <Content.Header>Coding Board</Content.Header>
+          <Link to='/codingboard' style={{textDecoration: "none"}}>
+            <Content.Description>Get your hands on coding, and enjoy solving problems :)</Content.Description>
+          </Link>
+        </Content.Content>
       </Home>
-    </AppPage>
+    </Page>
   );
 }
 

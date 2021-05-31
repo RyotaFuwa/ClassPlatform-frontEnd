@@ -3,9 +3,9 @@ import styled from "styled-components";
 
 export const Home = styled.div`
   width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
+  padding-bottom: 15rem;
 `
 
 export const Brand = styled.span`
@@ -60,9 +60,3 @@ export const Links = styled.div`
   z-index: 9999;
 `
 
-export const Content = styled.div`
-  min-height: 50vh;
-  margin: 100px 10% 300px 10%;
-  display: grid;
-  grid-gap: 50px;
-`

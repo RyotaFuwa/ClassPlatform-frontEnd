@@ -52,3 +52,33 @@ export const AbsoluteBottom = styled.div`
   position: absolute;
   bottom: 0;
 `
+
+export const Content = {
+  Content: styled.div`
+    max-width: 82rem;
+    width: 80vw;
+    margin: 10rem auto;
+    padding: 1rem;
+  `,
+  Description: styled.div`
+    border: 2px solid darkblue;
+    border-radius: 4px;
+    width: 100%;
+    padding: 1rem;
+    color: black;
+    font-size: 1.4rem;
+    font-weight: 400;
+    box-shadow: 1rem 1rem 2rem #cccccc;
+    transition: all .25s;
+    text-decoration: none;
+    &:hover {
+      box-shadow: 4px 4px 8px #777777;
+      background-color: royalblue;
+      color: white;
+    }
+  `,
+  Header: styled.h1`
+    padding: 1rem;
+    margin: 0 1rem;
+  `
+}

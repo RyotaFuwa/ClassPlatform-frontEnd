@@ -4,7 +4,7 @@
   display: grid;
   padding: 10px 10px;
   grid-gap: 1vmin;
-  grid-template-rows: auto 30px 60% 1fr;
+  grid-template-rows: auto 30px 60vh 1fr;
   grid-template-columns: 35% 1fr auto;
   grid-template-areas:
   "header header header"
@@ -38,7 +38,7 @@
 
 .coding-room .docs-tab {
   grid-area: docs-tab;
-  overflow-y: scroll;
+  overflow-y: hidden;
 }
 
 

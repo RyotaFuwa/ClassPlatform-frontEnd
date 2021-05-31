@@ -6,8 +6,10 @@ import {CleanDocViewer} from "../../../components/CleanDocViewer/CleanDocViewer"
 import {Tab} from "../../../components/Tab/Tab";
 import Tips from "../components/Tips/Tips";
 import AceEditor from "react-ace";
-import React from "react";
+import React, {useState} from "react";
 import './DocTabs.css';
+
+//TODO: create a simple editor.
 
 const Instruction = props => {
   const EDITOR_JS_TOOLS = {
@@ -32,20 +34,25 @@ const Instruction = props => {
           holder='instruction-holder'
           data={props.instruction}
           instanceRef={instance => props.setRef(instance)}
-          enableReInitialize={true}
+          enableReInitialize
           tools={EDITOR_JS_TOOLS}
         />
       </>
     )
   }
   else {
-    return <div className='instruction'><CleanDocViewer data={props.instruction}/></div>
+    return  (
+      <div className='instruction'>
+        <CleanDocViewer data={props.instruction}/>
+      </div>
+    )
   }
 }
 
 const DocsTabs = props => {
   return (
-    <div className='docs-tab'>
+    <div className='docs-tab'
+    >
       <Tab.Tab>
         <Tab.Block name="Instruction">
           <Instruction

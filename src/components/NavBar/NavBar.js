@@ -52,7 +52,9 @@ const NavBar = props => {
           <span className='mr-2' />
           {props.currentUser ?
             <>
-              {admin && <Navbar.Brand><span className='brand admin'>Admin</span></Navbar.Brand>}
+              <Navbar.Brand><span className='brand admin'>
+              {props.currentUser.admin ? 'Admin' : props.currentUser.userType}
+              </span></Navbar.Brand>
               <UserPopover />
             </>
             :
