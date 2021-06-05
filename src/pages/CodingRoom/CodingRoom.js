@@ -16,13 +16,19 @@ import RunButton from "./components/Primitives/RunButton";
 import MainEditor from "./components/MainEditor/MainEditor";
 import OutputBox from "./components/Primitives/OutputBox";
 import DocsTabs from "./DocTabs/DocTabs";
+import {edit} from "ace-builds";
+import {key} from "../../js/misc";
 
 //TODO: use redux-session to hold question text.
 
+const DEFAULT_EDITOR_THEME = 'monkai';
+const DEFAULT_KEYBINDING = 'sublime';
+const DEFAULT_LANG = 'python';
 
 class CodingRoom extends React.Component {
   constructor(props) {
     super(props);
+    const {editorTheme, keybinding, lang} = this.props.currentUser;
     this.state = {
       questionName: (props.match && props.match.params.question) ? props.match.params.question : 'Coding Room',
       instruction: '',
@@ -32,9 +38,10 @@ class CodingRoom extends React.Component {
       text: '',
       solution: ' ',
 
-      lang: "python",
-      theme: 'monokai',
-      keybinding: 'sublime',
+      editorTheme: editorTheme ? editorTheme : DEFAULT_EDITOR_THEME,
+      keybinding: keybinding ? keybinding : DEFAULT_KEYBINDING,
+      lang: lang ? lang : DEFAULT_LANG,
+
       output: {stdout: '', stderr: '', error: ''},
 
       timerType: 'stopwatch',
@@ -122,6 +129,7 @@ class CodingRoom extends React.Component {
     } else {
       code = this.state.text;
     }
+    const {editorTheme, keybinding, lang} = this.state;
     return (
       <AppPage>
         <div className='coding-room'>
@@ -143,9 +151,9 @@ class CodingRoom extends React.Component {
           />
           <Console
             admin={admin}
-            theme={this.state.theme}
-            keybinding={this.state.keybinding}
-            lang={this.state.lang}
+            editorTheme={editorTheme}
+            keybinding={keybinding}
+            lang={lang}
             editorMode={this.state.editorMode}
             handleChange={updatingFields => this.handleChange(updatingFields)}
           />
@@ -155,7 +163,7 @@ class CodingRoom extends React.Component {
           />
           <MainEditor
             text={code}
-            theme={this.state.theme}
+            theme={this.state.editorTheme}
             keybinding={this.state.keybinding}
             lang={this.state.lang}
             onChange={txt => this.setState({[this.state.editorMode]: txt})}

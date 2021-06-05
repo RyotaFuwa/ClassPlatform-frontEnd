@@ -8,8 +8,8 @@ const Console = props => {
       <SelectPopover
         options={['monokai', 'github', 'dawn'].map(each => ({label: each, value: each, disabled: false}))}
         color='primary'
-        value={props.theme}
-        handleChange={e => props.handleChange({theme: e.target.value})}
+        value={props.editorTheme}
+        handleChange={e => props.handleChange({editorTheme: e.target.value})}
       />
       <span className='m-1'/>
       <SelectPopover
