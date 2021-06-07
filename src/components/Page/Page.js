@@ -10,7 +10,7 @@ const Page = props => {
         <div className='main'>
           {props.children}
         </div>
-        <Footer />
+        {!props.removeFooter && <Footer/> }
       </div>
     )
 }

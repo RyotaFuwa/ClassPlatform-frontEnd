@@ -11,7 +11,7 @@ import './DocTabs.css';
 
 //TODO: create a simple editor.
 
-const Instruction = props => {
+export const Instruction = props => {
   const EDITOR_JS_TOOLS = {
     paragraph: {
       class: Paragraph,

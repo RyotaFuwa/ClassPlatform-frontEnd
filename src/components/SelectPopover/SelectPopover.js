@@ -22,7 +22,7 @@ const SelectPopover = props => {
 
   return (
     <div>
-      <Button size='small' variant="text" color={props.color ? props.color : 'default'} onClick={handleClick}>
+      <Button size='medium' variant="text" color={props.color ? props.color : 'default'} onClick={handleClick}>
         {props.value}
       </Button>
       <Popover

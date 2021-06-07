@@ -4,6 +4,7 @@ import styled from 'styled-components';
 const Box = styled.pre`
   width: 100%;
   height: 100%;
+  margin: 0;
   background-color: #151518;
   color: ${props => props.color}
   overflow-y: scroll;

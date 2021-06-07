@@ -1,19 +1,20 @@
 .timerbox {
   display: grid;
   width: 275px;
-  max-height: 40px;
+  height: 40px;
   grid-gap: 0.5rem;
-  padding: 0.1rem 0.5rem;
   align-items: center;
   grid-template-columns: 5fr 2fr;
   border-radius: 0.25rem;
+  padding-bottom: 4px;
 }
 
 .timerbox-timer {
   grid-column: 1 / 2;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
 }
 
 .timerbox-ops {
   grid-column: 2 / 3;
+  padding-bottom: 2px;
 }

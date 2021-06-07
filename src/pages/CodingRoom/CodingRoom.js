@@ -1,8 +1,12 @@
 import React from "react";
 import {connect} from 'react-redux';
+import CollapibleBlock from "../../components/CollapibleBlock/CollapibleBlock";
+import {BackToTopButton} from "../../components/Primitives/Primitives";
+import styled from "styled-components";
 import TimerBox from "../../components/TimerBox/TimerBox";
+import * as Icon from "react-bootstrap-icons";
 
-import {AppPage, Header} from "../../components/Page/Page";
+import {Page} from "../../components/Page/Page";
 import "./CodingRoom.css";
 
 import {
@@ -10,20 +14,35 @@ import {
 } from "../../firebase/firebase.firestore.codingQuestions";
 
 import {mapDispatchToProps, mapStateToProps} from "./consts";
-import Title from "./components/Primitives/Title";
 import Console from "./components/Console/Console";
-import RunButton from "./components/Primitives/RunButton";
-import MainEditor from "./components/MainEditor/MainEditor";
+import {RunButton, SubmitButton} from "./components/Primitives/RunButton";
 import OutputBox from "./components/Primitives/OutputBox";
-import DocsTabs from "./DocTabs/DocTabs";
-import {edit} from "ace-builds";
-import {key} from "../../js/misc";
+import {CleanDocViewer} from "../../components/CleanDocViewer/CleanDocViewer";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import AceEditor from "react-ace";
+import "ace-builds/src-noconflict/mode-python";
+import "ace-builds/src-noconflict/mode-java";
+import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-noconflict/mode-c_cpp";
+import "ace-builds/src-noconflict/theme-monokai";
+import "ace-builds/src-noconflict/theme-github";
+import "ace-builds/src-noconflict/theme-dawn";
+import "ace-builds/src-noconflict/theme-chrome";
+import "ace-builds/src-noconflict/keybinding-vim";
+import "ace-builds/src-noconflict/keybinding-emacs";
+import "ace-builds/src-noconflict/keybinding-sublime";
 
 //TODO: use redux-session to hold question text.
 
-const DEFAULT_EDITOR_THEME = 'monkai';
+const DEFAULT_EDITOR_THEME = 'monokai';
 const DEFAULT_KEYBINDING = 'sublime';
 const DEFAULT_LANG = 'python';
+
+const OuterBox = styled.div`
+  text-align: right;
+  margin: 5em 0;
+  z-index: 9999;
+`
 
 class CodingRoom extends React.Component {
   constructor(props) {
@@ -48,12 +67,11 @@ class CodingRoom extends React.Component {
       controllable: true,
       durationMinute: 45,
 
+      sidebarClosed: false,
       running: false,
-      editorMode: 'text'
-      // editing: this.props.currentUser && this.props.currentUser.admin,
     };
 
-    this.instructionRef = null;
+    this.sidebarRef = React.createRef();
   }
 
   async componentDidMount() {
@@ -93,7 +111,8 @@ class CodingRoom extends React.Component {
   }
 
   async runCode() {
-    this.setState({running: true})
+    const {currentUser} = this.props;
+    this.setState({running: currentUser.admin})
   }
 
   async updateContent() {
@@ -121,64 +140,114 @@ class CodingRoom extends React.Component {
     this.setState(updatingFields);
   }
 
+  expandSideBar(e) {
+    if(this.state.sidebarClosed) {
+      this.sidebarRef.current.style.width = "45rem";
+      this.sidebarRef.current.style.padding = null;
+      this.setState(state => ({sidebarClosed: !state.sidebarClosed}))
+    }
+    else {
+      this.sidebarRef.current.style.width = 0;
+      this.sidebarRef.current.style.padding = 0;
+      this.setState(state => ({sidebarClosed: !state.sidebarClosed}))
+    }
+  }
+
   render() {
-    const admin = (this.props.currentUser && this.props.currentUser.admin);
     let code = '';
     if(this.state.editorMode === 'solution') {
       code = this.state.solution;
     } else {
       code = this.state.text;
     }
-    const {editorTheme, keybinding, lang} = this.state;
+    const {currentUser} = this.props;
+    const {questionName, editorTheme, keybinding, lang, instruction, tips, text, solution, running} = this.state;
     return (
-      <AppPage>
+      <Page removeFooter>
         <div className='coding-room'>
-          <Header
-            left={(
-              <Title
-                name={this.state.questionName}
-                admin={admin}
-                handleClick={() => this.updateContent()}
-              />
-            )}
-            right={(
-              <TimerBox
-                timerType={this.state.timerType}
-                durationMinute={this.state.durationMinute}
-                controllable={this.state.controllable}
-              />
-            )}
-          />
-          <Console
-            admin={admin}
-            editorTheme={editorTheme}
-            keybinding={keybinding}
-            lang={lang}
-            editorMode={this.state.editorMode}
-            handleChange={updatingFields => this.handleChange(updatingFields)}
-          />
-          <RunButton
-            running={this.state.running}
-            onClick={() => this.runCode()}
-          />
-          <MainEditor
-            text={code}
-            theme={this.state.editorTheme}
-            keybinding={this.state.keybinding}
-            lang={this.state.lang}
-            onChange={txt => this.setState({[this.state.editorMode]: txt})}
-          />
-          <OutputBox output={this.state.output} />
-          <DocsTabs
-            instruction={this.state.instruction}
-            setInstructionRef={instance => this.instructionRef = instance}
-            tips={this.state.tips}
-            pseudo={this.state.pseudo}
-            editing={admin}
-            handleChange={updatingFields => this.handleChange(updatingFields)}
-          />
+          <div className='coding-room__sidebar' ref={this.sidebarRef}>
+            <h2 className='title'>{questionName}</h2>
+
+            <div className='instruction'>
+              <CleanDocViewer data={instruction}/>
+            </div>
+
+            <div className='tips'>
+              {tips.length > 0 && <h5>TIPS</h5>}
+              {tips.map((tip, i) => (
+                <CollapibleBlock key={i} title={<div className='title'>Tip {i + 1}</div>}>
+                  <p className='tip'>{tip}</p>
+                </CollapibleBlock>
+              ))}
+            </div>
+
+            <OuterBox>
+              <BackToTopButton />
+            </OuterBox>
+          </div>
+
+        <div className='coding-room__main-panel'>
+          <div
+            className='coding-room__sidebar--expand'
+            onClick={e => this.expandSideBar(e)}
+            style={{transform: this.state.sidebarClosed ? "none" : "rotateZ(180deg)"}}
+          >
+            <Icon.ChevronRight/>
+          </div>
+          <div className='console'>
+
+            <Console
+              editorTheme={editorTheme}
+              keybinding={keybinding}
+              lang={lang}
+              editorMode={this.state.editorMode}
+              handleChange={updatingFields => this.handleChange(updatingFields)}
+            />
+            <TimerBox
+              timerType={this.state.timerType}
+              durationMinute={this.state.durationMinute}
+              controllable={this.state.controllable}
+            />
+          </div>
+
+          <div className='main-editor'>
+            <AceEditor
+              showPrintMargin
+              highlightActiveLine
+              showGutter
+              setOptions={{
+                enableBasicAutocompletion: true,
+                enableLiveAutocompletion: true,
+                enableSnippets: true,
+                showLineNumbers: true,
+                tabSize: 4,
+              }}
+              fontSize={14}
+              width='100%'
+              height="100%"
+              placeholder=""
+              mode={lang}
+              theme={editorTheme}
+              keyboardHandler={keybinding}
+              value={text}
+              onChange={txt => this.setState({text: txt})}
+            />
+          </div>
+
+          <div className='execute-console'>
+            <SubmitButton disabled={!currentUser.admin} />
+            <RunButton running={this.state.running}
+                       onClick={() => this.runCode()}
+                       disabled={!currentUser.admin}
+            />
+          </div>
+          {running && <LinearProgress/>}
+          <div className='output-box'>
+            <OutputBox output={this.state.output} />
+          </div>
+          </div>
         </div>
-      </AppPage>
+      </Page>
     )
   }
 }

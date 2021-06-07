@@ -1,7 +1,7 @@
 import Button from "@material-ui/core/Button";
 import React from "react";
 
-const RunButton = props => {
+export const RunButton = props => {
   return (
     <Button
       className='run-button'
@@ -10,11 +10,25 @@ const RunButton = props => {
       variant='contained'
       color="primary"
       onClick={props.onClick}
-      disabled={props.running}
+      disabled={props.running || props.disabled}
     >
-      {props.running ? 'Not Available For Guests' : 'Run' }
+      RUN
     </Button>
   )
 }
 
-export default RunButton;
+export const SubmitButton = props => {
+  return (
+    <Button
+      className='run-button'
+      fullWidth
+      style={{marginLeft: '0.25rem', backgroundColor: 'darkseagreen', color: "white"}}
+      size='small'
+      variant='contained'
+      disabled={props.disabled}
+    >
+      SUBMIT
+    </Button>
+  )
+}
+

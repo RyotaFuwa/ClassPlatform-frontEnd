@@ -1,6 +1,6 @@
 .collapsible-content {
   height: 0;
   overflow: scroll;
-  transition: height 0.5s ease-out;
+  transition: height 0.25s ease-out;
   text-align: left;
 }

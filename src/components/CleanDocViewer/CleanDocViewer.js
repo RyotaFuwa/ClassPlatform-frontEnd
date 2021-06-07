@@ -35,11 +35,6 @@ const ViewerBox = styled.div`
   justify-content: center;
 `
 
-const OuterBox = styled.div`
-  text-align: right;
-  margin: 5em 0;
-  z-index: 9999;
-`
 
 export const CleanDocViewer = ({data}) => {
   if(!data) return <div />
@@ -47,9 +42,6 @@ export const CleanDocViewer = ({data}) => {
   return (
     <ViewerBox>
       {data.blocks.map((block, idx) => <Block key={idx} block={block} />)}
-      <OuterBox>
-        <BackToTopButton />
-      </OuterBox>
     </ViewerBox>
 )
 }

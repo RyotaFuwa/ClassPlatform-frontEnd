@@ -14,7 +14,7 @@ const CodeSnippet = ({code, language}) => {
   return (
     <SyntaxHighlighter
       language={language === 'pseudo' ? '' : language}
-      customStyle={{width: '100%'}}
+      customStyle={{width: '100%', fontSize: '1rem'}}
       style={cb}
       showLineNumbers={language !== 'pseudo'}
     >

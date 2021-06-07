@@ -15,7 +15,7 @@ function expandContent(e) {
 const CollapibleBlock = props => {
   return (
     <div className={props.className}>
-      <div className='link' onClick={expandContent}>
+      <div onClick={expandContent}>
         {props.title}
       </div>
       <div className='block-content collapsible-content'><span />{props.children}</div>

@@ -1,44 +1,88 @@
 .coding-room {
-  width: 100%;
-  height: 100%;
-  display: grid;
-  padding: 10px 10px;
-  grid-gap: 1vmin;
-  grid-template-rows: auto 30px 60vh 1fr;
-  grid-template-columns: 35% 1fr auto;
-  grid-template-areas:
-  "header header header"
-  "docs-tab console run-button"
-  "docs-tab main-editor main-editor"
-  "docs-tab output-box output-box";
+  display: flex;
   overflow: hidden;
 }
 
-.coding-room .header {
-  grid-area: header;
+.coding-room__sidebar {
+  display: block;
+  width: 40rem;
+  max-width: 60rem;
+  padding: 1rem;
+  border-right: 1px solid lightgray;
+  transition: all .25s;
+  overflow: hidden;
 }
 
-.coding-room .console {
-  grid-area: console;
+.coding-room__sidebar--expand {
+  width: 2rem;
+  height: 2rem;
+  font-size: 1rem;
+  border: 1px solid dimgray;
+  border-radius: 1rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.coding-room__sidebar .instruction {
+  margin-bottom: 3rem;
+}
+
+.coding-room__sidebar .tips {
+  margin: 1rem;
+}
+
+.tips .title {
+  font-size: 1.25rem;
+  text-align: center;
+  border: 1px solid lightgray;
+  margin-bottom: 4px;
+}
+
+.tips h5 {
+  margin-bottom: 2rem;
+}
+
+.tips .tip {
+  margin-bottom: 1rem
+}
+
+.tip-box {
+  margin-bottom: 1rem;
+}
+
+.coding-room__main-panel {
+  margin: 1rem auto;
+  padding: 0 1rem;
+  min-width: 15rem;
+  max-width: 82rem;
+  width: 100%;
+}
+
+.coding-room__main-panel .console {
   display: flex;
-  flex-direction: row;
+  justify-content: space-between;
 }
 
 .coding-room .run-button {
-  grid-area: run-button;
+  width: 7.5rem;
 }
 
 .coding-room .main-editor {
-  grid-area: main-editor;
+  border: 1px solid lightgray;
+  height: 50rem;
+}
+
+.coding-room .execute-console {
+  margin: 1.5rem 0 0.25rem 0;
+  height: 2.25rem;
+  display: flex;
+  flex-direction: row-reverse;
 }
 
 .coding-room .output-box {
-  grid-area: output-box;
+  min-height: 30rem;
+  border: 1px solid lightgray;
 }
 
-.coding-room .docs-tab {
-  grid-area: docs-tab;
-  overflow-y: hidden;
-}
 
 

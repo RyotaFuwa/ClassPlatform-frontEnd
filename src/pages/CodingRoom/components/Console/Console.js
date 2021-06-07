@@ -4,21 +4,21 @@ import React from "react";
 const Console = props => {
   return (
     <div className="console">
-      <span className='m-1'/>
+      <span className='ml-1'/>
       <SelectPopover
         options={['monokai', 'github', 'dawn'].map(each => ({label: each, value: each, disabled: false}))}
         color='primary'
         value={props.editorTheme}
         handleChange={e => props.handleChange({editorTheme: e.target.value})}
       />
-      <span className='m-1'/>
+      <span className='ml-1'/>
       <SelectPopover
         options={['sublime', 'vim', 'emacs'].map(each => ({label: each, value: each, disabled: false}))}
         color='primary'
         value={props.keybinding}
         handleChange={e => props.handleChange({keybinding: e.target.value})}
       />
-      <span className='m-1'/>
+      <span className='ml-1'/>
       <SelectPopover
         color='primary'
         options={[
@@ -32,7 +32,7 @@ const Console = props => {
       />
       {props.admin &&
       <>
-        <span className='m-1'/>
+        <span className='ml-1'/>
         <SelectPopover
           color='secondary'
           options={[
@@ -42,7 +42,7 @@ const Console = props => {
           value={props.editorMode}
           handleChange={e => props.handleChange({editorMode: e.target.value})}
         />
-        <span className='m-1'/>
+        <span className='ml-1'/>
         <SelectPopover
           color='secondary'
           options={[
